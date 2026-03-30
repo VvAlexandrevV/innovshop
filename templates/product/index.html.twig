@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!{% endblock %}
+
+{% block body %}
+
+    <h1>Liste des produits</h1>
+
+    {% for product in products %} {# pour chaque élément contenu dans products, je prends cet élément et je l’appelle product #}
+        <div class="product-card">
+            <h2>{{ product.nom }}</h2>
+            <p><strong>Prix:</strong>{{ product.prix }} €</p>
+            <p><strong>Déscription du produit:</strong> <br>{{ product.description }}</p>
+            <p><strong>Spécifications:</strong> <br>{{ product.specification }}</p>
+            <p>{{ product.aLaUne }}</p>
+        </div>    
+    {% else %}
+            <p>Aucun produit trouvé</p>
+    {% endfor %}
+
+{% endblock %}
