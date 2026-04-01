@@ -19,4 +19,19 @@ final class ProductController extends AbstractController
             'products' => $products,
         ]);
     }
+
+   #[Route('/product/{id}', name: 'app_product_detail')]
+    public function detailProduct(int $id, ProductRepository $productRepository): Response
+    {
+        $product = $productRepository->find($id);
+
+        if (!$product) {
+            throw $this->createNotFoundException('Produit introuvable');
+        }
+
+        return $this->render('product/detail.html.twig', [
+            'product' => $product,
+        ]);
+    }
+
 }

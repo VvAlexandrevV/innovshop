@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue sur InnovShop</h1>
+    <a href="{{ path('app_product') }}">Voir le catalogue</a>
+
+    <h2>Produits à la une</h2>
+
+    {% for product in produitsALaUne %}
+        <div class="product-card">
+            <h3>{{ product.nom }}</h3>
+            <p><strong>Prix :</strong> {{ product.prix }} €</p>
+            <p><strong>Description du produit :</strong> <br>{{ product.description }}</p>
+            <p><strong>Spécifications :</strong> <br>{{ product.specification }}</p>
+
+            <a href="{{ path('app_product_detail', {id: product.id}) }}">Voir le détail</a>
+        </div>
+    {% else %}
+        <p>Aucun produit à la une pour le moment.</p>
+    {% endfor %}
+
+    <h2>Derniers produits ajoutés</h2>
+
+    {% for product in derniersProduits %}
+        <div class="product-card">
+            <h3>{{ product.nom }}</h3>
+            <p><strong>Prix :</strong> {{ product.prix }} €</p>
+            <p><strong>Description du produit :</strong> <br>{{ product.description }}</p>
+            <p><strong>Spécifications :</strong> <br>{{ product.specification }}</p>
+
+            <a href="{{ path('app_product_detail', {id: product.id}) }}">Voir le détail</a>
+        </div>
+    {% else %}
+        <p>Aucun produit récent disponible.</p>
+    {% endfor %}
+{% endblock %}
