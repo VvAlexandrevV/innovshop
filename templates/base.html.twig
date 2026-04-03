@@ -2,6 +2,21 @@
 <html>
     <head>
         <meta charset="UTF-8">
+
+        <nav class="navbar">
+            <div class="nav-logo">
+                <a href="{{ path('app_home') }}">InnovShop</a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                <li><a href="{{ path('app_product') }}">Catalogue</a></li>
+                <li><a href="#">Panier</a></li>
+                <li><a href="#">Connexion</a></li>
+                <li><a href="#">Inscription</a></li>
+            </ul>
+        </nav>
+
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
@@ -21,4 +36,14 @@
     <body>
         {% block body %}{% endblock %}
     </body>
+
+    <footer>
+        <div class="footer">
+            <div class="footer-texte">
+                <p><strong>Contactez nous:</strong></p>
+                <p><strong>Tel:</strong> 0606060606</p>
+                <p><strong>Adresse:</strong> 15 rue innovshop 75000 Paris</p>
+            </div>
+        </div>    
+    </footer>
 </html>
