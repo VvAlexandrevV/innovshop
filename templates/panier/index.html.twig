@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier{% endblock %}
+
+{% block body %}
+    <h1>Mon panier</h1>
+
+    {% for product in produits %}
+        <p>{{ product.nom }} - {{ product.prix }} €</p>
+        <a href="{{ path('app_product_detail', {id: product.id}) }}" class="product-link">Voir le détail</a>
+    {% else %}
+        <p>Votre panier est vide.</p>
+    {% endfor %}
+{% endblock %}

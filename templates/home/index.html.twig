@@ -3,36 +3,49 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-    <h1>Bienvenue sur InnovShop</h1>
-    <a href="{{ path('app_product') }}">Voir le catalogue</a>
-
-    <h2>Produits à la une</h2>
-
-    {% for product in produitsALaUne %}
-        <div class="product-card">
-            <h3>{{ product.nom }}</h3>
-            <p><strong>Prix :</strong> {{ product.prix }} €</p>
-            <p><strong>Description du produit :</strong> <br>{{ product.description }}</p>
-            <p><strong>Spécifications :</strong> <br>{{ product.specification }}</p>
-
-            <a href="{{ path('app_product_detail', {id: product.id}) }}">Voir le détail</a>
+    <section class="home-hero">
+        <div class="home-hero-content">
+            <h1>Bienvenue sur InnovShop</h1>
+            <p>Découvrez nos produits innovants et trouvez facilement ce qu’il vous faut.</p>
+            <a href="{{ path('app_product') }}" class="btn-catalogue">Voir le catalogue</a>
         </div>
-    {% else %}
-        <p>Aucun produit à la une pour le moment.</p>
-    {% endfor %}
+    </section>
 
-    <h2>Derniers produits ajoutés</h2>
+    <section class="home-section">
+        <h2>Produits à la une</h2>
 
-    {% for product in derniersProduits %}
-        <div class="product-card">
-            <h3>{{ product.nom }}</h3>
-            <p><strong>Prix :</strong> {{ product.prix }} €</p>
-            <p><strong>Description du produit :</strong> <br>{{ product.description }}</p>
-            <p><strong>Spécifications :</strong> <br>{{ product.specification }}</p>
+        <div class="products-grid">
+            {% for product in produitsALaUne %}
+                <div class="product-card">
+                    <h3>{{ product.nom }}</h3>
+                    <p><strong>Prix :</strong> {{ product.prix }} €</p>
+                    <p><strong>Description du produit :</strong><br>{{ product.description }}</p>
 
-            <a href="{{ path('app_product_detail', {id: product.id}) }}">Voir le détail</a>
+                    <a href="{{ path('app_product_detail', {id: product.id}) }}" class="product-link">Voir le détail</a>
+                    <a href="{{ path('app_panier_add', {id: product.id}) }}" class="ajout_panier">Ajouter au panier</a>
+                </div>
+            {% else %}
+                <p>Aucun produit à la une pour le moment.</p>
+            {% endfor %}
         </div>
-    {% else %}
-        <p>Aucun produit récent disponible.</p>
-    {% endfor %}
+    </section>
+
+    <section class="home-section">
+        <h2>Derniers produits ajoutés</h2>
+
+        <div class="products-grid">
+            {% for product in derniersProduits %}
+                <div class="product-card">
+                    <h3>{{ product.nom }}</h3>
+                    <p><strong>Prix :</strong> {{ product.prix }} €</p>
+                    <p><strong>Description du produit :</strong><br>{{ product.description }}</p>
+
+                    <a href="{{ path('app_product_detail', {id: product.id}) }}" class="product-link">Voir le détail</a>
+                    <a href="{{ path('app_panier_add', {id: product.id}) }}" class="ajout_panier">Ajouter au panier</a>
+                </div>
+            {% else %}
+                <p>Aucun produit récent disponible.</p>
+            {% endfor %}
+        </div>
+    </section>
 {% endblock %}

@@ -11,8 +11,10 @@
         <p><strong>Prix :</strong> {{ product.prix }} €</p>
         <p><strong>Description du produit :</strong> <br>{{ product.description }}</p>
         <p><strong>Spécifications :</strong> <br>{{ product.specification }}</p>
+
+        <a href="{{ path('app_panier_add', {id: product.id}) }}" class="ajout_panier">Ajouter au panier</a>
     </div>
 
-    <a href="{{ path('app_product') }}">Retour à la liste des produits</a>
+    <a href="{{ path('app_product') }}" class="retour_liste">Retour à la liste des produits</a>
 
 {% endblock %}

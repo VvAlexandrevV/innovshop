@@ -4,23 +4,28 @@
 
 {% block body %}
 
-    <h1>Liste des produits</h1>
+    <section class="catalogue">
+        <h1>Catalogue produits</h1>
 
-    {% for product in products %}
-        <div class="product-card">
-            <h2>{{ product.nom }}</h2>
-            <p><strong>Prix :</strong> {{ product.prix }} €</p>
-            <p><strong>Description du produit :</strong> <br>{{ product.description }}</p>
-            <p><strong>Spécifications :</strong> <br>{{ product.specification }}</p>
+        <div class="products-grid">
+            {% for product in products %}
+                <div class="product-card">
+                    <h2>{{ product.nom }}</h2>
+                    <p><strong>Prix :</strong> {{ product.prix }} €</p>
+                    <p><strong>Description du produit :</strong><br>{{ product.description }}</p>
+                    <p><strong>Spécifications :</strong><br>{{ product.specification }}</p>
 
-            <a href="{{ path('app_product_detail', {id: product.id}) }}">Voir le détail</a>
+                    {% if product.aLaUne %}
+                        <span class="badge-featured">À la une</span>
+                    {% endif %}
 
-            {% if product.aLaUne %}
-                <p><strong>Produit à la une</strong></p>
-            {% endif %}
+                    <a href="{{ path('app_product_detail', {id: product.id}) }}" class="product-link">Voir le détail</a>
+                    <a href="{{ path('app_panier_add', {id: product.id}) }}" class="ajout_panier">Ajouter au panier</a>
+                </div>
+            {% else %}
+                <p>Aucun produit trouvé</p>
+            {% endfor %}
         </div>
-    {% else %}
-        <p>Aucun produit trouvé</p>
-    {% endfor %}
+    </section>
 
 {% endblock %}

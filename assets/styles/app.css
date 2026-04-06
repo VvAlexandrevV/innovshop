@@ -10,6 +10,8 @@ body {
     align-items: center;
     padding: 15px 30px;
     background-color: #111827;
+    
+    
 }
 
 .nav-logo a {
@@ -49,3 +51,194 @@ body {
     text-align: center;
     padding: 5px;
 }
+
+.home-hero {
+    background: linear-gradient(135deg, #111827, #1f2937);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.home-hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.home-hero h1 {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.home-hero p {
+    font-size: 18px;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.btn-catalogue {
+    display: inline-block;
+    background-color: white;
+    color: #111827;
+    text-decoration: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.btn-catalogue:hover {
+    background-color: #e5e7eb;
+}
+
+.home-section {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.home-section h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #111827;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.product-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #111827;
+}
+
+.product-card p {
+    margin-bottom: 12px;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.product-link {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #111827;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.product-link:hover {
+    background-color: #1f2937;
+}
+
+/**CATALOGUE **/
+
+.catalogue {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.catalogue h1 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #111827;
+}
+
+/* Réutilisation de la grille */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+/* Carte produit */
+.product-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.product-card h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #111827;
+}
+
+.product-card p {
+    margin-bottom: 10px;
+    color: #374151;
+    line-height: 1.5;
+}
+
+/* Badge à la une */
+.badge-featured {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #111827;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+/* Bouton */
+.product-link {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #111827;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.product-link:hover {
+    background-color: #1f2937;
+}
+
+.ajout_panier {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #111827;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.ajout_panier:hover {
+    background-color: #1f2937;
+}
+
+.retour_liste {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #111827;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.retour_liste:hover {
+    background-color: #1f2937;
+}
+
+
