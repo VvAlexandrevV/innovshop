@@ -11,7 +11,8 @@
             <ul class="nav-links">
                 <li><a href="{{ path('app_home') }}">Accueil</a></li>
                 <li><a href="{{ path('app_product') }}">Catalogue</a></li>
-                <li><a href="{{ path('app_panier') }}">Panier</a></li>
+                {% set panier = app.session.get('panier', []) %}
+                <li><a href="{{ path('app_panier') }}">Panier <span class="cart-badge">{{ panier|length }}</span></a></li>
                 <li><a href="#">Connexion</a></li>
                 <li><a href="#">Inscription</a></li>
             </ul>

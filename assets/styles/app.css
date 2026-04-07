@@ -240,5 +240,52 @@ body {
 .retour_liste:hover {
     background-color: #1f2937;
 }
+/*bouton vider panier*/
+.btn-vider-panier {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #111827;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.btn-vider-panier:hover {
+    background-color: #1f2937;
+}
+/*badge panier*/
+.cart-badge {
+    display: inline-block;
+    min-width: 20px;
+    padding: 2px 6px;
+    margin-left: 6px;
+    border-radius: 999px;
+    background-color: white;
+    color: #111827;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/*bouton supprrimer produit*/
+
+.remove-product {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #bd1616;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.remove-product:hover {
+    background-color: #f30404;
+    box-shadow: #1f2937;
+}
+
 
 
