@@ -10,9 +10,13 @@
             <h2>{{ ligne.product.nom }}</h2>
             <p><strong>Prix :</strong> {{ ligne.product.prix }} €</p>
 
-            <a href="{{ path('app_panier_remove', {index: ligne.index}) }}" class='remove-product'>Supprimer</a>
+   {% if app.user %}
+    <a href="{{ path('app_panier_remove_cart_item', {id: ligne.id}) }}" class="remove-product">Supprimer</a>
+    {% else %}
+        <a href="{{ path('app_panier_remove_session', {index: ligne.index}) }}" class="remove-product">Supprimer</a>
+    {% endif %}
 
-            <a href="{{ path('app_product_detail', {id: ligne.product.id}) }}" class='product-link'>Voir le détail</a>
+        <a href="{{ path('app_product_detail', {id: ligne.product.id}) }}" class="product-link">Voir le détail</a>
         </div>
     {% else %}
         <p>Votre panier est vide.</p>
@@ -20,5 +24,7 @@
 
     <h2>Total : {{ total }} €</h2>
 
-    <a href="{{ path('app_panier_clear') }}" class='btn-vider-panier'>Vider le panier</a>
+    <a href="{{ path('app_panier_clear') }}" class="btn-vider-panier">Vider le panier</a>
+
+    <a href="{{ path('app_panier_validation_commande') }}" class="btn-validation-commande">Valider ma commande</a>
 {% endblock %}

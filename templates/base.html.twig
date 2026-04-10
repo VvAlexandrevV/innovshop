@@ -11,9 +11,14 @@
             <ul class="nav-links">
                 <li><a href="{{ path('app_home') }}">Accueil</a></li>
                 <li><a href="{{ path('app_product') }}">Catalogue</a></li>
-                {% set panier = app.session.get('panier', []) %}
-                <li><a href="{{ path('app_panier') }}">Panier <span class="cart-badge">{{ panier|length }}</span></a></li>
-                <li><a href="#">Connexion</a></li>
+                {% if app.user and app.user.cart %}
+                    {% set nbArticlesPanier = app.user.cart.cartItems|length %}
+                {% else %}
+                    {% set panier = app.session.get('panier', []) %}
+                    {% set nbArticlesPanier = panier|length %}
+                {% endif %}
+                <li><a href="{{ path('app_panier') }}">Panier <span class="cart-badge">{{ nbArticlesPanier }}</span></a></li>
+                <li><a href="{{ path('app_login') }}">Connexion</a></li>
                 <li><a href="#">Inscription</a></li>
             </ul>
         </nav>
