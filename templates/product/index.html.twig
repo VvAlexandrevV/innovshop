@@ -12,6 +12,11 @@
         <div class="products-grid">
             {% for product in products %}
                 <div class="product-card">
+                    {% if product.image %}
+                <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
+            {% else %}
+                <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut" class="product-image">
+            {% endif %}
                     <h2>{{ product.nom }}</h2>
                     <p><strong>Prix :</strong> {{ product.prix }} €</p>
                     <p><strong>Description du produit :</strong><br>{{ product.description }}</p>

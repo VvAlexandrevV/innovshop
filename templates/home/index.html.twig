@@ -14,9 +14,15 @@
     <section class="home-section">
         <h2>Produits à la une</h2>
 
-        <div class="products-grid">
+        <<div class="products-grid">
             {% for product in produitsALaUne %}
                 <div class="product-card">
+                    {% if product.image %}
+                        <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
+                    {% else %}
+                        <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut" class="product-image">
+                    {% endif %}
+
                     <h3>{{ product.nom }}</h3>
                     <p><strong>Prix :</strong> {{ product.prix }} €</p>
                     <p><strong>Description du produit :</strong><br>{{ product.description }}</p>
@@ -36,6 +42,12 @@
         <div class="products-grid">
             {% for product in derniersProduits %}
                 <div class="product-card">
+                    {% if product.image %}
+                        <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
+                    {% else %}
+                        <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut" class="product-image">
+                    {% endif %}
+
                     <h3>{{ product.nom }}</h3>
                     <p><strong>Prix :</strong> {{ product.prix }} €</p>
                     <p><strong>Description du produit :</strong><br>{{ product.description }}</p>
