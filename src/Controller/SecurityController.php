@@ -9,6 +9,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
+    // Cette méthode sert à afficher la page de connexion et gérer les erreurs de login ainsi que le dernier identifiant saisi.
+    // Liée à Symfony Security, AuthenticationUtils et au template security/login.html.twig.
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {

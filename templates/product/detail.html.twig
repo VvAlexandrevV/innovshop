@@ -1,20 +1,106 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails du produit{% endblock %}
+{% block title %}{{ product.nom }} | InnovShop{% endblock %}
 
 {% block body %}
+    <section class="product-detail-hero">
+        <div class="container product-detail-grid">
+            <div class="product-detail-media">
+                <div class="product-detail-main-image">
+                    {% if product.image %}
+                        <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}">
+                    {% else %}
+                        <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut">
+                    {% endif %}
+                </div>
+            </div>
 
-    <h1>Détails du produit</h1>
+            <div class="product-detail-info">
+                <span class="detail-tag">Produit InnovShop</span>
 
-    <div class="product-card">
-        <h2>{{ product.nom }}</h2>
-        <p><strong>Prix :</strong> {{ product.prix }} €</p>
-        <p><strong>Description du produit :</strong> <br>{{ product.description }}</p>
-        <p><strong>Spécifications :</strong> <br>{{ product.specification }}</p>
+                <h1>{{ product.nom }}</h1>
 
-        <a href="{{ path('app_panier_add', {id: product.id}) }}" class="ajout_panier">Ajouter au panier</a>
-    </div>
+                <p class="detail-intro">
+                    {{ product.description }}
+                </p>
 
-    <a href="{{ path('app_product') }}" class="retour_liste">Retour à la liste des produits</a>
+                <div class="detail-highlight-boxes">
+                    <div class="detail-highlight">
+                        <span class="detail-highlight-label">Prix</span>
+                        <strong>{{ product.prix }} €</strong>
+                    </div>
 
+                    <div class="detail-highlight">
+                        <span class="detail-highlight-label">Disponibilité</span>
+                        <strong>En stock</strong>
+                    </div>
+                </div>
+
+                <div class="detail-actions">
+                    <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">
+                        Ajouter au panier
+                    </a>
+
+                    <a href="{{ path('app_product') }}" class="btn btn-secondary">
+                        Retour au catalogue
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-detail-section">
+        <div class="container detail-content-grid">
+            <div class="detail-description-card">
+                <span class="section-tag">Description</span>
+                <h2>À propos du produit</h2>
+                <p>
+                    {{ product.description }}
+                </p>
+            </div>
+
+            <div class="detail-specs-card">
+                <span class="section-tag">Fiche technique</span>
+                <h2>Caractéristiques</h2>
+
+                <div class="detail-specs-list">
+                    <div class="detail-spec-row">
+                        <span>Nom</span>
+                        <strong>{{ product.nom }}</strong>
+                    </div>
+
+                    <div class="detail-spec-row">
+                        <span>Prix</span>
+                        <strong>{{ product.prix }} €</strong>
+                    </div>
+
+                    {% if product.category is defined and product.category %}
+                        <div class="detail-spec-row">
+                            <span>Catégorie</span>
+                            <strong>{{ product.category.nom }}</strong>
+                        </div>
+                    {% endif %}
+
+                    {% if product.specification is defined and product.specification %}
+                        <div class="detail-spec-row">
+                            <span>Spécifications</span>
+                            <strong>{{ product.specification }}</strong>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-detail-section alt-section">
+        <div class="container detail-extra-box">
+            <span class="section-tag">Pourquoi ce produit ?</span>
+            <h2>Un choix pensé pour l’expérience utilisateur</h2>
+            <p>
+                Ce produit s’intègre dans l’univers InnovShop avec une approche moderne, claire et orientée qualité.
+                L’objectif n’est pas juste d’afficher un article, mais de lui donner une vraie présence visuelle
+                et une lecture plus premium.
+            </p>
+        </div>
+    </section>
 {% endblock %}

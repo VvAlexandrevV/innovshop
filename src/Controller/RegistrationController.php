@@ -15,6 +15,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RegistrationController extends AbstractController
 {
+    // Cette méthode sert à gérer l'inscription d'un nouvel utilisateur : affichage du formulaire, création du compte et connexion automatique.
+    // Liée à User, RegistrationFormType, LoginFormAuthenticator, Security et au template registration/register.html.twig.
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
     {

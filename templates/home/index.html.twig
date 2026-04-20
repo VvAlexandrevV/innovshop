@@ -1,63 +1,158 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Accueil | InnovShop{% endblock %}
 
 {% block body %}
-    <section class="home-hero">
-        <div class="home-hero-content">
-            <h1>Bienvenue sur InnovShop</h1>
-            <p>Découvrez nos produits innovants et trouvez facilement ce qu’il vous faut.</p>
-            <a href="{{ path('app_product') }}" class="btn-catalogue">Voir le catalogue</a>
+    <section class="hero-section">
+        <div class="hero-background">
+            <img src="{{ asset('images/hero.png') }}" alt="Hero InnovShop">
+            <div class="hero-overlay"></div>
+        </div>
+
+        <div class="hero-content container">
+            <span class="hero-badge">Boutique nouvelle génération</span>
+
+            <h1>
+                INNOV<br>
+                <span>SHOP</span>
+            </h1>
+
+            <p>
+                Découvrez une sélection de produits innovants, modernes et soigneusement choisis
+                pour améliorer votre quotidien.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{{ path('app_product') }}" class="btn btn-primary">Voir le catalogue</a>
+                <a href="#featured-products" class="btn btn-secondary">Produits à la une</a>
+            </div>
         </div>
     </section>
 
-    <section class="home-section">
-        <h2>Produits à la une</h2>
-
-        <div class="products-grid">
-            {% for product in produitsALaUne %}
-                <div class="product-card">
-                    {% if product.image %}
-                        <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
-                    {% else %}
-                        <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut" class="product-image">
-                    {% endif %}
-
-                    <h3>{{ product.nom }}</h3>
-                    <p><strong>Prix :</strong> {{ product.prix }} €</p>
-                    <p><strong>Description du produit :</strong><br>{{ product.description }}</p>
-
-                    <a href="{{ path('app_product_detail', {id: product.id}) }}" class="product-link">Voir le détail</a>
-                    <a href="{{ path('app_panier_add', {id: product.id}) }}" class="ajout_panier">Ajouter au panier</a>
+    <section class="category-section container">
+        <div class="category-grid">
+            <div class="category-card category-large">
+                <div class="category-content">
+                    <h2>Produits innovants</h2>
+                    <p>Une sélection pensée pour allier design, performance et utilité.</p>
+                    <a href="{{ path('app_product') }}">Découvrir</a>
                 </div>
-            {% else %}
-                <p>Aucun produit à la une pour le moment.</p>
-            {% endfor %}
+            </div>
+
+            <div class="category-card">
+                <div class="category-content">
+                    <h3>À la une</h3>
+                    <p>Nos produits les plus mis en avant.</p>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-content">
+                    <h3>Nouveautés</h3>
+                    <p>Les derniers produits ajoutés à la boutique.</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="home-section">
-        <h2>Derniers produits ajoutés</h2>
-
-        <div class="products-grid">
-            {% for product in derniersProduits %}
-                <div class="product-card">
-                    {% if product.image %}
-                        <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
-                    {% else %}
-                        <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut" class="product-image">
-                    {% endif %}
-
-                    <h3>{{ product.nom }}</h3>
-                    <p><strong>Prix :</strong> {{ product.prix }} €</p>
-                    <p><strong>Description du produit :</strong><br>{{ product.description }}</p>
-
-                    <a href="{{ path('app_product_detail', {id: product.id}) }}" class="product-link">Voir le détail</a>
-                    <a href="{{ path('app_panier_add', {id: product.id}) }}" class="ajout_panier">Ajouter au panier</a>
+    <section id="featured-products" class="product-section">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <span class="section-tag">Sélection premium</span>
+                    <h2>Produits à la une</h2>
                 </div>
-            {% else %}
-                <p>Aucun produit récent disponible.</p>
-            {% endfor %}
+                <a href="{{ path('app_product') }}" class="section-link">Voir le catalogue</a>
+            </div>
+
+            <div class="products-grid">
+                {% for product in produitsALaUne %}
+                    <div class="product-card">
+                        <div class="product-image-wrapper">
+                            {% if product.image %}
+                                <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
+                            {% else %}
+                                <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut" class="product-image">
+                            {% endif %}
+                        </div>
+
+                        <div class="product-content">
+                            <h3>{{ product.nom }}</h3>
+                            <p class="product-description">
+                                {{ product.description|length > 100 ? product.description|slice(0, 100) ~ '...' : product.description }}
+                            </p>
+
+                            <div class="product-footer">
+                                <span class="product-price">{{ product.prix }} €</span>
+                            </div>
+
+                            <div class="product-actions">
+                                <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-secondary">Voir le détail</a>
+                                <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">Ajouter</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="empty-state">Aucun produit à la une pour le moment.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="product-section alt-section">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <span class="section-tag">Dernières nouveautés</span>
+                    <h2>Derniers produits ajoutés</h2>
+                </div>
+            </div>
+
+            <div class="products-grid">
+                {% for product in derniersProduits %}
+                    <div class="product-card">
+                        <div class="product-image-wrapper">
+                            {% if product.image %}
+                                <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
+                            {% else %}
+                                <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut" class="product-image">
+                            {% endif %}
+                        </div>
+
+                        <div class="product-content">
+                            <h3>{{ product.nom }}</h3>
+                            <p class="product-description">
+                                {{ product.description|length > 100 ? product.description|slice(0, 100) ~ '...' : product.description }}
+                            </p>
+
+                            <div class="product-footer">
+                                <span class="product-price">{{ product.prix }} €</span>
+                            </div>
+
+                            <div class="product-actions">
+                                <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-secondary">Voir le détail</a>
+                                <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">Ajouter</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="empty-state">Aucun produit récent disponible.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter-section">
+        <div class="container newsletter-box">
+            <h2>Restez connecté à InnovShop</h2>
+            <p>
+                Recevez nos nouveautés, nos sélections et les prochains produits mis en avant.
+            </p>
+
+            <form class="newsletter-form">
+                <input type="email" placeholder="Votre adresse email">
+                <button type="submit" class="btn btn-primary">S'inscrire</button>
+            </form>
         </div>
     </section>
 {% endblock %}

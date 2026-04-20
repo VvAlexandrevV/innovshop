@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class CheckoutController extends AbstractController
 {
+// Cette méthode sert à gérer le processus de commande (checkout) : affichage du formulaire, création de la commande et transformation du panier en commande.
+// Liée à Order, OrderItem, User, Cart, OrderType (formulaire) et au template checkout/index.html.twig.
 #[Route('/checkout', name: 'app_checkout')]
 public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -77,6 +79,8 @@ public function index(Request $request, EntityManagerInterface $entityManager): 
         ]);
     }
 
+    // Cette méthode sert à afficher la page de confirmation après une commande réussie.
+    // Liée à l'entité Order et au template checkout/success.html.twig.
     #[Route('/checkout/success/{id}', name: 'app_checkout_success')]
     public function success(Order $order): Response
         {

@@ -3,25 +3,143 @@
 {% block title %}Commande confirmée{% endblock %}
 
 {% block body %}
-    <h1>Commande confirmée</h1>
+    <section class="order-confirmation-page">
+        <div class="container">
+            <div class="order-confirmation-hero">
+                <div class="order-confirmation-badge">Commande validée</div>
+                <h1>Merci pour votre commande</h1>
+                <p>
+                    Votre commande a bien été enregistrée. Vous trouverez ci-dessous
+                    le récapitulatif complet de votre achat.
+                </p>
+            </div>
 
-    <p><strong>Commande n° :</strong> {{ order.id }}</p>
-    <p><strong>Date :</strong> {{ order.createdAt|date('d/m/Y H:i') }}</p>
-    <p><strong>Statut :</strong> {{ order.status }}</p>
-    <p><strong>Total :</strong> {{ order.total }} €</p>
+            <div class="order-confirmation-grid">
+                <div class="order-confirmation-main">
+                    <section class="checkout-card">
+                        <div class="checkout-section-title">
+                            <span class="checkout-step">01</span>
+                            <h2>Informations de commande</h2>
+                        </div>
 
-    <h2>Adresse de livraison</h2>
-    <p>{{ order.deliveryFirstName }} {{ order.deliveryLastName }}</p>
-    <p>{{ order.deliveryAddress }}</p>
-    <p>{{ order.deliveryPostalCode }} {{ order.deliveryCity }}</p>
-    <p>{{ order.deliveryCountry }}</p>
+                        <div class="order-meta-grid">
+                            <div class="order-meta-box">
+                                <span class="order-meta-label">Commande n°</span>
+                                <strong>#{{ order.id }}</strong>
+                            </div>
 
-    <h2>Lignes de commande</h2>
+                            <div class="order-meta-box">
+                                <span class="order-meta-label">Date</span>
+                                <strong>{{ order.createdAt|date('d/m/Y H:i') }}</strong>
+                            </div>
 
-    {% for orderItem in order.orderItems %}
-        <div class="product-card">
-            <h3>{{ orderItem.productName }}</h3>
-            <p><strong>Prix :</strong> {{ orderItem.productPrice }} €</p>
+                            <div class="order-meta-box">
+                                <span class="order-meta-label">Statut</span>
+                                <strong>{{ order.status }}</strong>
+                            </div>
+
+                            <div class="order-meta-box">
+                                <span class="order-meta-label">Total</span>
+                                <strong>{{ order.total }} €</strong>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="checkout-card">
+                        <div class="checkout-section-title">
+                            <span class="checkout-step">02</span>
+                            <h2>Adresse de livraison</h2>
+                        </div>
+
+                        <div class="delivery-card">
+                            <p><strong>{{ order.deliveryFirstName }} {{ order.deliveryLastName }}</strong></p>
+                            <p>{{ order.deliveryAddress }}</p>
+                            <p>{{ order.deliveryPostalCode }} {{ order.deliveryCity }}</p>
+                            <p>{{ order.deliveryCountry }}</p>
+                        </div>
+                    </section>
+
+                    <section class="checkout-card">
+                        <div class="checkout-section-title">
+                            <span class="checkout-step">03</span>
+                            <h2>Lignes de commande</h2>
+                        </div>
+
+                        <div class="checkout-products">
+                            {% for orderItem in order.orderItems %}
+                                <article class="checkout-product order-line-card">
+                                    <div class="checkout-product-content order-line-content">
+                                        <div class="checkout-product-top">
+                                            <div>
+                                                <h3>{{ orderItem.productName }}</h3>
+                                                <p class="checkout-product-description">
+                                                    Produit enregistré dans la commande.
+                                                </p>
+                                            </div>
+
+                                            <div class="checkout-product-price">
+                                                {{ orderItem.productPrice }} €
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            {% else %}
+                                <p class="empty-state">Aucune ligne de commande trouvée.</p>
+                            {% endfor %}
+                        </div>
+                    </section>
+                </div>
+
+                <aside class="checkout-sidebar">
+                    <div class="checkout-summary-card">
+                        <h2>Résumé</h2>
+
+                        <div class="summary-lines">
+                            <div class="summary-line">
+                                <span>Nombre d’articles</span>
+                                <strong>{{ order.orderItems|length }}</strong>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Montant total</span>
+                                <strong>{{ order.total }} €</strong>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Statut</span>
+                                <strong class="summary-free">{{ order.status }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="summary-total">
+                            <span>Total payé</span>
+                            <strong>{{ order.total }} €</strong>
+                        </div>
+
+                        <div class="cart-summary-actions">
+                            <a href="{{ path('app_home') }}" class="btn btn-primary checkout-submit">
+                                Retour à l'accueil
+                            </a>
+
+                            <a href="{{ path('app_product') }}" class="btn btn-secondary cart-clear-btn">
+                                Continuer mes achats
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="checkout-side-infos">
+                        <div class="checkout-info-box">
+                            <h3>Commande enregistrée</h3>
+                            <p>Votre achat a bien été pris en compte dans votre espace client.</p>
+                        </div>
+
+                        <div class="checkout-info-box">
+                            <h3>Suite du traitement</h3>
+                            <p>Vous pourrez suivre l’évolution de la commande selon son statut.</p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
         </div>
-    {% endfor %}
+    </section>
 {% endblock %}

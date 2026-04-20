@@ -1,26 +1,113 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion | InnovShop{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+    <section class="auth-page">
+        <div class="auth-layout">
+            <div class="auth-branding">
+                <div class="auth-branding-inner">
+                    <div class="auth-logo">InnovShop</div>
 
-    {% if app.user %}
-        <div class="mb-3">
-            Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Déconnexion</a>
+                    <h1>
+                        CONNEXION<br>
+                        <span>SÉCURISÉE</span>
+                    </h1>
+
+                    <p>
+                        Accédez à votre espace client, retrouvez votre panier et gérez vos commandes
+                        dans un environnement moderne, rapide et sécurisé.
+                    </p>
+
+                    <div class="auth-stats">
+                        <div class="auth-stat">
+                            <span>Navigation</span>
+                            <strong>Fluide</strong>
+                        </div>
+
+                        <div class="auth-stat">
+                            <span>Accès</span>
+                            <strong>Sécurisé</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-panel">
+                <div class="auth-box">
+                    <header class="auth-header">
+                        <h2>Se connecter</h2>
+                        <p>Entrez vos identifiants pour accéder à votre compte.</p>
+                    </header>
+
+                    {% if error %}
+                        <div class="auth-alert">
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <div class="auth-alert auth-alert-success">
+                            Vous êtes connecté en tant que {{ app.user.userIdentifier }}.
+                            <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                        </div>
+                    {% endif %}
+
+                    <form method="post" class="auth-form">
+                        <div class="form-group">
+                            <label for="username">Adresse email</label>
+                            <input
+                                type="email"
+                                value="{{ last_username }}"
+                                name="email"
+                                id="username"
+                                class="auth-input"
+                                autocomplete="email"
+                                required
+                                autofocus
+                                placeholder="exemple@innovshop.fr"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Mot de passe</label>
+                            <input
+                                type="password"
+                                name="password"
+                                id="password"
+                                class="auth-input"
+                                autocomplete="current-password"
+                                required
+                                placeholder="••••••••"
+                            >
+                        </div>
+
+                        <input
+                            type="hidden"
+                            name="_csrf_token"
+                            value="{{ csrf_token('authenticate') }}"
+                        >
+
+                        <div class="auth-options">
+                            <label class="auth-checkbox">
+                                <input type="checkbox" name="_remember_me">
+                                <span>Rester connecté</span>
+                            </label>
+                        </div>
+
+                        <button class="btn btn-primary auth-submit" type="submit">
+                            Se connecter
+                        </button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <p>
+                            Pas encore de compte ?
+                            <a href="{{ path('app_register') }}">Créer un compte</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
-    {% endif %}
-
-    <h1 class="h3 mb-3 font-weight-normal">Veuillez vous connecter</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Mot de passe</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-    <button class="btn-primary" type="submit">Connexion</button>
-</form>
+    </section>
 {% endblock %}

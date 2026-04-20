@@ -3,38 +3,64 @@
 {% block title %}Catalogue produits{% endblock %}
 
 {% block body %}
-
-    <section class="catalogue">
-        <h1>Catalogue produits</h1>
-        <div class="count">
-    {{ products.getTotalItemCount }} produits
-</div>
-        <div class="products-grid">
-            {% for product in products %}
-                <div class="product-card">
-                    {% if product.image %}
-                <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
-            {% else %}
-                <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut" class="product-image">
-            {% endif %}
-                    <h2>{{ product.nom }}</h2>
-                    <p><strong>Prix :</strong> {{ product.prix }} €</p>
-                    <p><strong>Description du produit :</strong><br>{{ product.description }}</p>
-
-                    {% if product.aLaUne %}
-                        <span class="badge-featured">À la une</span>
-                    {% endif %}
-
-                    <a href="{{ path('app_product_detail', {id: product.id}) }}" class="product-link">Voir le détail</a>
-                    <a href="{{ path('app_panier_add', {id: product.id}) }}" class="ajout_panier">Ajouter au panier</a>
+    <section class="catalogue-section">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <span class="section-tag">Catalogue InnovShop</span>
+                    <h1>Nos produits</h1>
                 </div>
-            {% else %}
-                <p>Aucun produit trouvé</p>
-            {% endfor %}
-        </div>
-        <div class="navigation">
-    {{ knp_pagination_render(products) }}
-</div>
-    </section>
 
+                <div class="count">
+                    {{ products.getTotalItemCount }} produits
+                </div>
+            </div>
+
+            <div class="products-grid">
+                {% for product in products %}
+                    <div class="product-card">
+                        <div class="product-image-wrapper">
+                            {% if product.image %}
+                                <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
+                            {% else %}
+                                <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut" class="product-image">
+                            {% endif %}
+
+                            {% if product.aLaUne %}
+                                <span class="badge-featured">À la une</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="product-content">
+                            <h3>{{ product.nom }}</h3>
+
+                            <p class="product-description">
+                                {{ product.description|length > 110 ? product.description|slice(0, 110) ~ '...' : product.description }}
+                            </p>
+
+                            <div class="product-footer">
+                                <span class="product-price">{{ product.prix }} €</span>
+                            </div>
+
+                            <div class="product-actions">
+                                <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-secondary">
+                                    Voir le détail
+                                </a>
+
+                                <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">
+                                    Ajouter au panier
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="empty-state">Aucun produit trouvé.</p>
+                {% endfor %}
+            </div>
+
+            <div class="navigation">
+                {{ knp_pagination_render(products) }}
+            </div>
+        </div>
+    </section>
 {% endblock %}

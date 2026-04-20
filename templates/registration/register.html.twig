@@ -1,19 +1,83 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Créer un compte | InnovShop{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <section class="auth-page">
+        <div class="auth-layout">
+            <div class="auth-branding">
+                <div class="auth-branding-inner">
+                    <div class="auth-logo">InnovShop</div>
 
-    {{ form_errors(registrationForm) }}
+                    <h1>
+                        CRÉER<br>
+                        <span>UN COMPTE</span>
+                    </h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                    <p>
+                        Rejoignez InnovShop pour enregistrer votre panier, suivre vos commandes
+                        et profiter d’une expérience plus fluide sur toute la boutique.
+                    </p>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                    <div class="auth-stats">
+                        <div class="auth-stat">
+                            <span>Compte</span>
+                            <strong>Personnel</strong>
+                        </div>
+
+                        <div class="auth-stat">
+                            <span>Expérience</span>
+                            <strong>Optimisée</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-panel">
+                <div class="auth-box">
+                    <header class="auth-header">
+                        <h2>Créer un compte</h2>
+                        <p>Renseignez vos informations pour rejoindre InnovShop.</p>
+                    </header>
+
+                    {{ form_start(registrationForm, {'attr': {'class': 'auth-form'}}) }}
+
+                        <div class="form-group">
+                            {{ form_label(registrationForm.email) }}
+                            {{ form_widget(registrationForm.email, {'attr': {'class': 'auth-input', 'placeholder': 'exemple@innovshop.fr'}}) }}
+                            {{ form_errors(registrationForm.email) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(registrationForm.plainPassword, 'Mot de passe') }}
+                            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'auth-input', 'placeholder': 'Choisissez un mot de passe'}}) }}
+                            {{ form_errors(registrationForm.plainPassword) }}
+                        </div>
+
+                        {% if registrationForm.agreeTerms is defined %}
+                            <div class="form-group auth-checkbox-group">
+                                <div class="auth-checkbox">
+                                    {{ form_widget(registrationForm.agreeTerms) }}
+                                    <span>J’accepte les conditions d’utilisation</span>
+                                </div>
+                                {{ form_errors(registrationForm.agreeTerms) }}
+                            </div>
+                        {% endif %}
+
+                        <button type="submit" class="btn btn-primary auth-submit">
+                            Créer mon compte
+                        </button>
+
+                    {{ form_end(registrationForm) }}
+
+                    <div class="auth-footer">
+                        <p>
+                            Vous avez déjà un compte ?
+                            <a href="{{ path('app_login') }}">Se connecter</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

@@ -3,33 +3,162 @@
 {% block title %}Validation de commande{% endblock %}
 
 {% block body %}
-    <h1>Validation de commande</h1>
+    <section class="checkout-page">
+        <div class="container">
+            <div class="checkout-header">
+                <a href="{{ path('app_panier') }}" class="checkout-back-link">← Retour au panier</a>
+                <h1>Validation de commande</h1>
+                <p>Vérifiez votre panier et renseignez vos informations de livraison avant de confirmer.</p>
+            </div>
 
-    <h2>Récapitulatif du panier</h2>
+            <div class="checkout-grid">
+                <div class="checkout-main">
+                    <section class="checkout-card">
+                        <div class="checkout-section-title">
+                            <span class="checkout-step">01</span>
+                            <h2>Récapitulatif du panier</h2>
+                        </div>
 
-    {% for cartItem in cartItems %}
-        <div class="product-card">
-            <h3>{{ cartItem.product.nom }}</h3>
-            <p><strong>Prix :</strong> {{ cartItem.product.prix }} €</p>
+                        <div class="checkout-products">
+                            {% for cartItem in cartItems %}
+                                <article class="checkout-product">
+                                    <div class="checkout-product-image">
+                                        {% if cartItem.product.image %}
+                                            <img src="{{ asset('images/products/' ~ cartItem.product.image) }}" alt="{{ cartItem.product.nom }}">
+                                        {% else %}
+                                            <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut">
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="checkout-product-content">
+                                        <div class="checkout-product-top">
+                                            <div>
+                                                <h3>{{ cartItem.product.nom }}</h3>
+                                                <p class="checkout-product-description">
+                                                    {{ cartItem.product.description|length > 120 ? cartItem.product.description|slice(0, 120) ~ '...' : cartItem.product.description }}
+                                                </p>
+                                            </div>
+
+                                            <div class="checkout-product-price">
+                                                {{ cartItem.product.prix }} €
+                                            </div>
+                                        </div>
+
+                                        <div class="checkout-product-bottom">
+                                            <span class="checkout-qty">Quantité : 1</span>
+
+                                            <div class="checkout-product-actions">
+                                                <a href="{{ path('app_product_detail', {id: cartItem.product.id}) }}" class="small-link">
+                                                    Voir le détail
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            {% else %}
+                                <p class="empty-state">Aucun article dans la commande.</p>
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section class="checkout-card">
+                        <div class="checkout-section-title">
+                            <span class="checkout-step">02</span>
+                            <h2>Informations de livraison</h2>
+                        </div>
+
+                        {{ form_start(orderForm, {'attr': {'class': 'checkout-form'}}) }}
+                            <div class="checkout-form-grid">
+                                <div class="form-group">
+                                    {{ form_label(orderForm.deliveryFirstName) }}
+                                    {{ form_widget(orderForm.deliveryFirstName, {'attr': {'class': 'auth-input', 'placeholder': 'Prénom'}}) }}
+                                    {{ form_errors(orderForm.deliveryFirstName) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(orderForm.deliveryLastName) }}
+                                    {{ form_widget(orderForm.deliveryLastName, {'attr': {'class': 'auth-input', 'placeholder': 'Nom'}}) }}
+                                    {{ form_errors(orderForm.deliveryLastName) }}
+                                </div>
+
+                                <div class="form-group full-width">
+                                    {{ form_label(orderForm.deliveryAddress) }}
+                                    {{ form_widget(orderForm.deliveryAddress, {'attr': {'class': 'auth-input', 'placeholder': 'Adresse complète'}}) }}
+                                    {{ form_errors(orderForm.deliveryAddress) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(orderForm.deliveryPostalCode) }}
+                                    {{ form_widget(orderForm.deliveryPostalCode, {'attr': {'class': 'auth-input', 'placeholder': 'Code postal'}}) }}
+                                    {{ form_errors(orderForm.deliveryPostalCode) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(orderForm.deliveryCity) }}
+                                    {{ form_widget(orderForm.deliveryCity, {'attr': {'class': 'auth-input', 'placeholder': 'Ville'}}) }}
+                                    {{ form_errors(orderForm.deliveryCity) }}
+                                </div>
+
+                                <div class="form-group full-width">
+                                    {{ form_label(orderForm.deliveryCountry) }}
+                                    {{ form_widget(orderForm.deliveryCountry, {'attr': {'class': 'auth-input', 'placeholder': 'Pays'}}) }}
+                                    {{ form_errors(orderForm.deliveryCountry) }}
+                                </div>
+                            </div>
+
+                            <div class="checkout-form-actions">
+                                <button type="submit" class="btn btn-primary checkout-submit">
+                                    Confirmer la commande
+                                </button>
+                            </div>
+                        {{ form_end(orderForm) }}
+                    </section>
+                </div>
+
+                <aside class="checkout-sidebar">
+                    <div class="checkout-summary-card">
+                        <h2>Résumé de commande</h2>
+
+                        <div class="summary-lines">
+                            <div class="summary-line">
+                                <span>Articles</span>
+                                <strong>{{ cartItems|length }}</strong>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Sous-total</span>
+                                <strong>{{ total }} €</strong>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Livraison</span>
+                                <strong class="summary-free">Offerte</strong>
+                            </div>
+                        </div>
+
+                        <div class="summary-total">
+                            <span>Total</span>
+                            <strong>{{ total }} €</strong>
+                        </div>
+
+                        <p class="checkout-security-note">
+                            Vérifiez bien vos informations avant de confirmer votre commande.
+                        </p>
+                    </div>
+
+                    <div class="checkout-side-infos">
+                        <div class="checkout-info-box">
+                            <h3>Livraison rapide</h3>
+                            <p>Votre commande sera traitée après validation et confirmation.</p>
+                        </div>
+
+                        <div class="checkout-info-box">
+                            <h3>Commande sécurisée</h3>
+                            <p>Vos informations sont traitées dans un environnement protégé.</p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
         </div>
-    {% endfor %}
-
-        <div class="cart-total">
-            <h2>Total de la commande</h2>
-            <p><strong>{{ total }} €</strong></p>
-            <p>{{ cartItems|length }} article(s)</p>
-        </div>
-
-    <h2>Informations de livraison</h2>
-
-    {{ form_start(orderForm) }}
-        {{ form_row(orderForm.deliveryFirstName) }}
-        {{ form_row(orderForm.deliveryLastName) }}
-        {{ form_row(orderForm.deliveryAddress) }}
-        {{ form_row(orderForm.deliveryPostalCode) }}
-        {{ form_row(orderForm.deliveryCity) }}
-        {{ form_row(orderForm.deliveryCountry) }}
-
-        <button type="submit">Confirmer la commande</button>
-    {{ form_end(orderForm) }}
+    </section>
 {% endblock %}

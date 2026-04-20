@@ -9,6 +9,9 @@ use App\Repository\ProductRepository;
 
 final class HomeController extends AbstractController
 {
+    
+    // Cette méthode sert à afficher la page d'accueil avec les produits à la une et les derniers produits ajoutés.
+    // Liée à ProductRepository et au template home/index.html.twig
     #[Route('/', name: 'app_home')]
     public function index(ProductRepository $productRepository): Response
     {
