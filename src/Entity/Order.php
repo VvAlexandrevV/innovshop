@@ -210,4 +210,15 @@ class Order
 
         return $this;
     }
+
+    //Label pour les status
+    public function getStatusLabel(): string
+    {
+        return match($this->status) {
+            'pending_payment' => 'En attente de paiement',
+            'paid' => 'Payée',
+            'shipped' => 'Expédiée',
+            default => 'Inconnu'
+        };
+    }
 }

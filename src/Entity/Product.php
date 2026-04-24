@@ -39,9 +39,13 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    #[ORM\Column]
+    private ?bool $isActive = true;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->isActive = true;
     }
 
     public function getId(): ?int
@@ -141,6 +145,18 @@ class Product
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

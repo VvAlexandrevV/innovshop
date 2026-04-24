@@ -53,7 +53,7 @@
                     </li>
 
                     {% if app.user %}
-                        <li><a href="#">{{ app.user.email }}</a></li>
+                        <li><a href="{{ path('app_account') }}" class="nav-user">{{ app.user.email }}</a></li>
                         <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
                     {% else %}
                         <li><a href="{{ path('app_login') }}">Connexion</a></li>
@@ -64,8 +64,17 @@
         </header>
 
         <main>
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
             {% block body %}{% endblock %}
         </main>
+
 
         <footer class="site-footer">
             <div class="footer">

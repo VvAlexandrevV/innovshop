@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes commandes{% endblock %}
+
+{% block body %}
+    <section class="account-page">
+        <div class="container">
+            <div class="account-header">
+                <span class="account-badge">Espace client</span>
+                <h1>Mes commandes</h1>
+                <p>
+                    Consultez l’historique de vos commandes passées sur InnovShop.
+                </p>
+            </div>
+
+            <div class="account-card">
+                {% if orders is not empty %}
+                    <div class="orders-table-wrapper">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Commande</th>
+                                    <th>Date</th>
+                                    <th>Statut</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                    <tr>
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                                        <td>{{ order.statusLabel }}</td>
+                                        <td>{{ order.total }} €</td>
+                                        <td>
+                                            <a href="{{ path('app_account_order_show', {id: order.id}) }}">
+                                                Voir
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                <div class="account-actions">
+                                    <a href="{{ path('app_account') }}" class="btn btn-secondary">Retour à mon compte</a>
+                                </div>
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="empty-state">Vous n’avez encore passé aucune commande.</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

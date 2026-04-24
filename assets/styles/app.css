@@ -43,6 +43,17 @@ main {
     border-bottom: 1px solid rgba(92, 225, 230, 0.1);
 }
 
+.nav-user {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.nav-user:hover {
+    color: #0ea5e9;
+}
+
 .navbar {
     width: min(1200px, calc(100% - 2rem));
     margin: 0 auto;
@@ -1727,5 +1738,228 @@ main {
 @media (max-width: 768px) {
     .order-meta-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* =========================
+   ACCOUNT PAGE
+========================= */
+
+.account-page {
+    padding: 4rem 0 5rem;
+    background:
+        radial-gradient(circle at top left, rgba(0, 200, 255, 0.08), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(0, 140, 255, 0.08), transparent 35%);
+}
+
+.account-header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 3rem;
+}
+
+.account-badge {
+    display: inline-block;
+    padding: 0.45rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0, 170, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(0, 170, 255, 0.08);
+    color: #38bdf8;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.account-header h1 {
+    margin-bottom: 1rem;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1;
+    color: #ffffff;
+}
+
+.account-header p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.account-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.account-card {
+    position: relative;
+    padding: 1.75rem;
+    border-radius: 24px;
+    background: rgba(15, 23, 42, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.account-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(56, 189, 248, 0.35);
+    box-shadow:
+        0 25px 45px rgba(0, 0, 0, 0.28),
+        0 0 0 1px rgba(56, 189, 248, 0.08);
+}
+
+.account-card h2 {
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+    color: #ffffff;
+}
+
+.account-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.account-info-list p {
+    margin: 0;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.6;
+}
+
+.account-info-list p:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.account-info-list strong {
+    color: #ffffff;
+}
+
+.account-card-summary {
+    overflow: hidden;
+}
+
+.account-stats {
+    display: grid;
+    gap: 1rem;
+}
+
+.account-stat {
+    padding: 1.2rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(59, 130, 246, 0.08));
+    border: 1px solid rgba(56, 189, 248, 0.18);
+}
+
+.account-stat-value {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.account-stat-label {
+    display: block;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.95rem;
+}
+
+.account-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+/*account/orders.html.twig*/
+
+.orders-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.orders-table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+}
+
+.orders-table thead th {
+    padding: 1rem;
+    text-align: left;
+    color: #ffffff;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.orders-table tbody td {
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.82);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.orders-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.empty-state {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+/*show order*/
+.account-grid-order-detail {
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .account-grid-order-detail {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Responsive */
+
+@media (max-width: 992px) {
+    .account-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .account-card-summary {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .account-page {
+        padding: 3rem 0 4rem;
+    }
+
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .account-header {
+        margin-bottom: 2rem;
+    }
+
+    .account-card {
+        padding: 1.4rem;
+        border-radius: 20px;
+    }
+
+    .account-stat-value {
+        font-size: 1.5rem;
     }
 }

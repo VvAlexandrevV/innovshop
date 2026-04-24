@@ -67,7 +67,17 @@
                             <h2>Informations de livraison</h2>
                         </div>
 
-                        {{ form_start(orderForm, {'attr': {'class': 'checkout-form'}}) }}
+                            {{ form_start(orderForm, {
+                                'action': path('app_checkout'),
+                                'method': 'POST',
+                                'attr': {
+                                    'class': 'checkout-form',
+                                    'data-turbo': 'false'
+                                }
+                            }) }}
+                            
+                            {{ form_errors(orderForm) }}
+
                             <div class="checkout-form-grid">
                                 <div class="form-group">
                                     {{ form_label(orderForm.deliveryFirstName) }}
@@ -106,9 +116,9 @@
                                 </div>
                             </div>
 
-                            <div class="checkout-form-actions">
-                                <button type="submit" class="btn btn-primary checkout-submit">
-                                    Confirmer la commande
+                            <div class="account-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    Continuer vers le paiement
                                 </button>
                             </div>
                         {{ form_end(orderForm) }}

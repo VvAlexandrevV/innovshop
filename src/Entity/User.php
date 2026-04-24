@@ -44,6 +44,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Cart $cart = null;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $lastname = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $address = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $postalCode = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $city = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $country = null;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -143,6 +164,111 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeOrder(Order $order): static
     {
         $this->orders->removeElement($order);
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getEmail() ?? '';
+    }
+
+    public function getOrdersCount(): int
+    {
+        return $this->getOrders()->count();
+    }
+
+    public function getTotalSpent(): float
+    {
+        $total = 0;
+
+        foreach ($this->getOrders() as $order) {
+            $total += $order->getTotal() ?? 0;
+        }
+
+        return $total;
+}
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(?string $firstname): static
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(?string $lastname): static
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): static
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): static
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): static
+    {
+        $this->country = $country;
 
         return $this;
     }

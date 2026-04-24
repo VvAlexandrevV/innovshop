@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block body %}
+    <section class="account-page">
+        <div class="container">
+            <div class="account-header">
+                <span class="account-badge">Espace client</span>
+                <h1>Modifier mon profil</h1>
+                <p>Mettez à jour vos informations personnelles et votre adresse de livraison.</p>
+            </div>
+
+            {% for message in app.flashes('success') %}
+                <div class="flash-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <div class="account-card account-form-card">
+                {{ form_start(profileForm) }}
+
+                    <div class="profile-form-grid">
+                        <div class="form-group">
+                            {{ form_label(profileForm.firstname) }}
+                            {{ form_widget(profileForm.firstname) }}
+                            {{ form_errors(profileForm.firstname) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(profileForm.lastname) }}
+                            {{ form_widget(profileForm.lastname) }}
+                            {{ form_errors(profileForm.lastname) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(profileForm.phone) }}
+                            {{ form_widget(profileForm.phone) }}
+                            {{ form_errors(profileForm.phone) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(profileForm.email) }}
+                            {{ form_widget(profileForm.email) }}
+                            {{ form_errors(profileForm.email) }}
+                        </div>
+
+                        <div class="form-group form-group-full">
+                            {{ form_label(profileForm.address) }}
+                            {{ form_widget(profileForm.address) }}
+                            {{ form_errors(profileForm.address) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(profileForm.postalCode) }}
+                            {{ form_widget(profileForm.postalCode) }}
+                            {{ form_errors(profileForm.postalCode) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(profileForm.city) }}
+                            {{ form_widget(profileForm.city) }}
+                            {{ form_errors(profileForm.city) }}
+                        </div>
+
+
+                        <div class="form-group form-group-full">
+                            {{ form_label(profileForm.country) }}
+                            {{ form_widget(profileForm.country) }}
+                            {{ form_errors(profileForm.country) }}
+                        </div>
+                    </div>
+
+                    <div class="account-actions">
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        <a href="{{ path('app_account') }}" class="btn btn-secondary">Retour à mon compte</a>
+                    </div>
+
+                {{ form_end(profileForm) }}
+            </div>
+        </div>
+    </section>
+{% endblock %}

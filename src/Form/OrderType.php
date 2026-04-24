@@ -14,8 +14,8 @@ class OrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('deliveryFirstName', null, ['label' => 'Nom'])
-            ->add('deliveryLastName', null, ['label' => 'prénom'])
+            ->add('deliveryLastName', null, ['label' => 'Nom'])
+            ->add('deliveryFirstName', null, ['label' => 'Prénom'])
             ->add('deliveryAddress', null, ['label' => 'Adresse'])
             ->add('deliveryPostalCode', null, ['label' => 'Code postal'])
             ->add('deliveryCity', null, ['label' => 'Ville'])

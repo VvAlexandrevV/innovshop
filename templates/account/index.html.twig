@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+    <section class="account-page">
+        <div class="container">
+            <div class="account-header">
+                <span class="account-badge">Espace client</span>
+                <h1>Mon compte</h1>
+                <p>
+                    Retrouvez ici vos informations personnelles, votre adresse de livraison
+                    et un résumé rapide de votre activité sur InnovShop.
+                </p>
+            </div>
+
+            <div class="account-grid">
+                <div class="account-card">
+                    <h2>Informations personnelles</h2>
+
+                    <div class="account-info-list">
+                        <p><strong>Prénom :</strong> {{ user.firstname ?? 'Non renseigné' }}</p>
+                        <p><strong>Nom :</strong> {{ user.lastname ?? 'Non renseigné' }}</p>
+                        <p><strong>Email :</strong> {{ user.email }}</p>
+                        <p><strong>Téléphone :</strong> {{ user.phone ?? 'Non renseigné' }}</p>
+                    </div>
+                </div>
+
+                <div class="account-card">
+                    <h2>Adresse de livraison</h2>
+
+                    <div class="account-info-list">
+                        <p><strong>Adresse :</strong> {{ user.address ?? 'Non renseignée' }}</p>
+                        <p><strong>Code postal :</strong> {{ user.postalCode ?? 'Non renseigné' }}</p>
+                        <p><strong>Ville :</strong> {{ user.city ?? 'Non renseignée' }}</p>
+                        <p><strong>Pays :</strong> {{ user.country ?? 'Non renseigné' }}</p>
+                    </div>
+                </div>
+
+                <div class="account-card account-card-summary">
+                    <h2>Résumé</h2>
+
+                    <div class="account-stats">
+                        <div class="account-stat">
+                            <span class="account-stat-value">{{ ordersCount }}</span>
+                            <span class="account-stat-label">Commande{{ ordersCount > 1 ? 's' : '' }}</span>
+                        </div>
+
+                        <div class="account-stat">
+                            <span class="account-stat-value">{{ totalSpent }} €</span>
+                            <span class="account-stat-label">Total dépensé</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-actions">
+                <a href="{{ path('app_account_profile') }}" class="btn btn-primary">Modifier mon profil</a>
+                <a href="{{ path('app_account_orders') }}" class="btn btn-secondary">Voir mes commandes</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

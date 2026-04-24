@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail commande{% endblock %}
+
+{% block body %}
+    <section class="account-page">
+        <div class="container">
+            <div class="account-header">
+                <span class="account-badge">Espace client</span>
+                <h1>Commande #{{ order.id }}</h1>
+                <p>
+                    Consultez le détail de votre commande et les produits associés.
+                </p>
+            </div>
+
+            <div class="account-grid account-grid-order-detail">
+                <div class="account-card">
+                    <h2>Informations de la commande</h2>
+
+                    <div class="account-info-list">
+                        <p><strong>Numéro :</strong> #{{ order.id }}</p>
+                        <p><strong>Date :</strong> {{ order.createdAt|date('d/m/Y à H:i') }}</p>
+                        <p><strong>Statut :</strong> {{ order.statusLabel }}</p>
+                        <p><strong>Total :</strong> {{ order.total }} €</p>
+                    </div>
+                </div>
+
+                <div class="account-card">
+                    <h2>Adresse de livraison</h2>
+
+                    <div class="account-info-list">
+                        <p><strong>Prénom :</strong> {{ order.deliveryFirstName }}</p>
+                        <p><strong>Nom :</strong> {{ order.deliveryLastName }}</p>
+                        <p><strong>Adresse :</strong> {{ order.deliveryAddress }}</p>
+                        <p><strong>Code postal :</strong> {{ order.deliveryPostalCode }}</p>
+                        <p><strong>Ville :</strong> {{ order.deliveryCity }}</p>
+                        <p><strong>Pays :</strong> {{ order.deliveryCountry }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-card">
+                <h2>Produits commandés</h2>
+
+                {% if orderItems is not empty %}
+                    <div class="orders-table-wrapper">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Prix</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in orderItems %}
+                                    <tr>
+                                        <td>{{ item.productName }}</td>
+                                        <td>{{ item.productPrice }} €</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="empty-state">Aucun produit trouvé pour cette commande.</p>
+                {% endif %}
+            </div>
+
+            <div class="account-actions">
+                <a href="{{ path('app_account_orders') }}" class="btn btn-secondary">Retour aux commandes</a>
+                <a href="{{ path('app_account') }}" class="btn btn-primary">Retour à mon compte</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
