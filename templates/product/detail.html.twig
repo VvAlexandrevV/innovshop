@@ -27,7 +27,9 @@
                 <div class="detail-highlight-boxes">
                     <div class="detail-highlight">
                         <span class="detail-highlight-label">Prix</span>
-                        <strong>{{ product.prix }} €</strong>
+                        <strong id="product-dynamic-price" data-base-price="{{ product.prix }}">
+                            {{ product.prix }} €
+                        </strong>
                     </div>
 
                     <div class="detail-highlight">
@@ -36,15 +38,47 @@
                     </div>
                 </div>
 
-                <div class="detail-actions">
-                    <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">
-                        Ajouter au panier
-                    </a>
+                <form method="post" action="{{ path('app_panier_add', {id: product.id}) }}" data-turbo="false">
+                    {% if product.variants|length > 0 %}
+                        <div class="product-variants-box">
+                            <h2>Choisissez une option</h2>
 
-                    <a href="{{ path('app_product') }}" class="btn btn-secondary">
-                        Retour au catalogue
-                    </a>
-                </div>
+                            <div class="product-variants-list">
+                                {% for variant in product.variants %}
+                                    <label class="product-variant-card selectable-variant">
+                                        <input
+                                            type="checkbox"
+                                            name="variantIds[]"
+                                            value="{{ variant.id }}"
+                                            data-price-modifier="{{ variant.priceModifier ?: 0 }}"
+                                        >
+
+                                        <span class="variant-content">
+                                            <strong>{{ variant.type }} :</strong>
+                                            <span class="variant-pill">{{ variant.value }}</span>
+
+                                            {% if variant.priceModifier %}
+                                                <small class="variant-price-modifier">
+                                                    +{{ variant.priceModifier }} €
+                                                </small>
+                                            {% endif %}
+                                        </span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="detail-actions">
+                        <button type="submit" class="btn btn-primary">
+                            Ajouter au panier
+                        </button>
+
+                        <a href="{{ path('app_product') }}" class="btn btn-secondary">
+                            Retour au catalogue
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
@@ -54,9 +88,7 @@
             <div class="detail-description-card">
                 <span class="section-tag">Description</span>
                 <h2>À propos du produit</h2>
-                <p>
-                    {{ product.description }}
-                </p>
+                <p>{{ product.description }}</p>
             </div>
 
             <div class="detail-specs-card">
@@ -103,4 +135,27 @@
             </p>
         </div>
     </section>
+
+    <script>
+        const priceElement = document.querySelector('#product-dynamic-price');
+        const variantInputs = document.querySelectorAll('input[name="variantIds[]"]');
+
+        if (priceElement && variantInputs.length > 0) {
+            const basePrice = parseFloat(priceElement.dataset.basePrice);
+
+            variantInputs.forEach((input) => {
+                input.addEventListener('change', () => {
+                    let finalPrice = basePrice;
+
+                    variantInputs.forEach((variantInput) => {
+                        if (variantInput.checked) {
+                            finalPrice += parseFloat(variantInput.dataset.priceModifier || 0);
+                        }
+                    });
+
+                    priceElement.textContent = finalPrice.toFixed(2).replace('.', ',') + ' €';
+                });
+            });
+        }
+    </script>
 {% endblock %}

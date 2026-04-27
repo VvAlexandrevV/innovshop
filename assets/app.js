@@ -1,10 +1,26 @@
 import './stimulus_bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
 import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+function initBurgerMenu() {
+    const burgerButton = document.querySelector('.burger-btn');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (!burgerButton || !navLinks) {
+        return;
+    }
+
+    burgerButton.addEventListener('click', () => {
+        burgerButton.classList.toggle('is-active');
+        navLinks.classList.toggle('is-open');
+    });
+
+    navLinks.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+            burgerButton.classList.remove('is-active');
+            navLinks.classList.remove('is-open');
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initBurgerMenu);
+document.addEventListener('turbo:load', initBurgerMenu);

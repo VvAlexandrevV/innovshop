@@ -35,6 +35,12 @@
                     <a href="{{ path('app_home') }}">InnovShop</a>
                 </div>
 
+                <button class="burger-btn" type="button" aria-label="Ouvrir le menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
                 <ul class="nav-links">
                     <li><a href="{{ path('app_home') }}">Accueil</a></li>
                     <li><a href="{{ path('app_product') }}">Catalogue</a></li>
@@ -66,8 +72,18 @@
         <main>
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
-                    <div class="flash-{{ label }}">
-                        {{ message }}
+                    <div class="flash-message flash-{{ label }}">
+                        <span class="flash-icon">
+                            {% if label == 'success' %}
+                                ✓
+                            {% elseif label == 'error' or label == 'danger' %}
+                                !
+                            {% else %}
+                                i
+                            {% endif %}
+                        </span>
+
+                        <span>{{ message }}</span>
                     </div>
                 {% endfor %}
             {% endfor %}

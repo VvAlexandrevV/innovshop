@@ -37,10 +37,22 @@
                                                 <p class="checkout-product-description">
                                                     {{ cartItem.product.description|length > 120 ? cartItem.product.description|slice(0, 120) ~ '...' : cartItem.product.description }}
                                                 </p>
+                                                {% if cartItem.variants is not empty %}
+                                                    <div class="checkout-product-variant">
+                                                        {% for variant in cartItem.variants %}
+                                                            <p>
+                                                                {{ variant.type }} : {{ variant.value }}
+                                                                {% if variant.priceModifier %}
+                                                                    <span>(+{{ variant.priceModifier }} €)</span>
+                                                                {% endif %}
+                                                            </p>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
                                             </div>
 
                                             <div class="checkout-product-price">
-                                                {{ cartItem.product.prix }} €
+                                                {{ cartItem.price }} €
                                             </div>
                                         </div>
 

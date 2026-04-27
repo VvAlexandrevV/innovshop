@@ -14,16 +14,41 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CheckoutController extends AbstractController
 {
     #[Route('/checkout', name: 'app_checkout')]
-    public function index(Request $request): Response
-    {
+    public function index(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
-
         $cart = $user->getCart();
 
         if (!$cart || $cart->getCartItems()->isEmpty()) {
+            $this->addFlash('error', 'Votre panier est vide.');
+            return $this->redirectToRoute('app_panier');
+        }
+
+        $hasRemovedUnavailableProduct = false;
+
+        foreach ($cart->getCartItems() as $cartItem) {
+            $product = $cartItem->getProduct();
+
+            if (!$product || !$product->isActive()) {
+                $entityManager->remove($cartItem);
+                $hasRemovedUnavailableProduct = true;
+            }
+        }
+
+        if ($hasRemovedUnavailableProduct) {
+            $entityManager->flush();
+
+            $this->addFlash('warning', 'Un produit de votre panier n’est plus disponible et a été retiré.');
+
+            return $this->redirectToRoute('app_panier');
+        }
+
+        if ($cart->getCartItems()->isEmpty()) {
             $this->addFlash('error', 'Votre panier est vide.');
             return $this->redirectToRoute('app_panier');
         }
@@ -54,14 +79,31 @@ final class CheckoutController extends AbstractController
         }
 
         $total = 0;
+        $checkoutItems = [];
 
         foreach ($cart->getCartItems() as $cartItem) {
-            $total += $cartItem->getProduct()->getPrix();
+            $product = $cartItem->getProduct();
+            $price = $product->getPrix();
+
+            foreach ($cartItem->getVariants() as $variant) {
+                if ($variant->getPriceModifier()) {
+                    $price += (float) $variant->getPriceModifier();
+                }
+            }
+
+            $checkoutItems[] = [
+                'cartItem' => $cartItem,
+                'product' => $product,
+                'variants' => $cartItem->getVariants(),
+                'price' => $price,
+            ];
+
+            $total += $price;
         }
 
         return $this->render('checkout/index.html.twig', [
             'orderForm' => $form->createView(),
-            'cartItems' => $cart->getCartItems(),
+            'cartItems' => $checkoutItems,
             'total' => $total,
         ]);
     }

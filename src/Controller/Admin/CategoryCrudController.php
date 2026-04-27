@@ -22,6 +22,6 @@ class CategoryCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        return $actions->disable(Action::DELETE);
+        return $actions;//->disable(Action::DELETE);
     }
 }

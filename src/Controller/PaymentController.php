@@ -24,7 +24,6 @@ final class PaymentController extends AbstractController
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
-
         $cart = $user->getCart();
 
         if (!$cart || $cart->getCartItems()->isEmpty()) {
@@ -47,13 +46,28 @@ final class PaymentController extends AbstractController
             return $this->redirectToRoute('app_checkout');
         }
 
+        $hasRemovedUnavailableProduct = false;
+
         foreach ($cart->getCartItems() as $cartItem) {
             $product = $cartItem->getProduct();
 
-            if (!$product->isActive()) {
-                $this->addFlash('error', 'Le produit "' . $product->getNom() . '" n’est plus disponible.');
-                return $this->redirectToRoute('app_checkout');
+            if (!$product || !$product->isActive()) {
+                $entityManager->remove($cartItem);
+                $hasRemovedUnavailableProduct = true;
             }
+        }
+
+        if ($hasRemovedUnavailableProduct) {
+            $entityManager->flush();
+
+            $this->addFlash('warning', 'Un produit de votre panier n’est plus disponible et a été retiré.');
+
+            return $this->redirectToRoute('app_panier');
+        }
+
+        if ($cart->getCartItems()->isEmpty()) {
+            $this->addFlash('error', 'Votre panier est vide.');
+            return $this->redirectToRoute('app_panier');
         }
 
         $order = new Order();
@@ -73,13 +87,32 @@ final class PaymentController extends AbstractController
 
         foreach ($cart->getCartItems() as $cartItem) {
             $product = $cartItem->getProduct();
+            $variants = $cartItem->getVariants();
+
             $price = $product->getPrix();
+            $variantLabels = [];
+
+            foreach ($variants as $variant) {
+                $label = $variant->getType() . ' - ' . $variant->getValue();
+
+                if ($variant->getPriceModifier()) {
+                    $price += (float) $variant->getPriceModifier();
+                    $label .= ' (+' . $variant->getPriceModifier() . ' €)';
+                }
+
+                $variantLabels[] = $label;
+            }
+
+            $variantLabel = !empty($variantLabels)
+                ? implode(', ', $variantLabels)
+                : null;
 
             $orderItem = new OrderItem();
             $orderItem->setOrderEntity($order);
             $orderItem->setProduct($product);
             $orderItem->setProductName($product->getNom());
             $orderItem->setProductPrice((string) $price);
+            $orderItem->setVariantLabel($variantLabel);
 
             $total += $price;
 
@@ -87,7 +120,9 @@ final class PaymentController extends AbstractController
                 'price_data' => [
                     'currency' => 'eur',
                     'product_data' => [
-                        'name' => $product->getNom(),
+                        'name' => $variantLabel
+                            ? $product->getNom() . ' - ' . $variantLabel
+                            : $product->getNom(),
                     ],
                     'unit_amount' => (int) round($price * 100),
                 ],

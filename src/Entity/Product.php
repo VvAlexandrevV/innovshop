@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -36,16 +38,28 @@ class Product
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Category $category = null;
 
     #[ORM\Column]
     private ?bool $isActive = true;
 
+    /**
+     * @var Collection<int, Variant>
+     */
+    #[ORM\ManyToMany(targetEntity: Variant::class, mappedBy: 'products')]
+    private Collection $variants;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->isActive = true;
+        $this->variants = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->nom ?? '';
     }
 
     public function getId(): ?int
@@ -157,6 +171,30 @@ class Product
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+    
+    /**
+     * @return Collection<int, Variant>
+     */
+    public function getVariants(): Collection
+    {
+        return $this->variants;
+    }
+
+    public function addVariant(Variant $variant): static
+    {
+        if (!$this->variants->contains($variant)) {
+            $this->variants->add($variant);
+        }
+
+        return $this;
+    }
+
+    public function removeVariant(Variant $variant): static
+    {
+        $this->variants->removeElement($variant);
 
         return $this;
     }

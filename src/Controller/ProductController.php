@@ -2,43 +2,48 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 final class ProductController extends AbstractController
-{   
-    // Cette méthode sert à afficher la liste des produits avec pagination.
-    // Liée à ProductRepository, KnpPaginator et au template product/index.html.twig.
+{
     #[Route('/product', name: 'app_product')]
-    public function index(ProductRepository $productRepository, PaginatorInterface $paginator, Request $request): Response
-    {
+    public function index(
+        Request $request,
+        ProductRepository $productRepository,
+        CategoryRepository $categoryRepository,
+        PaginatorInterface $paginator
+    ): Response {
+        $search = $request->query->get('q');
+        $categoryId = $request->query->getInt('category');
 
-        $products_query = $productRepository->findAll();
+        $queryBuilder = $productRepository->findBySearchAndCategory($search, $categoryId);
 
         $products = $paginator->paginate(
-        $products_query, /* query NOT result */
-        $request->query->getInt('page', 1), /* page number */
-        10 /* limit per page */
-    );
-
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            10
+        );
 
         return $this->render('product/index.html.twig', [
             'products' => $products,
+            'categories' => $categoryRepository->findAll(),
+            'search' => $search,
+            'selectedCategory' => $categoryId,
         ]);
     }
 
-    // Cette méthode sert à afficher le détail d’un produit précis.
-    // Liée à ProductRepository et au template product/detail.html.twig.
-   #[Route('/product/{id}', name: 'app_product_detail')]
+    #[Route('/product/{id}', name: 'app_product_detail')]
     public function detailProduct(int $id, ProductRepository $productRepository): Response
     {
         $product = $productRepository->find($id);
 
-        if (!$product) {
+        if (!$product || !$product->isActive()) {
             throw $this->createNotFoundException('Produit introuvable');
         }
 
@@ -46,5 +51,4 @@ final class ProductController extends AbstractController
             'product' => $product,
         ]);
     }
-
 }

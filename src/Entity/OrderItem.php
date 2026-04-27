@@ -28,6 +28,9 @@ class OrderItem
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $productPrice = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $variantLabel = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -77,6 +80,18 @@ class OrderItem
     public function setProductPrice(string $productPrice): static
     {
         $this->productPrice = $productPrice;
+
+        return $this;
+    }
+
+    public function getVariantLabel(): ?string
+    {
+        return $this->variantLabel;
+    }
+
+    public function setVariantLabel(?string $variantLabel): static
+    {
+        $this->variantLabel = $variantLabel;
 
         return $this;
     }

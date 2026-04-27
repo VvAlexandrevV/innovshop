@@ -3,6 +3,16 @@
 {% block title %}Commande confirmée{% endblock %}
 
 {% block body %}
+
+    {% set statusLabels = {
+        'pending': 'En attente',
+        'paid': 'Payée',
+        'failed': 'Échouée',
+        'cancelled': 'Annulée',
+        'shipped': 'Expédiée',
+        'delivered': 'Livrée'
+    } %}
+
     <section class="order-confirmation-page">
         <div class="container">
             <div class="order-confirmation-hero">
@@ -16,6 +26,7 @@
 
             <div class="order-confirmation-grid">
                 <div class="order-confirmation-main">
+                    
                     <section class="checkout-card">
                         <div class="checkout-section-title">
                             <span class="checkout-step">01</span>
@@ -35,7 +46,7 @@
 
                             <div class="order-meta-box">
                                 <span class="order-meta-label">Statut</span>
-                                <strong>{{ order.status }}</strong>
+                                <strong>{{ statusLabels[order.status] ?? order.status }}</strong>
                             </div>
 
                             <div class="order-meta-box">
@@ -88,6 +99,7 @@
                             {% endfor %}
                         </div>
                     </section>
+
                 </div>
 
                 <aside class="checkout-sidebar">
@@ -107,7 +119,9 @@
 
                             <div class="summary-line">
                                 <span>Statut</span>
-                                <strong class="summary-free">{{ order.status }}</strong>
+                                <strong class="summary-free">
+                                    {{ statusLabels[order.status] ?? order.status }}
+                                </strong>
                             </div>
                         </div>
 
@@ -139,7 +153,9 @@
                         </div>
                     </div>
                 </aside>
+
             </div>
         </div>
     </section>
+
 {% endblock %}

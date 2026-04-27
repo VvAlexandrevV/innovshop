@@ -16,6 +16,44 @@
                 </div>
             </div>
 
+            <section class="catalog-filters">
+                <form method="get" action="{{ path('app_product') }}" class="catalog-search-form">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        value="{{ search }}" 
+                        placeholder="Rechercher un produit..." 
+                        class="catalog-search-input"
+                    >
+
+                    {% if selectedCategory %}
+                        <input type="hidden" name="category" value="{{ selectedCategory }}">
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-primary">
+                        Rechercher
+                    </button>
+                </form>
+
+                <div class="category-tabs">
+                    <a 
+                        href="{{ path('app_product', {q: search}) }}" 
+                        class="category-tab {{ selectedCategory == 0 ? 'active' : '' }}"
+                    >
+                        Tous
+                    </a>
+
+                    {% for category in categories %}
+                        <a 
+                            href="{{ path('app_product', {category: category.id, q: search}) }}" 
+                            class="category-tab {{ selectedCategory == category.id ? 'active' : '' }}"
+                        >
+                            {{ category.nom }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </section>
+
             <div class="products-grid">
                 {% for product in products %}
                     <div class="product-card">
