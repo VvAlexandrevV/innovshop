@@ -21,15 +21,30 @@
                                 <tr>
                                     <th>Commande</th>
                                     <th>Date</th>
+                                    <th>Produits</th>
                                     <th>Statut</th>
                                     <th>Total</th>
+                                    <th>Action</th>
                                 </tr>
+                            </thead>
                             </thead>
                             <tbody>
                                 {% for order in orders %}
                                     <tr>
                                         <td>#{{ order.id }}</td>
                                         <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+
+                                        <td>
+                                            {% for item in order.orderItems %}
+                                                <div>
+                                                    {{ item.productName }}
+                                                    {% if item.variantLabel %}
+                                                        <small>({{ item.variantLabel }})</small>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </td>
+
                                         <td>{{ order.statusLabel }}</td>
                                         <td>{{ order.total }} €</td>
                                         <td>

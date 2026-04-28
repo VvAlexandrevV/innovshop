@@ -44,16 +44,20 @@ class Product
     #[ORM\Column]
     private ?bool $isActive = true;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private ?int $stock = 0;
+
     /**
      * @var Collection<int, Variant>
      */
-    #[ORM\ManyToMany(targetEntity: Variant::class, mappedBy: 'products')]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Variant::class, orphanRemoval: true)]
     private Collection $variants;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->isActive = true;
+        $this->stock = 0;
         $this->variants = new ArrayCollection();
     }
 
@@ -75,7 +79,6 @@ class Product
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -87,7 +90,6 @@ class Product
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -99,7 +101,6 @@ class Product
     public function setSpecification(string $specification): static
     {
         $this->specification = $specification;
-
         return $this;
     }
 
@@ -111,7 +112,6 @@ class Product
     public function setPrix(float $prix): static
     {
         $this->prix = $prix;
-
         return $this;
     }
 
@@ -123,7 +123,6 @@ class Product
     public function setImage(?string $image): static
     {
         $this->image = $image;
-
         return $this;
     }
 
@@ -135,7 +134,6 @@ class Product
     public function setALaUne(bool $aLaUne): static
     {
         $this->aLaUne = $aLaUne;
-
         return $this;
     }
 
@@ -147,7 +145,6 @@ class Product
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -159,7 +156,6 @@ class Product
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
-
         return $this;
     }
 
@@ -171,10 +167,47 @@ class Product
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
-
         return $this;
     }
-    
+
+    public function getStock(): ?int
+    {
+        return $this->stock;
+    }
+
+    public function setStock(int $stock): static
+    {
+        $this->stock = max(0, $stock);
+        return $this;
+    }
+
+    public function decreaseStock(int $quantity = 1): static
+    {
+        $this->stock = max(0, $this->stock - $quantity);
+        return $this;
+    }
+
+    public function hasAvailableVariant(): bool
+    {
+        foreach ($this->variants as $variant) {
+            if ($variant->isAvailable()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isAvailable(): bool
+    {
+        return $this->isActive() && ($this->getStock() > 0 || $this->hasAvailableVariant());
+    }
+
+    public function canBeAddedWithoutVariant(): bool
+    {
+        return $this->isActive() && $this->getStock() > 0;
+    }
+
     /**
      * @return Collection<int, Variant>
      */
@@ -187,6 +220,7 @@ class Product
     {
         if (!$this->variants->contains($variant)) {
             $this->variants->add($variant);
+            $variant->setProduct($this);
         }
 
         return $this;
@@ -194,7 +228,11 @@ class Product
 
     public function removeVariant(Variant $variant): static
     {
-        $this->variants->removeElement($variant);
+        if ($this->variants->removeElement($variant)) {
+            if ($variant->getProduct() === $this) {
+                $variant->setProduct(null);
+            }
+        }
 
         return $this;
     }

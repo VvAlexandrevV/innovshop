@@ -24,7 +24,7 @@ final class PanierController extends AbstractController
     ): Response {
         $product = $productRepository->find($id);
 
-        if (!$product || !$product->isActive()) {
+        if (!$product || !$product->isAvailable()) {
             $this->addFlash('error', 'Ce produit n’est plus disponible.');
             return $this->redirectToRoute('app_product');
         }
@@ -32,22 +32,26 @@ final class PanierController extends AbstractController
         $variantIds = $request->request->all('variantIds');
         $selectedVariants = [];
 
-        if ($product->getVariants()->count() > 0 && empty($variantIds)) {
-            $this->addFlash('error', 'Veuillez sélectionner au moins une variante avant d’ajouter ce produit au panier.');
-
-            return $this->redirectToRoute('app_product_detail', ['id' => $product->getId()]);
-        }
-
         foreach ($variantIds as $variantId) {
             $variant = $variantRepository->find($variantId);
 
-            if (!$variant || !$product->getVariants()->contains($variant)) {
-                $this->addFlash('error', 'Une variante sélectionnée est invalide.');
+            if (
+                !$variant ||
+                $variant->getProduct() !== $product ||
+                !$variant->isAvailable()
+            ) {
+                $this->addFlash('error', 'Une option sélectionnée n’est plus disponible.');
 
                 return $this->redirectToRoute('app_product_detail', ['id' => $product->getId()]);
             }
 
             $selectedVariants[] = $variant;
+        }
+
+        if ($product->getStock() <= 0 && empty($selectedVariants)) {
+            $this->addFlash('error', 'Le produit de base n’est plus disponible. Sélectionnez une option disponible.');
+
+            return $this->redirectToRoute('app_product_detail', ['id' => $product->getId()]);
         }
 
         if ($this->getUser()) {
@@ -109,14 +113,38 @@ final class PanierController extends AbstractController
             if ($cart) {
                 foreach ($cart->getCartItems() as $cartItem) {
                     $product = $cartItem->getProduct();
+                    $variants = $cartItem->getVariants();
 
-                    if (!$product || !$product->isActive()) {
+                    if (!$product || !$product->isAvailable()) {
                         $entityManager->remove($cartItem);
                         $hasRemovedUnavailableProduct = true;
                         continue;
                     }
 
-                    $variants = $cartItem->getVariants();
+                    if ($product->getStock() <= 0 && $variants->isEmpty()) {
+                        $entityManager->remove($cartItem);
+                        $hasRemovedUnavailableProduct = true;
+                        continue;
+                    }
+
+                    $hasInvalidVariant = false;
+
+                    foreach ($variants as $variant) {
+                        if (
+                            !$variant->isAvailable() ||
+                            $variant->getProduct() !== $product
+                        ) {
+                            $hasInvalidVariant = true;
+                            break;
+                        }
+                    }
+
+                    if ($hasInvalidVariant) {
+                        $entityManager->remove($cartItem);
+                        $hasRemovedUnavailableProduct = true;
+                        continue;
+                    }
+
                     $price = $product->getPrix();
 
                     foreach ($variants as $variant) {
@@ -147,19 +175,37 @@ final class PanierController extends AbstractController
             foreach ($panier as $ligne) {
                 $product = $productRepository->find($ligne['productId']);
 
-                if (!$product || !$product->isActive()) {
+                if (!$product || !$product->isAvailable()) {
                     $hasRemovedUnavailableProduct = true;
                     continue;
                 }
 
                 $variants = [];
+                $hasInvalidVariant = false;
 
                 foreach (($ligne['variantIds'] ?? []) as $variantId) {
                     $variant = $variantRepository->find($variantId);
 
-                    if ($variant && $product->getVariants()->contains($variant)) {
-                        $variants[] = $variant;
+                    if (
+                        !$variant ||
+                        $variant->getProduct() !== $product ||
+                        !$variant->isAvailable()
+                    ) {
+                        $hasInvalidVariant = true;
+                        break;
                     }
+
+                    $variants[] = $variant;
+                }
+
+                if ($hasInvalidVariant) {
+                    $hasRemovedUnavailableProduct = true;
+                    continue;
+                }
+
+                if ($product->getStock() <= 0 && empty($variants)) {
+                    $hasRemovedUnavailableProduct = true;
+                    continue;
                 }
 
                 $price = $product->getPrix();
@@ -189,7 +235,7 @@ final class PanierController extends AbstractController
         }
 
         if ($hasRemovedUnavailableProduct) {
-            $this->addFlash('warning', 'Un produit de votre panier n’est plus disponible et a été retiré.');
+            $this->addFlash('warning', 'Un produit ou une option de votre panier n’est plus disponible et a été retiré.');
         }
 
         return $this->render('panier/index.html.twig', [

@@ -48,6 +48,7 @@
                             <thead>
                                 <tr>
                                     <th>Produit</th>
+                                    <th>Variante</th>
                                     <th>Prix</th>
                                 </tr>
                             </thead>
@@ -55,6 +56,13 @@
                                 {% for item in orderItems %}
                                     <tr>
                                         <td>{{ item.productName }}</td>
+                                        <td>
+                                            {% if item.variantLabel %}
+                                                {{ item.variantLabel }}
+                                            {% else %}
+                                                Standard
+                                            {% endif %}
+                                        </td>
                                         <td>{{ item.productPrice }} €</td>
                                     </tr>
                                 {% endfor %}

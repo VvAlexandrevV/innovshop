@@ -51,7 +51,7 @@ final class PaymentController extends AbstractController
         foreach ($cart->getCartItems() as $cartItem) {
             $product = $cartItem->getProduct();
 
-            if (!$product || !$product->isActive()) {
+            if (!$product || !$product->isAvailable()) {
                 $entityManager->remove($cartItem);
                 $hasRemovedUnavailableProduct = true;
             }
@@ -71,6 +71,12 @@ final class PaymentController extends AbstractController
         }
 
         $order = new Order();
+        $stockErrorMessage = $this->getStockErrorMessage($cart);
+
+        if ($stockErrorMessage) {
+            $this->addFlash('warning', $stockErrorMessage);
+            return $this->redirectToRoute('app_panier');
+        }
         $order->setUser($user);
         $order->setStatus('pending_payment');
         $order->setDeliveryFirstName($delivery['firstName']);
@@ -163,5 +169,53 @@ final class PaymentController extends AbstractController
     {
         $this->addFlash('error', 'Paiement annulé.');
         return $this->redirectToRoute('app_panier');
+    }
+
+    private function getStockErrorMessage($cart): ?string
+    {
+        $productNeeds = [];
+        $variantNeeds = [];
+
+        foreach ($cart->getCartItems() as $cartItem) {
+            $product = $cartItem->getProduct();
+            $variants = $cartItem->getVariants();
+
+            if (!$product || !$product->isActive()) {
+                return 'Un produit de votre panier n’est plus disponible.';
+            }
+
+            if ($variants->isEmpty()) {
+                if (!$product->canBeAddedWithoutVariant()) {
+                    return 'Le produit "' . $product->getNom() . '" n’est plus disponible sans option.';
+                }
+
+                $productId = $product->getId();
+                $productNeeds[$productId] = ($productNeeds[$productId] ?? 0) + 1;
+
+                if ($productNeeds[$productId] > $product->getStock()) {
+                    return 'Stock insuffisant pour "' . $product->getNom() . '". Il reste ' . $product->getStock() . ' article(s) disponible(s).';
+                }
+
+                continue;
+            }
+
+            foreach ($variants as $variant) {
+                if (
+                    !$variant->isAvailable() ||
+                    $variant->getProduct() !== $product
+                ) {
+                    return 'Une option du produit "' . $product->getNom() . '" n’est plus disponible.';
+                }
+
+                $variantId = $variant->getId();
+                $variantNeeds[$variantId] = ($variantNeeds[$variantId] ?? 0) + 1;
+
+                if ($variantNeeds[$variantId] > $variant->getStock()) {
+                    return 'Stock insuffisant pour "' . $product->getNom() . '" avec l’option "' . $variant->getType() . ' - ' . $variant->getValue() . '". Il reste ' . $variant->getStock() . ' article(s) disponible(s).';
+                }
+            }
+        }
+
+        return null;
     }
 }

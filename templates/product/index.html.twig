@@ -17,18 +17,49 @@
             </div>
 
             <section class="catalog-filters">
-                <form method="get" action="{{ path('app_product') }}" class="catalog-search-form">
+                <form method="get" action="{{ path('app_product') }}" class="catalog-search-form" id="catalog-search-form">
                     <input 
                         type="text" 
                         name="q" 
+                        id="catalog-search-input"
                         value="{{ search }}" 
                         placeholder="Rechercher un produit..." 
+                        class="catalog-search-input"
+                    >
+
+                    <input 
+                        type="number" 
+                        name="minPrice" 
+                        id="catalog-min-price"
+                        value="{{ minPrice }}" 
+                        placeholder="Prix min" 
+                        class="catalog-search-input"
+                    >
+
+                    <input 
+                        type="number" 
+                        name="maxPrice" 
+                        id="catalog-max-price"
+                        value="{{ maxPrice }}" 
+                        placeholder="Prix max" 
                         class="catalog-search-input"
                     >
 
                     {% if selectedCategory %}
                         <input type="hidden" name="category" value="{{ selectedCategory }}">
                     {% endif %}
+
+                    <select name="tri" class="catalog-tri-select" id="catalog-tri-select">
+                        <option value="newest" {{ tri == 'newest' ? 'selected' : '' }}>
+                            Plus récents
+                        </option>
+                        <option value="price_asc" {{ tri == 'price_asc' ? 'selected' : '' }}>
+                            Prix croissant
+                        </option>
+                        <option value="price_desc" {{ tri == 'price_desc' ? 'selected' : '' }}>
+                            Prix décroissant
+                        </option>
+                    </select>
 
                     <button type="submit" class="btn btn-primary">
                         Rechercher
@@ -37,7 +68,8 @@
 
                 <div class="category-tabs">
                     <a 
-                        href="{{ path('app_product', {q: search}) }}" 
+                        href="{{ path('app_product', {q: search, tri: tri, minPrice: minPrice, maxPrice: maxPrice}) }}" 
+                        data-category-id="0"
                         class="category-tab {{ selectedCategory == 0 ? 'active' : '' }}"
                     >
                         Tous
@@ -45,7 +77,8 @@
 
                     {% for category in categories %}
                         <a 
-                            href="{{ path('app_product', {category: category.id, q: search}) }}" 
+                            href="{{ path('app_product', {category: category.id, q: search, tri: tri, minPrice: minPrice, maxPrice: maxPrice}) }}" 
+                            data-category-id="{{ category.id }}"
                             class="category-tab {{ selectedCategory == category.id ? 'active' : '' }}"
                         >
                             {{ category.nom }}
@@ -54,50 +87,11 @@
                 </div>
             </section>
 
-            <div class="products-grid">
-                {% for product in products %}
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            {% if product.image %}
-                                <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
-                            {% else %}
-                                <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut" class="product-image">
-                            {% endif %}
-
-                            {% if product.aLaUne %}
-                                <span class="badge-featured">À la une</span>
-                            {% endif %}
-                        </div>
-
-                        <div class="product-content">
-                            <h3>{{ product.nom }}</h3>
-
-                            <p class="product-description">
-                                {{ product.description|length > 110 ? product.description|slice(0, 110) ~ '...' : product.description }}
-                            </p>
-
-                            <div class="product-footer">
-                                <span class="product-price">{{ product.prix }} €</span>
-                            </div>
-
-                            <div class="product-actions">
-                                <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-secondary">
-                                    Voir le détail
-                                </a>
-
-                                <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">
-                                    Ajouter au panier
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <p class="empty-state">Aucun produit trouvé.</p>
-                {% endfor %}
-            </div>
-
-            <div class="navigation">
-                {{ knp_pagination_render(products) }}
+            <div 
+                id="catalog-results"
+                data-search-url="{{ path('app_product_search') }}"
+            >
+                {% include 'product/_products_grid.html.twig' with { products: products } %}
             </div>
         </div>
     </section>

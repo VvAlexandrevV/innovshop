@@ -83,9 +83,15 @@
                                         <div class="checkout-product-top">
                                             <div>
                                                 <h3>{{ orderItem.productName }}</h3>
-                                                <p class="checkout-product-description">
-                                                    Produit enregistré dans la commande.
-                                                </p>
+                                               {% if orderItem.variantLabel %}
+                                                    <p class="checkout-product-description">
+                                                        Variante : {{ orderItem.variantLabel }}
+                                                    </p>
+                                                {% else %}
+                                                    <p class="checkout-product-description">
+                                                        Variante : Standard
+                                                    </p>
+                                                {% endif %}
                                             </div>
 
                                             <div class="checkout-product-price">

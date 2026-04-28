@@ -62,7 +62,15 @@
 
                             <div class="product-actions">
                                 <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-secondary">Voir le détail</a>
-                                <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">Ajouter</a>
+                                {% if product.variants|length > 0 %}
+                                    <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-primary">
+                                        Ajouter au panier
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">
+                                        Ajouter au panier
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -105,7 +113,15 @@
 
                             <div class="product-actions">
                                 <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-secondary">Voir le détail</a>
-                                <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">Ajouter</a>
+                                {% if product.variants|length > 0 %}
+                                    <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-primary">
+                                        Ajouter au panier
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">
+                                        Ajouter au panier
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

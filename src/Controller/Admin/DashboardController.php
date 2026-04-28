@@ -20,7 +20,13 @@ class DashboardController extends AbstractDashboardController
 {
     public function index(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_home');
+        }
 
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
 
@@ -30,7 +36,6 @@ class DashboardController extends AbstractDashboardController
 
         return $this->redirect($url);
     }
-
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()

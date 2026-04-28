@@ -21,8 +21,17 @@ final class ProductController extends AbstractController
     ): Response {
         $search = $request->query->get('q');
         $categoryId = $request->query->getInt('category');
+        $tri = $request->query->get('tri', 'newest');
+        $minPrice = $request->query->get('minPrice');
+        $maxPrice = $request->query->get('maxPrice');
 
-        $queryBuilder = $productRepository->findBySearchAndCategory($search, $categoryId);
+        $queryBuilder = $productRepository->findBySearchAndCategory(
+            $search,
+            $categoryId,
+            $tri,
+            $minPrice !== null && $minPrice !== '' ? (float) $minPrice : null,
+            $maxPrice !== null && $maxPrice !== '' ? (float) $maxPrice : null
+        );
 
         $products = $paginator->paginate(
             $queryBuilder,
@@ -35,16 +44,52 @@ final class ProductController extends AbstractController
             'categories' => $categoryRepository->findAll(),
             'search' => $search,
             'selectedCategory' => $categoryId,
+            'tri' => $tri,
+            'minPrice' => $minPrice,
+            'maxPrice' => $maxPrice,
         ]);
     }
 
-    #[Route('/product/{id}', name: 'app_product_detail')]
+    #[Route('/product/search', name: 'app_product_search')]
+    public function search(
+        Request $request,
+        ProductRepository $productRepository,
+        PaginatorInterface $paginator
+    ): Response {
+        $search = $request->query->get('q');
+        $categoryId = $request->query->getInt('category');
+        $tri = $request->query->get('tri', 'newest');
+        $minPrice = $request->query->get('minPrice');
+        $maxPrice = $request->query->get('maxPrice');
+
+        $queryBuilder = $productRepository->findBySearchAndCategory(
+            $search,
+            $categoryId,
+            $tri,
+            $minPrice !== null && $minPrice !== '' ? (float) $minPrice : null,
+            $maxPrice !== null && $maxPrice !== '' ? (float) $maxPrice : null
+        );
+
+        $products = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('product/_products_grid.html.twig', [
+            'products' => $products,
+        ]);
+    }
+
+    #[Route('/product/{id}', name: 'app_product_detail', requirements: ['id' => '\d+'])]
     public function detailProduct(int $id, ProductRepository $productRepository): Response
     {
         $product = $productRepository->find($id);
 
         if (!$product || !$product->isActive()) {
-            throw $this->createNotFoundException('Produit introuvable');
+            $this->addFlash('error', 'Ce produit n’est plus disponible.');
+
+            return $this->redirectToRoute('app_product');
         }
 
         return $this->render('product/detail.html.twig', [

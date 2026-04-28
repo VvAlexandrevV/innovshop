@@ -2321,3 +2321,192 @@ main {
         height: 24px;
     }
 }
+
+/*Catalogue select*/
+.catalog-tri-select {
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: #121923;
+    color: #f5f7fa;
+    font-size: 16px;
+    outline: none;
+    cursor: pointer;
+}
+
+.catalog-tri-select:focus {
+    border-color: #6ee7f9;
+    box-shadow: 0 0 0 3px rgba(110, 231, 249, 0.12);
+}
+
+@media (max-width: 768px) {
+    .catalog-tri-select {
+        width: 100%;
+    }
+}
+
+/*pagination*/
+/* =========================================================
+   PAGINATION CATALOGUE
+   Fichier : product/index.html.twig
+========================================================= */
+
+.navigation {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.navigation-top {
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.pagination a,
+.pagination .current {
+    min-width: 42px;
+    height: 42px;
+    padding: 0 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #c9d2dc;
+    font-weight: 700;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.pagination a:hover {
+    background: rgba(110, 231, 249, 0.12);
+    border-color: rgba(110, 231, 249, 0.45);
+    color: #6ee7f9;
+    transform: translateY(-2px);
+}
+
+.pagination .current {
+    background: linear-gradient(135deg, #6ee7f9, #38bdf8);
+    border-color: transparent;
+    color: #081018;
+    box-shadow: 0 10px 28px rgba(56, 189, 248, 0.22);
+}
+
+.pagination .disabled,
+.pagination .disabled span {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .navigation-top {
+        margin-bottom: 1.5rem;
+    }
+
+    .pagination span,
+    .pagination a,
+    .pagination .current {
+        min-width: 38px;
+        height: 38px;
+        padding: 0 0.7rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Variante indisponible → grisée + non cliquable */
+.variant-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+}
+
+.variant-disabled:hover {
+    transform: none;
+    border-color: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+}
+/* =========================
+   VARIANTES PRODUIT
+   ========================= */
+
+.variant-disabled input {
+    cursor: not-allowed;
+}
+
+.variant-stock {
+    color: #86efac;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.variant-stock-unavailable,
+.stock-unavailable,
+.product-unavailable-message,
+.product-option-required-message {
+    color: #ff9e98;
+}
+
+.product-unavailable-message,
+.product-option-required-message {
+    margin-top: 1rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+/* =========================
+   BOUTONS
+   ========================= */
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Chrome, Safari, Edge */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* =========================================================
+   RECHERCHE AJAX CATALOGUE
+   Fichier concerné : templates/product/index.html.twig
+   Éléments affectés :
+   - #catalog-results
+   - grille produits pendant le chargement AJAX
+   - effet visuel léger quand les résultats se rechargent
+========================================================= */
+
+#catalog-results {
+    transition:
+        opacity 0.2s ease,
+        filter 0.2s ease;
+}
+
+#catalog-results.catalog-results-loading {
+    opacity: 0.55;
+    filter: blur(1px);
+    pointer-events: none;
+}

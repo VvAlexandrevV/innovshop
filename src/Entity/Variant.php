@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\VariantRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,16 +23,16 @@ class Variant
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $priceModifier = null;
 
-    /**
-     * @var Collection<int, Product>
-     */
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'variants')]
-    #[ORM\JoinTable(name: 'product_variant_link')]
-    private Collection $products;
+    #[ORM\Column(options: ['default' => 0])]
+    private ?int $stock = 0;
 
-    public function __construct()
+    #[ORM\ManyToOne(inversedBy: 'variants')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?Product $product = null;
+
+    public function __toString(): string
     {
-        $this->products = new ArrayCollection();
+        return ($this->type ?? '') . ' - ' . ($this->value ?? '');
     }
 
     public function getId(): ?int
@@ -50,7 +48,6 @@ class Variant
     public function setType(string $type): static
     {
         $this->type = $type;
-
         return $this;
     }
 
@@ -62,7 +59,6 @@ class Variant
     public function setValue(string $value): static
     {
         $this->value = $value;
-
         return $this;
     }
 
@@ -74,32 +70,39 @@ class Variant
     public function setPriceModifier(?string $priceModifier): static
     {
         $this->priceModifier = $priceModifier;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Product>
-     */
-    public function getProducts(): Collection
+    public function getStock(): ?int
     {
-        return $this->products;
+        return $this->stock;
     }
 
-    public function addProduct(Product $product): static
+    public function setStock(int $stock): static
     {
-        if (!$this->products->contains($product)) {
-            $this->products->add($product);
-            $product->addVariant($this);
-        }
-
+        $this->stock = max(0, $stock);
         return $this;
     }
 
-    public function removeProduct(Product $product): static
+    public function decreaseStock(int $quantity = 1): static
     {
-        $this->products->removeElement($product);
+        $this->stock = max(0, $this->stock - $quantity);
+        return $this;
+    }
 
+    public function isAvailable(): bool
+    {
+        return $this->getStock() > 0;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): static
+    {
+        $this->product = $product;
         return $this;
     }
 }

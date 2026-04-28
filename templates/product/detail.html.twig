@@ -3,6 +3,10 @@
 {% block title %}{{ product.nom }} | InnovShop{% endblock %}
 
 {% block body %}
+    {% set baseStockAvailable = product.stock > 0 %}
+    {% set hasAvailableVariant = product.hasAvailableVariant %}
+    {% set productAvailable = product.isAvailable %}
+
     <section class="product-detail-hero">
         <div class="container product-detail-grid">
             <div class="product-detail-media">
@@ -20,9 +24,7 @@
 
                 <h1>{{ product.nom }}</h1>
 
-                <p class="detail-intro">
-                    {{ product.description }}
-                </p>
+                <p class="detail-intro">{{ product.description }}</p>
 
                 <div class="detail-highlight-boxes">
                     <div class="detail-highlight">
@@ -34,23 +36,42 @@
 
                     <div class="detail-highlight">
                         <span class="detail-highlight-label">Disponibilité</span>
-                        <strong>En stock</strong>
+
+                        {% if productAvailable %}
+                            {% if baseStockAvailable %}
+                                <strong>{{ product.stock }} disponible{{ product.stock > 1 ? 's' : '' }}</strong>
+                            {% else %}
+                                <strong>Disponible avec option</strong>
+                            {% endif %}
+                        {% else %}
+                            <strong class="stock-unavailable">Non disponible</strong>
+                        {% endif %}
                     </div>
                 </div>
 
-                <form method="post" action="{{ path('app_panier_add', {id: product.id}) }}" data-turbo="false">
+                <form
+                    method="post"
+                    action="{{ path('app_panier_add', {id: product.id}) }}"
+                    data-turbo="false"
+                    id="product-add-form"
+                    data-base-stock="{{ product.stock }}"
+                >
                     {% if product.variants|length > 0 %}
                         <div class="product-variants-box">
-                            <h2>Choisissez une option</h2>
+                            <h2>Options disponibles</h2>
 
                             <div class="product-variants-list">
                                 {% for variant in product.variants %}
-                                    <label class="product-variant-card selectable-variant">
+                                    {% set variantAvailable = variant.stock > 0 %}
+
+                                    <label class="product-variant-card selectable-variant {{ not variantAvailable ? 'variant-disabled' : '' }}">
                                         <input
                                             type="checkbox"
                                             name="variantIds[]"
                                             value="{{ variant.id }}"
                                             data-price-modifier="{{ variant.priceModifier ?: 0 }}"
+                                            data-stock="{{ variant.stock }}"
+                                            {{ not variantAvailable ? 'disabled' : '' }}
                                         >
 
                                         <span class="variant-content">
@@ -62,6 +83,16 @@
                                                     +{{ variant.priceModifier }} €
                                                 </small>
                                             {% endif %}
+
+                                            {% if variantAvailable %}
+                                                <small class="variant-stock">
+                                                    {{ variant.stock }} disponible{{ variant.stock > 1 ? 's' : '' }}
+                                                </small>
+                                            {% else %}
+                                                <small class="variant-stock variant-stock-unavailable">
+                                                    Non disponible
+                                                </small>
+                                            {% endif %}
                                         </span>
                                     </label>
                                 {% endfor %}
@@ -70,7 +101,12 @@
                     {% endif %}
 
                     <div class="detail-actions">
-                        <button type="submit" class="btn btn-primary">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="add-to-cart-button"
+                            {{ not productAvailable ? 'disabled' : '' }}
+                        >
                             Ajouter au panier
                         </button>
 
@@ -78,6 +114,16 @@
                             Retour au catalogue
                         </a>
                     </div>
+
+                    {% if not productAvailable %}
+                        <p class="product-unavailable-message">
+                            Ce produit n’est plus disponible.
+                        </p>
+                    {% elseif not baseStockAvailable and hasAvailableVariant %}
+                        <p class="product-option-required-message">
+                            Le produit de base n’est plus disponible. Sélectionnez une option disponible.
+                        </p>
+                    {% endif %}
                 </form>
             </div>
         </div>
@@ -104,6 +150,11 @@
                     <div class="detail-spec-row">
                         <span>Prix</span>
                         <strong>{{ product.prix }} €</strong>
+                    </div>
+
+                    <div class="detail-spec-row">
+                        <span>Stock produit de base</span>
+                        <strong>{{ product.stock }}</strong>
                     </div>
 
                     {% if product.category is defined and product.category %}
@@ -137,25 +188,44 @@
     </section>
 
     <script>
+        const form = document.querySelector('#product-add-form');
         const priceElement = document.querySelector('#product-dynamic-price');
         const variantInputs = document.querySelectorAll('input[name="variantIds[]"]');
+        const addToCartButton = document.querySelector('#add-to-cart-button');
 
-        if (priceElement && variantInputs.length > 0) {
+        if (form && priceElement && addToCartButton) {
             const basePrice = parseFloat(priceElement.dataset.basePrice);
+            const baseStock = parseInt(form.dataset.baseStock, 10);
+
+            function updateProductState() {
+                let finalPrice = basePrice;
+                let hasSelectedAvailableVariant = false;
+
+                variantInputs.forEach((variantInput) => {
+                    if (variantInput.checked) {
+                        finalPrice += parseFloat(variantInput.dataset.priceModifier || 0);
+
+                        if (parseInt(variantInput.dataset.stock, 10) > 0) {
+                            hasSelectedAvailableVariant = true;
+                        }
+                    }
+                });
+
+                priceElement.textContent = finalPrice.toFixed(2).replace('.', ',') + ' €';
+
+                if (baseStock > 0) {
+                    addToCartButton.disabled = false;
+                    return;
+                }
+
+                addToCartButton.disabled = !hasSelectedAvailableVariant;
+            }
 
             variantInputs.forEach((input) => {
-                input.addEventListener('change', () => {
-                    let finalPrice = basePrice;
-
-                    variantInputs.forEach((variantInput) => {
-                        if (variantInput.checked) {
-                            finalPrice += parseFloat(variantInput.dataset.priceModifier || 0);
-                        }
-                    });
-
-                    priceElement.textContent = finalPrice.toFixed(2).replace('.', ',') + ' €';
-                });
+                input.addEventListener('change', updateProductState);
             });
+
+            updateProductState();
         }
     </script>
 {% endblock %}

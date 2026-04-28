@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\MailerInterface;
 
 final class CheckoutController extends AbstractController
 {
@@ -29,27 +31,10 @@ final class CheckoutController extends AbstractController
             return $this->redirectToRoute('app_panier');
         }
 
-        $hasRemovedUnavailableProduct = false;
+        $stockErrorMessage = $this->getStockErrorMessage($cart);
 
-        foreach ($cart->getCartItems() as $cartItem) {
-            $product = $cartItem->getProduct();
-
-            if (!$product || !$product->isActive()) {
-                $entityManager->remove($cartItem);
-                $hasRemovedUnavailableProduct = true;
-            }
-        }
-
-        if ($hasRemovedUnavailableProduct) {
-            $entityManager->flush();
-
-            $this->addFlash('warning', 'Un produit de votre panier n’est plus disponible et a été retiré.');
-
-            return $this->redirectToRoute('app_panier');
-        }
-
-        if ($cart->getCartItems()->isEmpty()) {
-            $this->addFlash('error', 'Votre panier est vide.');
+        if ($stockErrorMessage) {
+            $this->addFlash('warning', $stockErrorMessage);
             return $this->redirectToRoute('app_panier');
         }
 
@@ -112,8 +97,10 @@ final class CheckoutController extends AbstractController
     public function success(
         Order $order,
         EntityManagerInterface $entityManager,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        MailerInterface $mailer
     ): Response {
+        
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         /** @var \App\Entity\User $user */
@@ -124,14 +111,46 @@ final class CheckoutController extends AbstractController
         }
 
         if ($order->getStatus() === 'pending_payment') {
-            $order->setStatus('paid');
-
             $cart = $user->getCart();
 
-            if ($cart) {
-                foreach ($cart->getCartItems() as $cartItem) {
-                    $entityManager->remove($cartItem);
+            if (!$cart || $cart->getCartItems()->isEmpty()) {
+                $this->addFlash('error', 'Votre panier est vide.');
+                return $this->redirectToRoute('app_panier');
+            }
+
+            $stockErrorMessage = $this->getStockErrorMessage($cart);
+
+            if ($stockErrorMessage) {
+                $this->addFlash('warning', $stockErrorMessage);
+                return $this->redirectToRoute('app_panier');
+            }
+
+            $order->setStatus('paid');
+            try {
+                $email = (new TemplatedEmail())
+                    ->from('noreply@innovshop.fr')
+                    ->to($user->getEmail())
+                    ->subject('Confirmation de votre commande InnovShop #' . $order->getId())
+                    ->htmlTemplate('emails/order_confirmation.html.twig')
+                    ->context([
+                        'order' => $order,
+                    ]);
+
+                $mailer->send($email);
+            } catch (\Throwable $exception) {
+                $this->addFlash('warning', 'La commande est validée, mais l’email de confirmation n’a pas pu être envoyé.');
+            }
+
+            foreach ($cart->getCartItems() as $cartItem) {
+                if ($cartItem->getVariants()->isEmpty()) {
+                    $cartItem->getProduct()->decreaseStock();
+                } else {
+                    foreach ($cartItem->getVariants() as $variant) {
+                        $variant->decreaseStock();
+                    }
                 }
+
+                $entityManager->remove($cartItem);
             }
 
             $requestStack->getSession()->remove('checkout_delivery');
@@ -142,5 +161,53 @@ final class CheckoutController extends AbstractController
         return $this->render('checkout/success.html.twig', [
             'order' => $order,
         ]);
+    }
+
+    private function getStockErrorMessage($cart): ?string
+    {
+        $productNeeds = [];
+        $variantNeeds = [];
+
+        foreach ($cart->getCartItems() as $cartItem) {
+            $product = $cartItem->getProduct();
+            $variants = $cartItem->getVariants();
+
+            if (!$product || !$product->isActive()) {
+                return 'Un produit de votre panier n’est plus disponible.';
+            }
+
+            if ($variants->isEmpty()) {
+                if (!$product->canBeAddedWithoutVariant()) {
+                    return 'Le produit "' . $product->getNom() . '" n’est plus disponible sans option.';
+                }
+
+                $productId = $product->getId();
+                $productNeeds[$productId] = ($productNeeds[$productId] ?? 0) + 1;
+
+                if ($productNeeds[$productId] > $product->getStock()) {
+                    return 'Stock insuffisant pour "' . $product->getNom() . '". Il reste ' . $product->getStock() . ' article(s) disponible(s).';
+                }
+
+                continue;
+            }
+
+            foreach ($variants as $variant) {
+                if (
+                    !$variant->isAvailable() ||
+                    $variant->getProduct() !== $product
+                ) {
+                    return 'Une option du produit "' . $product->getNom() . '" n’est plus disponible.';
+                }
+
+                $variantId = $variant->getId();
+                $variantNeeds[$variantId] = ($variantNeeds[$variantId] ?? 0) + 1;
+
+                if ($variantNeeds[$variantId] > $variant->getStock()) {
+                    return 'Stock insuffisant pour "' . $product->getNom() . '" avec l’option "' . $variant->getType() . ' - ' . $variant->getValue() . '". Il reste ' . $variant->getStock() . ' article(s) disponible(s).';
+                }
+            }
+        }
+
+        return null;
     }
 }

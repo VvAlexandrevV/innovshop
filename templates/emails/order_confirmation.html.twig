@@ -1,0 +1,36 @@
+<h1>Merci pour votre commande #{{ order.id }}</h1>
+
+<p>Bonjour {{ order.deliveryFirstName }} {{ order.deliveryLastName }},</p>
+
+<p>Votre commande a bien été validée.</p>
+
+<h2>Produits commandés</h2>
+
+<ul>
+    {% for item in order.orderItems %}
+        <li>
+            <strong>{{ item.productName }}</strong><br>
+
+            {% if item.variantLabel %}
+                Variante : {{ item.variantLabel }}<br>
+            {% else %}
+                Variante : Standard<br>
+            {% endif %}
+
+            Prix : {{ item.productPrice }} €
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>Adresse de livraison</h2>
+
+<p>
+    {{ order.deliveryFirstName }} {{ order.deliveryLastName }}<br>
+    {{ order.deliveryAddress }}<br>
+    {{ order.deliveryPostalCode }} {{ order.deliveryCity }}<br>
+    {{ order.deliveryCountry }}
+</p>
+
+<h2>Total</h2>
+
+<p><strong>{{ order.total }} €</strong></p>
