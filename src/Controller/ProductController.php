@@ -12,6 +12,19 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ProductController extends AbstractController
 {
+    /**
+     * Affiche le catalogue avec filtres + pagination.
+     *
+     * Fonctionnalité InnovShop :
+     * Front Office - Catalogue produits.
+     *
+     * Gère :
+     * - recherche texte
+     * - filtre catégorie
+     * - tri (prix, date…)
+     * - filtre prix min/max
+     * - pagination (KnpPaginator)
+     */
     #[Route('/product', name: 'app_product')]
     public function index(
         Request $request,
@@ -33,10 +46,14 @@ final class ProductController extends AbstractController
             $maxPrice !== null && $maxPrice !== '' ? (float) $maxPrice : null
         );
 
-        $products = $paginator->paginate(
+            $products = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            10
+            10,
+            [
+                'route' => 'app_product',
+                'params' => $request->query->all(),
+            ]
         );
 
         return $this->render('product/index.html.twig', [
@@ -50,12 +67,25 @@ final class ProductController extends AbstractController
         ]);
     }
 
+    /**
+     * Retourne les produits filtrés (AJAX).
+     *
+     * Fonctionnalité InnovShop :
+     * Front Office - Recherche dynamique.
+     *
+     * Sert à recharger uniquement la grille produits
+     * sans recharger toute la page.
+     */
     #[Route('/product/search', name: 'app_product_search')]
     public function search(
         Request $request,
         ProductRepository $productRepository,
         PaginatorInterface $paginator
     ): Response {
+
+    if (!$request->isXmlHttpRequest()) {
+    return $this->redirectToRoute('app_product', $request->query->all());
+}
         $search = $request->query->get('q');
         $categoryId = $request->query->getInt('category');
         $tri = $request->query->get('tri', 'newest');
@@ -70,10 +100,14 @@ final class ProductController extends AbstractController
             $maxPrice !== null && $maxPrice !== '' ? (float) $maxPrice : null
         );
 
-        $products = $paginator->paginate(
+            $products = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            10
+            10,
+            [
+                'route' => 'app_product',
+                'params' => $request->query->all(),
+            ]
         );
 
         return $this->render('product/_products_grid.html.twig', [
@@ -81,6 +115,15 @@ final class ProductController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche la fiche produit.
+     *
+     * Fonctionnalité InnovShop :
+     * Front Office - Détail produit.
+     *
+     * Vérifie que le produit est actif,
+     * sinon redirection avec message d’erreur.
+     */
     #[Route('/product/{id}', name: 'app_product_detail', requirements: ['id' => '\d+'])]
     public function detailProduct(int $id, ProductRepository $productRepository): Response
     {

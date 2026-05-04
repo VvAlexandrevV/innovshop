@@ -1,0 +1,181 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil vendeur | InnovShop{% endblock %}
+
+{% block body %}
+    <section class="seller-profile-page">
+        <div class="container">
+            <div class="seller-profile-header">
+                <div>
+                    <span class="seller-profile-badge">Espace vendeur</span>
+                    <h1>Profil vendeur</h1>
+                    <p>
+                        Gérez les informations de contact de votre entreprise.
+                    </p>
+                </div>
+
+                <a href="{{ path('seller') }}" class="btn btn-secondary">
+                    Retour à l’espace vendeur
+                </a>
+            </div>
+
+            {#
+                Messages flash.
+
+                success :
+                affiché après une modification réussie.
+
+                error :
+                affiché si une anomalie est détectée.
+            #}
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-error">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <div class="seller-profile-layout">
+                {#
+                    Bloc d'identité légale.
+
+                    Ces informations sont affichées en lecture seule.
+                    Le vendeur ne peut pas les modifier ici.
+                #}
+                <aside class="seller-profile-card">
+                    <h2>Identité légale</h2>
+
+                    <div class="seller-readonly-list">
+                        <div class="seller-readonly-item">
+                            <span>Nom officiel</span>
+                            <strong>{{ sellerProfile.companyName }}</strong>
+                        </div>
+
+                        <div class="seller-readonly-item">
+                            <span>SIRET</span>
+                            <strong>{{ sellerProfile.siret }}</strong>
+                        </div>
+
+                        <div class="seller-readonly-item">
+                            <span>Statut</span>
+
+                            {% if sellerProfile.status == 'pending' %}
+                                <strong>En attente de validation</strong>
+                            {% elseif sellerProfile.status == 'approved' %}
+                                <strong>Validé</strong>
+                            {% elseif sellerProfile.status == 'rejected' %}
+                                <strong>Refusé</strong>
+                            {% elseif sellerProfile.status == 'suspended' %}
+                                <strong>Suspendu</strong>
+                            {% elseif sellerProfile.status == 'deleted' %}
+                                <strong>Supprimé</strong>
+                            {% else %}
+                                <strong>{{ sellerProfile.status }}</strong>
+                            {% endif %}
+                        </div>
+
+                        <div class="seller-readonly-item">
+                            <span>Créé le</span>
+                            <strong>{{ sellerProfile.createdAt ? sellerProfile.createdAt|date('d/m/Y') : 'Non renseigné' }}</strong>
+                        </div>
+                    </div>
+
+                    <p class="seller-profile-note">
+                        Le nom officiel et le SIRET ne sont pas modifiables depuis votre espace vendeur.
+                        En cas d’erreur, contactez l’administrateur.
+                    </p>
+                </aside>
+
+                {#
+                    Formulaire de modification.
+
+                    Il contient uniquement les champs autorisés.
+                #}
+                <div class="seller-profile-form-card">
+                    <h2>Coordonnées entreprise</h2>
+
+                    {{ form_start(sellerProfileForm, {'attr': {'class': 'seller-profile-form'}}) }}
+
+                        <div class="form-group">
+                            {{ form_label(sellerProfileForm.companyEmail) }}
+                            {{ form_widget(sellerProfileForm.companyEmail, {
+                                'attr': {
+                                    'class': 'auth-input',
+                                    'placeholder': 'contact@entreprise.fr'
+                                }
+                            }) }}
+                            {{ form_errors(sellerProfileForm.companyEmail) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(sellerProfileForm.companyPhone) }}
+                            {{ form_widget(sellerProfileForm.companyPhone, {
+                                'attr': {
+                                    'class': 'auth-input',
+                                    'placeholder': 'Téléphone professionnel'
+                                }
+                            }) }}
+                            {{ form_errors(sellerProfileForm.companyPhone) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(sellerProfileForm.companyAddress) }}
+                            {{ form_widget(sellerProfileForm.companyAddress, {
+                                'attr': {
+                                    'class': 'auth-input',
+                                    'placeholder': 'Adresse de l’entreprise'
+                                }
+                            }) }}
+                            {{ form_errors(sellerProfileForm.companyAddress) }}
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                {{ form_label(sellerProfileForm.companyPostalCode) }}
+                                {{ form_widget(sellerProfileForm.companyPostalCode, {
+                                    'attr': {
+                                        'class': 'auth-input',
+                                        'placeholder': 'Code postal'
+                                    }
+                                }) }}
+                                {{ form_errors(sellerProfileForm.companyPostalCode) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(sellerProfileForm.companyCity) }}
+                                {{ form_widget(sellerProfileForm.companyCity, {
+                                    'attr': {
+                                        'class': 'auth-input',
+                                        'placeholder': 'Ville'
+                                    }
+                                }) }}
+                                {{ form_errors(sellerProfileForm.companyCity) }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(sellerProfileForm.companyCountry) }}
+                            {{ form_widget(sellerProfileForm.companyCountry, {
+                                'attr': {
+                                    'class': 'auth-input',
+                                    'placeholder': 'Pays'
+                                }
+                            }) }}
+                            {{ form_errors(sellerProfileForm.companyCountry) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Enregistrer les modifications
+                        </button>
+
+                    {{ form_end(sellerProfileForm) }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

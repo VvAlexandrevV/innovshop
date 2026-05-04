@@ -11,11 +11,33 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class VariantCrudController extends AbstractCrudController
 {
+    /**
+     * Indique à EasyAdmin quelle entité ce CRUD doit gérer.
+     *
+     * Fonctionnalité InnovShop :
+     * Back Office - Gestion des variantes produit.
+     *
+     * Cette méthode relie ce contrôleur EasyAdmin à l’entité Variant.
+     */
     public static function getEntityFqcn(): string
     {
         return Variant::class;
     }
 
+    /**
+     * Configure les champs utilisés pour gérer les variantes.
+     *
+     * Fonctionnalité InnovShop :
+     * Back Office - Gestion des options disponibles.
+     *
+     * Cette méthode permet à l’administrateur de créer des variantes
+     * liées à un produit : type de variante, valeur, supplément de prix,
+     * stock spécifique et produit associé.
+     *
+     * Exemple :
+     * type = couleur, valeur = noir
+     * type = taille, valeur = XL
+     */
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('type', 'Type de variante');

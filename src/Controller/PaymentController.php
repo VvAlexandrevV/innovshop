@@ -16,6 +16,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class PaymentController extends AbstractController
 {
+    /**
+     * Lance le paiement Stripe.
+     *
+     * Fonctionnalité InnovShop :
+     * Processus de commande - Paiement.
+     *
+     * Cette méthode :
+     * - vérifie panier + livraison
+     * - crée la commande + orderItems
+     * - calcule le total
+     * - prépare les données Stripe
+     * - redirige vers Stripe Checkout
+     */
     #[Route('/checkout/payment', name: 'app_checkout_payment')]
     #[IsGranted('ROLE_USER')]
     public function payment(
@@ -85,6 +98,7 @@ final class PaymentController extends AbstractController
         $order->setDeliveryPostalCode($delivery['postalCode']);
         $order->setDeliveryCity($delivery['city']);
         $order->setDeliveryCountry($delivery['country']);
+        $commissionRate = 0.10; // 10% de commission plateforme
 
         $total = 0;
         $lineItems = [];
@@ -95,7 +109,7 @@ final class PaymentController extends AbstractController
             $product = $cartItem->getProduct();
             $variants = $cartItem->getVariants();
 
-            $price = $product->getPrix();
+            $price = (float) $product->getPrix();
             $variantLabels = [];
 
             foreach ($variants as $variant) {
@@ -109,6 +123,18 @@ final class PaymentController extends AbstractController
                 $variantLabels[] = $label;
             }
 
+            $seller = $product->getSeller();
+
+            if ($seller) {
+                $commissionAmount = round($price * $commissionRate, 2);
+                $sellerAmount = round($price - $commissionAmount, 2);
+                $platformAmount = $commissionAmount;
+            } else {
+                $commissionAmount = 0;
+                $sellerAmount = 0;
+                $platformAmount = round($price, 2);
+            }
+
             $variantLabel = !empty($variantLabels)
                 ? implode(', ', $variantLabels)
                 : null;
@@ -116,9 +142,13 @@ final class PaymentController extends AbstractController
             $orderItem = new OrderItem();
             $orderItem->setOrderEntity($order);
             $orderItem->setProduct($product);
+            $orderItem->setSeller($seller);
             $orderItem->setProductName($product->getNom());
-            $orderItem->setProductPrice((string) $price);
+            $orderItem->setProductPrice(number_format($price, 2, '.', ''));
             $orderItem->setVariantLabel($variantLabel);
+            $orderItem->setCommissionAmount(number_format($commissionAmount, 2, '.', ''));
+            $orderItem->setSellerAmount(number_format($sellerAmount, 2, '.', ''));
+            $orderItem->setPlatformAmount(number_format($platformAmount, 2, '.', ''));
 
             $total += $price;
 
@@ -163,6 +193,14 @@ final class PaymentController extends AbstractController
         return $this->redirect($session->url);
     }
 
+    /**
+     * Gère l’annulation du paiement.
+     *
+     * Fonctionnalité InnovShop :
+     * Processus de commande - Annulation.
+     *
+     * Affiche un message et renvoie vers le panier.
+     */
     #[Route('/checkout/cancel', name: 'app_checkout_cancel')]
     #[IsGranted('ROLE_USER')]
     public function cancel(): Response
@@ -171,6 +209,17 @@ final class PaymentController extends AbstractController
         return $this->redirectToRoute('app_panier');
     }
 
+    /**
+     * Vérifie les stocks avant paiement.
+     *
+     * Fonctionnalité InnovShop :
+     * Sécurité commande - Vérification du stock.
+     *
+     * Empêche :
+     * - produit supprimé
+     * - variante invalide
+     * - stock insuffisant
+     */
     private function getStockErrorMessage($cart): ?string
     {
         $productNeeds = [];

@@ -15,6 +15,18 @@ use Symfony\Component\Mailer\MailerInterface;
 
 final class CheckoutController extends AbstractController
 {
+    /**
+     * Affiche et traite la première étape du checkout.
+     *
+     * Fonctionnalité InnovShop :
+     * Processus de commande - Vérification du panier et saisie des informations de livraison.
+     *
+     * Cette méthode vérifie que l’utilisateur est connecté,
+     * que son panier n’est pas vide et que les produits sont encore disponibles.
+     *
+     * Si le formulaire de livraison est valide, les informations sont stockées en session
+     * puis l’utilisateur est redirigé vers l’étape de paiement.
+     */
     #[Route('/checkout', name: 'app_checkout')]
     public function index(
         Request $request,
@@ -93,6 +105,18 @@ final class CheckoutController extends AbstractController
         ]);
     }
 
+    /**
+     * Valide la commande après paiement réussi.
+     *
+     * Fonctionnalité InnovShop :
+     * Processus de commande - Confirmation de commande.
+     *
+     * Cette méthode vérifie que la commande appartient bien à l’utilisateur connecté.
+     * Si la commande est encore en attente de paiement, elle passe au statut "paid".
+     *
+     * Elle envoie ensuite un email de confirmation, diminue le stock des produits
+     * ou des variantes, vide le panier et supprime les informations de livraison en session.
+     */
     #[Route('/checkout/success/{id}', name: 'app_checkout_success')]
     public function success(
         Order $order,
@@ -163,6 +187,18 @@ final class CheckoutController extends AbstractController
         ]);
     }
 
+    /**
+     * Vérifie la disponibilité réelle des produits et variantes du panier.
+     *
+     * Fonctionnalité InnovShop :
+     * Panier / Commande - Contrôle du stock avant validation.
+     *
+     * Cette méthode empêche l’utilisateur de commander un produit désactivé,
+     * une variante indisponible ou une quantité supérieure au stock disponible.
+     *
+     * Elle retourne un message d’erreur si un problème est détecté,
+     * ou null si tout est valide.
+     */
     private function getStockErrorMessage($cart): ?string
     {
         $productNeeds = [];

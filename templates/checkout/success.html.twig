@@ -83,6 +83,16 @@
                                         <div class="checkout-product-top">
                                             <div>
                                                 <h3>{{ orderItem.productName }}</h3>
+                                                <p class="checkout-product-seller">
+                                                    Vendu par :
+                                                    <strong>
+                                                        {% if orderItem.seller %}
+                                                            {{ orderItem.seller.sellerProfile ? orderItem.seller.sellerProfile.companyName : orderItem.seller.email }}
+                                                        {% else %}
+                                                            InnovShop
+                                                        {% endif %}
+                                                    </strong>
+                                                </p>
                                                {% if orderItem.variantLabel %}
                                                     <p class="checkout-product-description">
                                                         Variante : {{ orderItem.variantLabel }}

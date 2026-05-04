@@ -11,6 +11,14 @@
         <li>
             <strong>{{ item.productName }}</strong><br>
 
+            Vendu par :
+            {% if item.seller %}
+                {{ item.seller.sellerProfile ? item.seller.sellerProfile.companyName : item.seller.email }}
+            {% else %}
+                InnovShop
+            {% endif %}
+            <br>
+
             {% if item.variantLabel %}
                 Variante : {{ item.variantLabel }}<br>
             {% else %}

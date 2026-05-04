@@ -10,6 +10,18 @@ use App\Repository\ProductRepository;
 final class HomeController extends AbstractController
 {
     
+    /**
+     * Affiche la page d’accueil du site InnovShop.
+     *
+     * Fonctionnalité InnovShop :
+     * Front Office - Page d’accueil.
+     *
+     * Cette méthode récupère les 3 produits à la une
+     * et les 3 derniers produits ajoutés.
+     *
+     * Ces données sont ensuite envoyées au template home/index.html.twig
+     * pour afficher une page d’accueil essentiellement graphique.
+     */
     // Cette méthode sert à afficher la page d'accueil avec les produits à la une et les derniers produits ajoutés.
     // Liée à ProductRepository et au template home/index.html.twig
     #[Route('/', name: 'app_home')]

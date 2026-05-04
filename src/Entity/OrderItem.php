@@ -31,6 +31,19 @@ class OrderItem
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $variantLabel = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?User $seller = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $commissionAmount = '0.00';
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $sellerAmount = '0.00';
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $platformAmount = '0.00';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +105,54 @@ class OrderItem
     public function setVariantLabel(?string $variantLabel): static
     {
         $this->variantLabel = $variantLabel;
+
+        return $this;
+    }
+
+    public function getSeller(): ?User
+    {
+        return $this->seller;
+    }
+
+    public function setSeller(?User $seller): static
+    {
+        $this->seller = $seller;
+
+        return $this;
+    }
+
+    public function getCommissionAmount(): ?string
+    {
+        return $this->commissionAmount;
+    }
+
+    public function setCommissionAmount(string $commissionAmount): static
+    {
+        $this->commissionAmount = $commissionAmount;
+
+        return $this;
+    }
+
+    public function getSellerAmount(): ?string
+    {
+        return $this->sellerAmount;
+    }
+
+    public function setSellerAmount(string $sellerAmount): static
+    {
+        $this->sellerAmount = $sellerAmount;
+
+        return $this;
+    }
+
+    public function getPlatformAmount(): ?string
+    {
+        return $this->platformAmount;
+    }
+
+    public function setPlatformAmount(string $platformAmount): static
+    {
+        $this->platformAmount = $platformAmount;
 
         return $this;
     }

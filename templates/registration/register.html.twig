@@ -26,8 +26,8 @@
                         </div>
 
                         <div class="auth-stat">
-                            <span>Expérience</span>
-                            <strong>Optimisée</strong>
+                            <span>Marketplace</span>
+                            <strong>Vendeur</strong>
                         </div>
                     </div>
                 </div>
@@ -36,36 +36,243 @@
             <div class="auth-panel">
                 <div class="auth-box">
                     <header class="auth-header">
-                        <h2>Créer un compte</h2>
-                        <p>Renseignez vos informations pour rejoindre InnovShop.</p>
+                        <h2>
+                            {% if accountType == 'company' %}
+                                Créer un compte entreprise
+                            {% else %}
+                                Créer un compte particulier
+                            {% endif %}
+                        </h2>
+
+                        <p>
+                            {% if accountType == 'company' %}
+                                Renseignez vos informations pour devenir vendeur sur InnovShop.
+                            {% else %}
+                                Créez un compte pour commander et suivre vos achats.
+                            {% endif %}
+                        </p>
                     </header>
 
-                    {{ form_start(registrationForm, {'attr': {'class': 'auth-form'}}) }}
+                    {#
+                        Sélecteur de type de compte.
 
+                        Ce ne sont plus des checkbox/radio.
+                        Ce sont deux liens clairs :
+                        - un lien vers le formulaire particulier
+                        - un lien vers le formulaire entreprise
+
+                        Résultat :
+                        le formulaire affiché correspond vraiment au choix.
+                    #}
+                 <div class="register-type-section">
+                        <p class="register-type-title">Choisissez votre type de compte</p>
+
+                        <div class="register-type-actions">
+                            <a
+                                href="{{ path('app_register', { type: 'individual' }) }}"
+                                class="register-type-btn {{ accountType == 'individual' ? 'active' : '' }}"
+                            >
+                                Particulier
+                            </a>
+
+                            <a
+                                href="{{ path('app_register', { type: 'company' }) }}"
+                                class="register-type-btn {{ accountType == 'company' ? 'active' : '' }}"
+                            >
+                                Entreprise
+                            </a>
+                        </div>
+                    </div>
+
+                    {#
+                        Messages flash d'erreur.
+                    #}
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-error">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {{ form_start(registrationForm, {
+                        'attr': {
+                            'class': 'auth-form',
+                            'autocomplete': 'off'
+                        }
+                    }) }}
+
+                        {#
+                            Champ caché accountType.
+                            Il est rendu ici pour éviter que form_end()
+                            l'affiche automatiquement en bas du formulaire.
+                        #}
+                        {{ form_widget(registrationForm.accountType) }}
+
+                        {#
+                            Email de connexion.
+                        #}
                         <div class="form-group">
                             {{ form_label(registrationForm.email) }}
-                            {{ form_widget(registrationForm.email, {'attr': {'class': 'auth-input', 'placeholder': 'exemple@innovshop.fr'}}) }}
+                            {{ form_widget(registrationForm.email, {
+                                'attr': {
+                                    'class': 'auth-input',
+                                    'placeholder': 'exemple@innovshop.fr'
+                                }
+                            }) }}
                             {{ form_errors(registrationForm.email) }}
                         </div>
 
-                        <div class="form-group">
-                            {{ form_label(registrationForm.plainPassword, 'Mot de passe') }}
-                            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'auth-input', 'placeholder': 'Choisissez un mot de passe'}}) }}
-                            {{ form_errors(registrationForm.plainPassword) }}
-                        </div>
+                        {#
+                            Champs entreprise.
 
-                        {% if registrationForm.agreeTerms is defined %}
-                            <div class="form-group auth-checkbox-group">
-                                <div class="auth-checkbox">
-                                    {{ form_widget(registrationForm.agreeTerms) }}
-                                    <span>J’accepte les conditions d’utilisation</span>
+                            Ils existent uniquement si accountType == company.
+                            Donc aucun JS n'est nécessaire.
+                        #}
+                        {% if accountType == 'company' %}
+                            <div class="company-fields company-fields-visible">
+                                <div class="company-fields-header">
+                                    <h3>Informations entreprise</h3>
+                                    <p>
+                                        Votre compte vendeur sera soumis à validation.
+                                    </p>
                                 </div>
-                                {{ form_errors(registrationForm.agreeTerms) }}
+
+                                <div class="form-group">
+                                    {{ form_label(registrationForm.companyName) }}
+                                    {{ form_widget(registrationForm.companyName, {
+                                        'attr': {
+                                            'class': 'auth-input',
+                                            'placeholder': 'Nom de votre entreprise'
+                                        }
+                                    }) }}
+                                    {{ form_errors(registrationForm.companyName) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(registrationForm.siret) }}
+                                    {{ form_widget(registrationForm.siret, {
+                                        'attr': {
+                                            'class': 'auth-input',
+                                            'placeholder': '14 chiffres'
+                                        }
+                                    }) }}
+                                    {{ form_errors(registrationForm.siret) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(registrationForm.companyEmail) }}
+                                    {{ form_widget(registrationForm.companyEmail, {
+                                        'attr': {
+                                            'class': 'auth-input',
+                                            'placeholder': 'contact@entreprise.fr'
+                                        }
+                                    }) }}
+                                    {{ form_errors(registrationForm.companyEmail) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(registrationForm.companyPhone) }}
+                                    {{ form_widget(registrationForm.companyPhone, {
+                                        'attr': {
+                                            'class': 'auth-input',
+                                            'placeholder': 'Téléphone professionnel'
+                                        }
+                                    }) }}
+                                    {{ form_errors(registrationForm.companyPhone) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(registrationForm.companyAddress) }}
+                                    {{ form_widget(registrationForm.companyAddress, {
+                                        'attr': {
+                                            'class': 'auth-input',
+                                            'placeholder': 'Adresse de l’entreprise'
+                                        }
+                                    }) }}
+                                    {{ form_errors(registrationForm.companyAddress) }}
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        {{ form_label(registrationForm.companyPostalCode) }}
+                                        {{ form_widget(registrationForm.companyPostalCode, {
+                                            'attr': {
+                                                'class': 'auth-input',
+                                                'placeholder': 'Code postal'
+                                            }
+                                        }) }}
+                                        {{ form_errors(registrationForm.companyPostalCode) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_label(registrationForm.companyCity) }}
+                                        {{ form_widget(registrationForm.companyCity, {
+                                            'attr': {
+                                                'class': 'auth-input',
+                                                'placeholder': 'Ville'
+                                            }
+                                        }) }}
+                                        {{ form_errors(registrationForm.companyCity) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(registrationForm.companyCountry) }}
+                                    {{ form_widget(registrationForm.companyCountry, {
+                                        'attr': {
+                                            'class': 'auth-input',
+                                            'placeholder': 'Pays'
+                                        }
+                                    }) }}
+                                    {{ form_errors(registrationForm.companyCountry) }}
+                                </div>
                             </div>
                         {% endif %}
 
+                        {#
+                            Mot de passe.
+                        #}
+                        <div class="form-group">
+                            {{ form_label(registrationForm.plainPassword.first) }}
+                            {{ form_widget(registrationForm.plainPassword.first, {
+                                'attr': {
+                                    'class': 'auth-input',
+                                    'placeholder': 'Choisissez un mot de passe'
+                                }
+                            }) }}
+                            {{ form_errors(registrationForm.plainPassword.first) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(registrationForm.plainPassword.second) }}
+                            {{ form_widget(registrationForm.plainPassword.second, {
+                                'attr': {
+                                    'class': 'auth-input',
+                                    'placeholder': 'Confirmez votre mot de passe'
+                                }
+                            }) }}
+                            {{ form_errors(registrationForm.plainPassword.second) }}
+                        </div>
+
+                        {{ form_errors(registrationForm.plainPassword) }}
+
+                        {#
+                            Conditions d'utilisation.
+                        #}
+                        <div class="form-group auth-checkbox-group">
+                            <label class="auth-checkbox">
+                                {{ form_widget(registrationForm.agreeTerms) }}
+                                <span>J’accepte les conditions d’utilisation</span>
+                            </label>
+
+                            {{ form_errors(registrationForm.agreeTerms) }}
+                        </div>
+
                         <button type="submit" class="btn btn-primary auth-submit">
-                            Créer mon compte
+                            {% if accountType == 'company' %}
+                                Créer mon compte vendeur
+                            {% else %}
+                                Créer mon compte
+                            {% endif %}
                         </button>
 
                     {{ form_end(registrationForm) }}

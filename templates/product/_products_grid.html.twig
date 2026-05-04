@@ -6,7 +6,9 @@
 
 <div class="products-grid">
     {% for product in products %}
-        <div class="product-card">
+        {% set productAvailable = product.available %}
+
+        <div class="product-card {{ not productAvailable ? 'product-card-unavailable' : '' }}">
             <div class="product-image-wrapper">
                 {% if product.image %}
                     <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.nom }}" class="product-image">
@@ -17,10 +19,25 @@
                 {% if product.aLaUne %}
                     <span class="badge-featured">À la une</span>
                 {% endif %}
+
+                {% if not productAvailable %}
+                    <span class="badge-unavailable">Indisponible</span>
+                {% endif %}
             </div>
 
             <div class="product-content">
                 <h3>{{ product.nom }}</h3>
+
+                <p class="product-seller">
+                    Vendu par :
+                    <strong>
+                        {% if product.seller %}
+                            {{ product.seller.sellerProfile ? product.seller.sellerProfile.companyName : product.seller.email }}
+                        {% else %}
+                            InnovShop
+                        {% endif %}
+                    </strong>
+                </p>
 
                 <p class="product-description">
                     {{ product.description|length > 110 ? product.description|slice(0, 110) ~ '...' : product.description }}
@@ -35,14 +52,20 @@
                         Voir le détail
                     </a>
 
-                    {% if product.variants|length > 0 %}
-                        <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-primary">
-                            Ajouter au panier
-                        </a>
+                    {% if productAvailable %}
+                        {% if product.variants|length > 0 %}
+                            <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-primary">
+                                Ajouter au panier
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">
+                                Ajouter au panier
+                            </a>
+                        {% endif %}
                     {% else %}
-                        <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">
-                            Ajouter au panier
-                        </a>
+                        <span class="btn btn-secondary btn-disabled">
+                            Indisponible
+                        </span>
                     {% endif %}
                 </div>
             </div>

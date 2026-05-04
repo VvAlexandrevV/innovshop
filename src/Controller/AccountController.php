@@ -16,6 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
 final class AccountController extends AbstractController
 {
     
+    /**
+     * Affiche le tableau de bord du compte utilisateur.
+     *
+     * Fonctionnalité InnovShop :
+     * Espace client - Tableau de bord utilisateur.
+     *
+     * Cette méthode permet à un utilisateur connecté de voir ses informations principales,
+     * le nombre total de commandes passées et le montant total dépensé.
+     */
     #[Route('/account', name: 'app_account')]
     #[IsGranted('ROLE_USER')]
     public function index(): Response
@@ -30,6 +39,15 @@ final class AccountController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche l’historique des commandes de l’utilisateur connecté.
+     *
+     * Fonctionnalité InnovShop :
+     * Espace client - Historique des commandes.
+     *
+     * Cette méthode récupère uniquement les commandes du client connecté,
+     * triées de la plus récente à la plus ancienne.
+     */
     #[Route('/account/orders', name: 'app_account_orders')]
     #[IsGranted('ROLE_USER')]
     public function orders(OrderRepository $orderRepository): Response
@@ -44,7 +62,15 @@ final class AccountController extends AbstractController
         ]);
     }
 
-    #[Route('/account/profile', name: 'app_account_profile')]
+    /**
+     * Affiche et traite le formulaire de modification du profil utilisateur.
+     *
+     * Fonctionnalité InnovShop :
+     * Espace client - Modification des informations de profil et de livraison.
+     *
+     * Cette méthode permet à l’utilisateur connecté de modifier ses informations.
+     * Si le formulaire est valide, les changements sont enregistrés en base de données.
+     */
     #[Route('/account/profile', name: 'app_account_profile')]
     #[IsGranted('ROLE_USER')]
     public function profile(Request $request, EntityManagerInterface $entityManager): Response
@@ -68,6 +94,15 @@ final class AccountController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche le détail d’une commande appartenant à l’utilisateur connecté.
+     *
+     * Fonctionnalité InnovShop :
+     * Espace client - Consultation du détail d’une commande.
+     *
+     * Cette méthode protège l’accès aux commandes :
+     * un utilisateur ne peut voir que ses propres commandes.
+     */
     #[Route('/account/orders/{id}', name: 'app_account_order_show')]
     #[IsGranted('ROLE_USER')]
     public function showOrder(Order $order): Response

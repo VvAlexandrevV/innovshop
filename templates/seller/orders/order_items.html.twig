@@ -1,0 +1,32 @@
+{% set order = entity.instance %}
+
+<div class="seller-order-items">
+    {% for orderItem in order.orderItems %}
+        {% if orderItem.seller == app.user %}
+            {% set product = orderItem.product %}
+
+            <div class="seller-order-item">
+                <div class="seller-order-item-image">
+                    {% if product and product.image %}
+                        <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ orderItem.productName }}">
+                    {% else %}
+                        <img src="{{ asset('images/default-product.png') }}" alt="Image par défaut">
+                    {% endif %}
+                </div>
+
+                <div class="seller-order-item-content">
+                    <strong>{{ orderItem.productName }}</strong>
+
+                    {% if orderItem.variantLabel %}
+                        <p>Option : {{ orderItem.variantLabel }}</p>
+                    {% endif %}
+
+                    <p>Prix vendu : {{ orderItem.productPrice|number_format(2, ',', ' ') }} €</p>
+                    <p>Commission : {{ orderItem.commissionAmount|number_format(2, ',', ' ') }} €</p>
+                    <p>Gain vendeur : {{ orderItem.sellerAmount|number_format(2, ',', ' ') }} €</p>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+

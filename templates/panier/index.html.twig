@@ -35,6 +35,16 @@
                                             <div class="checkout-product-top">
                                                 <div>
                                                     <h3>{{ ligne.product.nom }}</h3>
+                                                    <p class="checkout-product-seller">
+                                                    Vendu par :
+                                                    <strong>
+                                                        {% if ligne.product.seller %}
+                                                            {{ ligne.product.seller.sellerProfile ? ligne.product.seller.sellerProfile.companyName : ligne.product.seller.email }}
+                                                        {% else %}
+                                                            InnovShop
+                                                        {% endif %}
+                                                    </strong>
+                                                </p>
                                                     <p class="checkout-product-description">
                                                         {{ ligne.product.description|length > 120 ? ligne.product.description|slice(0, 120) ~ '...' : ligne.product.description }}
                                                     </p>

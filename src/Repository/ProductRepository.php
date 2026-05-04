@@ -6,6 +6,7 @@ use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\User;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -25,7 +26,6 @@ class ProductRepository extends ServiceEntityRepository
             ->addSelect('c')
             ->addSelect('v')
             ->andWhere('p.isActive = :active')
-            ->andWhere('p.stock > 0 OR v.stock > 0')
             ->setParameter('active', true);
 
         if ($search) {
@@ -61,5 +61,43 @@ class ProductRepository extends ServiceEntityRepository
 
         return $qb;
     }
-    
+
+    public function findBySeller(User $seller): array
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('p.variants', 'v')
+            ->addSelect('c')
+            ->addSelect('v')
+            ->andWhere('p.seller = :seller')
+            ->setParameter('seller', $seller)
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAdminProducts(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('p.variants', 'v')
+            ->addSelect('c')
+            ->addSelect('v')
+            ->andWhere('p.seller IS NULL')
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findActiveForCatalog(): QueryBuilder
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('p.variants', 'v')
+            ->addSelect('c')
+            ->addSelect('v')
+            ->andWhere('p.isActive = :active')
+            ->setParameter('active', true)
+            ->orderBy('p.createdAt', 'DESC');
+    }
 }

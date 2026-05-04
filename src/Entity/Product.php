@@ -41,6 +41,10 @@ class Product
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Category $category = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?User $seller = null;
+
     #[ORM\Column]
     private ?bool $isActive = true;
 
@@ -235,5 +239,36 @@ class Product
         }
 
         return $this;
+    }
+    public function getSeller(): ?User
+    {
+        return $this->seller;
+    }
+
+    public function setSeller(?User $seller): static
+    {
+        $this->seller = $seller;
+
+        return $this;
+    }
+
+    public function getImagePreview(): ?string
+    {
+        return $this->image;
+    }
+
+    public function isMarketplaceProduct(): bool
+    {
+        return $this->seller !== null;
+    }
+
+    public function isAdminProduct(): bool
+    {
+        return $this->seller === null;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->isActive();
     }
 }

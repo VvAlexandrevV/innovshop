@@ -20,7 +20,14 @@
             </div>
 
             <div class="product-detail-info">
-                <span class="detail-tag">Produit InnovShop</span>
+                <span class="detail-tag">
+                    Vendu par :
+                    {% if product.seller %}
+                        {{ product.seller.sellerProfile ? product.seller.sellerProfile.companyName : product.seller.email }}
+                    {% else %}
+                        InnovShop
+                    {% endif %}
+                </span>
 
                 <h1>{{ product.nom }}</h1>
 
@@ -56,17 +63,20 @@
                     id="product-add-form"
                     data-base-stock="{{ product.stock }}"
                 >
-                    {% if product.variants|length > 0 %}
+                   {% set visibleVariants = product.variants|filter(variant => variant.active) %}
+
+                    {% if visibleVariants|length > 0 %}
                         <div class="product-variants-box">
                             <h2>Options disponibles</h2>
 
                             <div class="product-variants-list">
-                                {% for variant in product.variants %}
-                                    {% set variantAvailable = variant.stock > 0 %}
+                                {% for variant in visibleVariants %}
+                                    {% set variantAvailable = variant.available %}
 
                                     <label class="product-variant-card selectable-variant {{ not variantAvailable ? 'variant-disabled' : '' }}">
                                         <input
                                             type="checkbox"
+                                            class="variant-price-input"
                                             name="variantIds[]"
                                             value="{{ variant.id }}"
                                             data-price-modifier="{{ variant.priceModifier ?: 0 }}"
@@ -153,6 +163,17 @@
                     </div>
 
                     <div class="detail-spec-row">
+                        <span>Vendeur</span>
+                        <strong>
+                            {% if product.seller %}
+                                {{ product.seller.sellerProfile ? product.seller.sellerProfile.companyName : product.seller.email }}
+                            {% else %}
+                                InnovShop
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                    <div class="detail-spec-row">
                         <span>Stock produit de base</span>
                         <strong>{{ product.stock }}</strong>
                     </div>
@@ -186,46 +207,4 @@
             </p>
         </div>
     </section>
-
-    <script>
-        const form = document.querySelector('#product-add-form');
-        const priceElement = document.querySelector('#product-dynamic-price');
-        const variantInputs = document.querySelectorAll('input[name="variantIds[]"]');
-        const addToCartButton = document.querySelector('#add-to-cart-button');
-
-        if (form && priceElement && addToCartButton) {
-            const basePrice = parseFloat(priceElement.dataset.basePrice);
-            const baseStock = parseInt(form.dataset.baseStock, 10);
-
-            function updateProductState() {
-                let finalPrice = basePrice;
-                let hasSelectedAvailableVariant = false;
-
-                variantInputs.forEach((variantInput) => {
-                    if (variantInput.checked) {
-                        finalPrice += parseFloat(variantInput.dataset.priceModifier || 0);
-
-                        if (parseInt(variantInput.dataset.stock, 10) > 0) {
-                            hasSelectedAvailableVariant = true;
-                        }
-                    }
-                });
-
-                priceElement.textContent = finalPrice.toFixed(2).replace('.', ',') + ' €';
-
-                if (baseStock > 0) {
-                    addToCartButton.disabled = false;
-                    return;
-                }
-
-                addToCartButton.disabled = !hasSelectedAvailableVariant;
-            }
-
-            variantInputs.forEach((input) => {
-                input.addEventListener('change', updateProductState);
-            });
-
-            updateProductState();
-        }
-    </script>
 {% endblock %}

@@ -6,20 +6,46 @@
 
         <title>{% block title %}InnovShop{% endblock %}</title>
 
+        {#
+            Icône par défaut Symfony.
+            Tu pourras la remplacer plus tard par un vrai favicon InnovShop.
+        #}
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 
+        {#
+            Polices Google utilisées pour le design InnovShop.
+        #}
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-        {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-        {% endblock %}
+        {#
+            Styles CSS principaux.
 
+            Attention :
+            app.css est aussi importé dans assets/app.js.
+            Mais on garde ce lien direct car ton projet semble déjà fonctionner comme ça.
+        #}
+       {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+        {% endblock %}
+        
+
+        {#
+            JavaScript principal via Importmap.
+
+            importmap('app') charge assets/app.js.
+        #}
         {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {% block importmap %}
+                {{ importmap('app') }}
+            {% endblock %}
         {% endblock %}
 
+        {#
+            Hot reload FrankenPHP si activé.
+            Utile en développement uniquement.
+        #}
         {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
         {% if frankenphpHotReload %}
             <meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
@@ -31,10 +57,18 @@
     <body>
         <header class="site-header">
             <nav class="navbar">
+                {#
+                    Logo principal.
+                    Redirige toujours vers la page d'accueil.
+                #}
                 <div class="nav-logo">
                     <a href="{{ path('app_home') }}">InnovShop</a>
                 </div>
 
+                {#
+                    Bouton burger mobile.
+                    Le comportement est géré dans assets/app.js.
+                #}
                 <button class="burger-btn" type="button" aria-label="Ouvrir le menu">
                     <span></span>
                     <span></span>
@@ -42,9 +76,26 @@
                 </button>
 
                 <ul class="nav-links">
-                    <li><a href="{{ path('app_home') }}">Accueil</a></li>
-                    <li><a href="{{ path('app_product') }}">Catalogue</a></li>
+                    {#
+                        Liens publics.
+                    #}
+                    <li>
+                        <a href="{{ path('app_home') }}">Accueil</a>
+                    </li>
 
+                    <li>
+                        <a href="{{ path('app_product') }}">Catalogue</a>
+                    </li>
+
+                    {#
+                        Calcul du nombre d'articles dans le panier.
+
+                        Si l'utilisateur est connecté :
+                        on compte les lignes du panier en base.
+
+                        Sinon :
+                        on compte les lignes du panier stocké en session.
+                    #}
                     {% if app.user and app.user.cart %}
                         {% set nbArticlesPanier = app.user.cart.cartItems|length %}
                     {% else %}
@@ -58,18 +109,71 @@
                         </a>
                     </li>
 
+                    {#
+                        Navigation utilisateur.
+
+                        Si l'utilisateur est connecté :
+                        - Mon compte
+                        - Profil vendeur si ROLE_SELLER
+                        - Espace vendeur si ROLE_SELLER
+                        - Déconnexion
+
+                        Si l'utilisateur n'est pas connecté :
+                        - Connexion
+                        - Inscription
+                    #}
                     {% if app.user %}
-                        <li><a href="{{ path('app_account') }}" class="nav-user">{{ app.user.email }}</a></li>
-                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                        <li>
+                            <a href="{{ path('app_account') }}" class="nav-user">
+                                Mon compte
+                            </a>
+                        </li>
+
+                        {% if is_granted('ROLE_SELLER') %}
+                            <li>
+                                <a href="{{ path('seller_profile_edit') }}">
+                                    Profil vendeur
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ path('seller') }}">
+                                    Espace vendeur
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        <li>
+                            <a href="{{ path('app_logout') }}">
+                                Déconnexion
+                            </a>
+                        </li>
                     {% else %}
-                        <li><a href="{{ path('app_login') }}">Connexion</a></li>
-                        <li><a href="{{ path('app_register') }}">Créer un compte</a></li>
+                        <li>
+                            <a href="{{ path('app_login') }}">
+                                Connexion
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ path('app_register') }}">
+                                Inscription
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
             </nav>
         </header>
 
         <main>
+            {#
+                Messages flash globaux.
+
+                Exemples :
+                - success : message de réussite
+                - error / danger : message d'erreur
+                - info / warning : autres informations
+            #}
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
                     <div class="flash-message flash-{{ label }}">
@@ -88,9 +192,11 @@
                 {% endfor %}
             {% endfor %}
 
+            {#
+                Contenu propre à chaque page.
+            #}
             {% block body %}{% endblock %}
         </main>
-
 
         <footer class="site-footer">
             <div class="footer">

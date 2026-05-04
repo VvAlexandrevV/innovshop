@@ -14,6 +14,20 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class PanierController extends AbstractController
 {
+    /**
+     * Ajoute un produit (avec ou sans variantes) au panier.
+     *
+     * Fonctionnalité InnovShop :
+     * Front Office - Ajout au panier.
+     *
+     * Cette méthode gère :
+     * - la vérification de disponibilité du produit
+     * - la validation des variantes sélectionnées
+     * - l'ajout en base si utilisateur connecté
+     * - l'ajout en session si utilisateur non connecté
+     *
+     * Chaque ajout crée une nouvelle ligne (pas de quantité).
+     */
     #[Route('/panier/add/{id}', name: 'app_panier_add')]
     public function add(
         int $id,
@@ -94,6 +108,20 @@ final class PanierController extends AbstractController
         return $this->redirectToRoute('app_panier');
     }
 
+    /**
+     * Affiche le contenu du panier.
+     *
+     * Fonctionnalité InnovShop :
+     * Front Office - Consultation du panier.
+     *
+     * Cette méthode :
+     * - reconstruit les lignes du panier (BDD ou session)
+     * - supprime automatiquement les produits invalides
+     * - calcule le prix total
+     * - gère les variantes
+     *
+     * Elle nettoie aussi les incohérences (produits supprimés, stock 0, etc).
+     */
     #[Route('/panier', name: 'app_panier')]
     public function index(
         Request $request,
@@ -244,6 +272,16 @@ final class PanierController extends AbstractController
         ]);
     }
 
+    /**
+     * Vide complètement le panier.
+     *
+     * Fonctionnalité InnovShop :
+     * Front Office - Vider le panier.
+     *
+     * Supprime toutes les lignes :
+     * - en base de données si connecté
+     * - en session sinon
+     */
     #[Route('/panier/clear', name: 'app_panier_clear')]
     public function clear(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -266,6 +304,14 @@ final class PanierController extends AbstractController
         return $this->redirectToRoute('app_panier');
     }
 
+    /**
+     * Supprime une ligne du panier (version session).
+     *
+     * Fonctionnalité InnovShop :
+     * Front Office - Suppression d’un produit (non connecté).
+     *
+     * Supprime un élément du tableau session via son index.
+     */
     #[Route('/panier/remove/session/{index}', name: 'app_panier_remove_session')]
     public function removeSession(int $index, Request $request): Response
     {
@@ -281,12 +327,28 @@ final class PanierController extends AbstractController
         return $this->redirectToRoute('app_panier');
     }
 
+    /**
+     * Redirige vers le checkout.
+     *
+     * Fonctionnalité InnovShop :
+     * Front Office - Validation du panier.
+     *
+     * Point d’entrée vers le processus de commande.
+     */
     #[Route('/panier/validation-commande', name: 'app_panier_validation_commande')]
     public function validationCommande(): Response
     {
         return $this->redirectToRoute('app_checkout');
     }
 
+    /**
+     * Supprime une ligne du panier (version utilisateur connecté).
+     *
+     * Fonctionnalité InnovShop :
+     * Front Office - Suppression d’un produit (connecté).
+     *
+     * Supprime un CartItem en base de données.
+     */
     #[Route('/panier/remove/cart-item/{id}', name: 'app_panier_remove_cart_item')]
     public function removeCartItem(int $id, EntityManagerInterface $entityManager): Response
     {

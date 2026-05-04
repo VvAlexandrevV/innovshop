@@ -26,6 +26,9 @@ class Variant
     #[ORM\Column(options: ['default' => 0])]
     private ?int $stock = 0;
 
+    #[ORM\Column]
+    private ?bool $isActive = true;
+
     #[ORM\ManyToOne(inversedBy: 'variants')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Product $product = null;
@@ -48,6 +51,7 @@ class Variant
     public function setType(string $type): static
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -59,6 +63,7 @@ class Variant
     public function setValue(string $value): static
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -70,6 +75,7 @@ class Variant
     public function setPriceModifier(?string $priceModifier): static
     {
         $this->priceModifier = $priceModifier;
+
         return $this;
     }
 
@@ -81,18 +87,32 @@ class Variant
     public function setStock(int $stock): static
     {
         $this->stock = max(0, $stock);
+
         return $this;
     }
 
     public function decreaseStock(int $quantity = 1): static
     {
         $this->stock = max(0, $this->stock - $quantity);
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
+
         return $this;
     }
 
     public function isAvailable(): bool
     {
-        return $this->getStock() > 0;
+        return $this->isActive() && $this->getStock() > 0;
     }
 
     public function getProduct(): ?Product
@@ -103,6 +123,7 @@ class Variant
     public function setProduct(?Product $product): static
     {
         $this->product = $product;
+
         return $this;
     }
 }

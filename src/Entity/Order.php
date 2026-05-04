@@ -211,6 +211,45 @@ class Order
         return $this;
     }
 
+    public function getSellerGrossTotal(User $seller): float
+    {
+        $total = 0;
+
+        foreach ($this->orderItems as $orderItem) {
+            if ($orderItem->getSeller() === $seller) {
+                $total += (float) $orderItem->getProductPrice();
+            }
+        }
+
+        return $total;
+    }
+
+    public function getSellerCommissionTotal(User $seller): float
+    {
+        $total = 0;
+
+        foreach ($this->orderItems as $orderItem) {
+            if ($orderItem->getSeller() === $seller) {
+                $total += (float) $orderItem->getCommissionAmount();
+            }
+        }
+
+        return $total;
+    }
+
+    public function getSellerNetTotal(User $seller): float
+    {
+        $total = 0;
+
+        foreach ($this->orderItems as $orderItem) {
+            if ($orderItem->getSeller() === $seller) {
+                $total += (float) $orderItem->getSellerAmount();
+            }
+        }
+
+        return $total;
+    }
+
     //Label pour les status
     public function getStatusLabel(): string
     {
