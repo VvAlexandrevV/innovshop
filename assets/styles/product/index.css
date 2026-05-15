@@ -1,0 +1,132 @@
+/* =========================================================
+   CATALOGUE PRODUITS
+   Fichier Twig concerné : templates/product/index.html.twig
+
+   Rôle :
+   - Style spécifique de la page catalogue
+   - Gère le titre, le compteur de produits
+   - Gère la recherche, les filtres, le tri et les catégories
+   - Gère l'état de chargement AJAX du catalogue
+========================================================= */
+
+/* Section principale du catalogue */
+.catalogue-section {
+    padding: 4rem 0 5rem;
+}
+
+/* Titre principal du catalogue */
+.catalogue-section h1 {
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    letter-spacing: -0.04em;
+}
+
+/* Compteur de produits */
+.count {
+    color: #b9c4cf;
+    font-weight: 600;
+}
+
+/* Bloc contenant recherche + catégories */
+.catalog-filters {
+    margin: 40px 0;
+}
+
+/* Formulaire de recherche catalogue */
+.catalog-search-form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+/* Champs de recherche et prix */
+.catalog-search-input {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: #121923;
+    color: #f5f7fa;
+    font-size: 16px;
+    outline: none;
+}
+
+/* Focus des champs de recherche */
+.catalog-search-input:focus {
+    border-color: #6ee7f9;
+    box-shadow: 0 0 0 3px rgba(110, 231, 249, 0.12);
+}
+
+/* Select de tri */
+.catalog-tri-select {
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: #121923;
+    color: #f5f7fa;
+    font-size: 16px;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Focus du select de tri */
+.catalog-tri-select:focus {
+    border-color: #6ee7f9;
+    box-shadow: 0 0 0 3px rgba(110, 231, 249, 0.12);
+}
+
+/* Liste des catégories */
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Bouton catégorie */
+.category-tab {
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    color: #c9d2dc;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+/* Hover et catégorie active */
+.category-tab:hover,
+.category-tab.active {
+    background: #6ee7f9;
+    color: #081018;
+}
+
+/* Résultats AJAX du catalogue */
+#catalog-results {
+    transition:
+        opacity 0.2s ease,
+        filter 0.2s ease;
+}
+
+/* État visuel pendant le rechargement AJAX */
+#catalog-results.catalog-results-loading {
+    opacity: 0.55;
+    filter: blur(1px);
+    pointer-events: none;
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .catalog-search-form {
+        flex-direction: column;
+    }
+
+    .catalog-tri-select {
+        width: 100%;
+    }
+}

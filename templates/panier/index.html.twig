@@ -6,9 +6,15 @@
     <section class="checkout-page">
         <div class="container">
             <div class="checkout-header">
-                <a href="{{ path('app_product') }}" class="checkout-back-link">← Retour au catalogue</a>
+                <a href="{{ path('app_product') }}" class="checkout-back-link">
+                    ← Retour au catalogue
+                </a>
+
                 <h1>Mon panier</h1>
-                <p>Vérifiez vos articles avant de passer à la commande.</p>
+
+                <p>
+                    Vérifiez vos articles avant de passer à la commande.
+                </p>
             </div>
 
             {% if lignesPanier is not empty %}
@@ -35,20 +41,23 @@
                                             <div class="checkout-product-top">
                                                 <div>
                                                     <h3>{{ ligne.product.nom }}</h3>
+
                                                     <p class="checkout-product-seller">
-                                                    Vendu par :
-                                                    <strong>
-                                                        {% if ligne.product.seller %}
-                                                            {{ ligne.product.seller.sellerProfile ? ligne.product.seller.sellerProfile.companyName : ligne.product.seller.email }}
-                                                        {% else %}
-                                                            InnovShop
-                                                        {% endif %}
-                                                    </strong>
-                                                </p>
+                                                        Vendu par :
+                                                        <strong>
+                                                            {% if ligne.product.seller %}
+                                                                {{ ligne.product.seller.sellerProfile ? ligne.product.seller.sellerProfile.companyName : ligne.product.seller.email }}
+                                                            {% else %}
+                                                                InnovShop
+                                                            {% endif %}
+                                                        </strong>
+                                                    </p>
+
                                                     <p class="checkout-product-description">
                                                         {{ ligne.product.description|length > 120 ? ligne.product.description|slice(0, 120) ~ '...' : ligne.product.description }}
                                                     </p>
-                                                   {% if ligne.variants is not empty %}
+
+                                                    {% if ligne.variants is not empty %}
                                                         <div class="checkout-product-variant">
                                                             <span>Options sélectionnées :</span>
 
@@ -74,16 +83,16 @@
                                                 <span class="checkout-qty">Quantité : 1</span>
 
                                                 <div class="checkout-product-actions">
-                                                    <a href="{{ path('app_product_detail', {id: ligne.product.id}) }}" class="small-link">
+                                                    <a href="{{ path('app_product_detail', { id: ligne.product.id }) }}" class="small-link">
                                                         Voir le détail
                                                     </a>
 
                                                     {% if app.user %}
-                                                        <a href="{{ path('app_panier_remove_cart_item', {id: ligne.id}) }}" class="small-link danger-link">
+                                                        <a href="{{ path('app_panier_remove_cart_item', { id: ligne.id }) }}" class="small-link danger-link">
                                                             Supprimer
                                                         </a>
                                                     {% else %}
-                                                        <a href="{{ path('app_panier_remove_session', {index: ligne.index}) }}" class="small-link danger-link">
+                                                        <a href="{{ path('app_panier_remove_session', { index: ligne.index }) }}" class="small-link danger-link">
                                                             Supprimer
                                                         </a>
                                                     {% endif %}
@@ -137,6 +146,7 @@
             {% else %}
                 <div class="checkout-card empty-cart-box">
                     <p class="empty-state">Votre panier est vide.</p>
+
                     <a href="{{ path('app_product') }}" class="btn btn-primary">
                         Retour au catalogue
                     </a>

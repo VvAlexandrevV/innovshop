@@ -1,0 +1,97 @@
+/* =========================================================
+   COMPOSANT PARTAGÉ - PAGINATION
+   Fichiers Twig concernés :
+   - templates/product/_products_grid.html.twig
+
+   Rôle :
+   - Style de la pagination KnpPaginator
+   - Gère la pagination haute et basse du catalogue
+========================================================= */
+
+/* Conteneur général de pagination */
+.navigation {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* Pagination affichée au-dessus de la grille */
+.navigation-top {
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+/* Liste de pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+/* Liens et page active */
+.pagination a,
+.pagination .current {
+    min-width: 42px;
+    height: 42px;
+    padding: 0 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #c9d2dc;
+    font-weight: 700;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+/* Hover lien pagination */
+.pagination a:hover {
+    background: rgba(110, 231, 249, 0.12);
+    border-color: rgba(110, 231, 249, 0.45);
+    color: #6ee7f9;
+    transform: translateY(-2px);
+}
+
+/* Page courante */
+.pagination .current {
+    background: linear-gradient(135deg, #6ee7f9, #38bdf8);
+    border-color: transparent;
+    color: #081018;
+    box-shadow: 0 10px 28px rgba(56, 189, 248, 0.22);
+}
+
+/* Élément désactivé */
+.pagination .disabled,
+.pagination .disabled span {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .navigation-top {
+        margin-bottom: 1.5rem;
+    }
+
+    .pagination span,
+    .pagination a,
+    .pagination .current {
+        min-width: 38px;
+        height: 38px;
+        padding: 0 0.7rem;
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,234 @@
+/* =========================================================
+   COMPOSANT PARTAGÉ - CARTES PRODUITS
+   Fichiers Twig concernés :
+   - templates/home/index.html.twig
+   - templates/product/index.html.twig
+   - templates/product/_products_grid.html.twig
+
+   Rôle :
+   - Style des grilles produits
+   - Style des cartes produits
+   - Gère l'image, le vendeur, le prix, les badges et les actions
+   - Gère les produits indisponibles
+========================================================= */
+
+/* Grille des produits */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+/* Carte produit */
+.product-card {
+    position: relative;
+    background: #151d28;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    overflow: hidden;
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+/* Hover carte produit */
+.product-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(110, 231, 249, 0.35);
+    box-shadow: 0 18px 44px rgba(0,0,0,0.28);
+}
+
+/* Zone image produit */
+.product-image-wrapper {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: #0f1620;
+    overflow: hidden;
+}
+
+/* Image produit */
+.product-image,
+.product-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    transform: scale(1.06);
+    transition:
+        filter 0.45s ease,
+        transform 0.45s ease,
+        opacity 0.45s ease;
+    will-change: filter, transform;
+}
+
+/* Passage en couleur au survol */
+.product-card:hover .product-image,
+.product-card:hover .product-image-wrapper img {
+    filter: grayscale(0%);
+    transform: scale(1);
+}
+
+/* Badge produit à la une */
+.badge-featured {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, #d7a7ff, #a855f7);
+    color: #0b0f14;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Badge produit indisponible */
+.badge-unavailable {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(15, 23, 42, 0.88);
+    color: #fca5a5;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid rgba(252, 165, 165, 0.35);
+    z-index: 2;
+}
+
+/* Contenu de la carte */
+.product-content {
+    padding: 1.25rem;
+}
+
+/* Nom du produit */
+.product-content h3 {
+    margin: 0 0 0.8rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: -0.03em;
+}
+
+/* Vendeur du produit */
+.product-seller {
+    margin: 0 0 1rem;
+    color: #9fb0c0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Nom du vendeur */
+.product-seller strong {
+    color: #6ee7f9;
+    font-weight: 700;
+}
+
+/* Description courte */
+.product-description {
+    min-height: 70px;
+    margin-bottom: 1.25rem;
+    color: #b8c3cf;
+    line-height: 1.7;
+}
+
+/* Zone prix */
+.product-footer {
+    margin-bottom: 1rem;
+}
+
+/* Prix produit */
+.product-price {
+    color: #6ee7f9;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Actions produit */
+.product-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Boutons dans les cartes */
+.product-actions .btn {
+    flex: 1;
+    text-align: center;
+}
+
+/* Produit indisponible */
+.product-card-unavailable {
+    opacity: 0.58;
+    filter: grayscale(100%);
+}
+
+/* Hover désactivé pour produit indisponible */
+.product-card-unavailable:hover {
+    transform: none;
+    border-color: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+/* Prix grisé si produit indisponible */
+.product-card-unavailable .product-price {
+    color: #9ca3af;
+}
+
+/* Bouton visuellement désactivé */
+.btn-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* État vide dans une grille */
+.empty-state {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+/* =========================================================
+   RESPONSIVE - TABLETTE
+========================================================= */
+
+@media (max-width: 992px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .product-actions .btn {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - PETIT MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+    .product-image-wrapper {
+        aspect-ratio: 1 / 1;
+    }
+}

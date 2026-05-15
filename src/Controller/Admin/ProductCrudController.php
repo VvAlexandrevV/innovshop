@@ -5,15 +5,14 @@ namespace App\Controller\Admin;
 use App\Entity\Product;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ProductCrudController extends AbstractCrudController
 {
@@ -21,9 +20,14 @@ class ProductCrudController extends AbstractCrudController
      * Indique à EasyAdmin quelle entité ce CRUD doit gérer.
      *
      * Fonctionnalité InnovShop :
-     * Back Office - Gestion des produits.
+     * Back Office Admin - Vue globale des produits.
      *
-     * Cette méthode relie ce contrôleur EasyAdmin à l’entité Product.
+     * Ce CRUD sert à afficher tous les produits de la marketplace :
+     * - produits InnovShop ;
+     * - produits vendeurs.
+     *
+     * Il sert de vue d’ensemble et ne doit pas être utilisé pour modifier
+     * directement les produits afin d’éviter de casser la séparation admin/seller.
      */
     public static function getEntityFqcn(): string
     {
@@ -31,41 +35,24 @@ class ProductCrudController extends AbstractCrudController
     }
 
     /**
-     * Configure les champs utilisés pour créer, modifier et afficher un produit.
+     * Configure le titre de la vue globale des produits.
+     */
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setPageTitle(Crud::PAGE_INDEX, 'Tous les produits')
+            ->setDefaultSort(['createdAt' => 'DESC']);
+    }
+
+    /**
+     * Configure les champs affichés dans la liste globale.
      *
-     * Fonctionnalité InnovShop :
-     * Back Office - Création / modification des produits.
-     *
-     * Cette méthode permet à l’administrateur de gérer les informations
-     * principales d’un produit : nom, prix, stock, description, spécifications,
-     * image, catégorie, mise en avant et visibilité dans le catalogue.
-     *
-     * Le champ "aLaUne" sert à afficher un produit dans la section
-     * "produits à la une" de la page d’accueil.
-     *
-     * Le champ "isActive" permet de retirer un produit du catalogue
-     * sans le supprimer définitivement, ce qui protège l’historique des commandes.
+     * Cette vue permet à l’admin de voir rapidement si un produit appartient :
+     * - à InnovShop si le seller est vide ;
+     * - à un vendeur si le seller est renseigné.
      */
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('nom', 'Nom');
-
-        yield MoneyField::new('prix', 'Prix')
-            ->setCurrency('EUR')
-            ->setStoredAsCents(false);
-
-        yield IntegerField::new('stock', 'Stock')
-            ->setHelp('Nombre d’unités disponibles à la vente.');    
-
-        yield TextareaField::new('description', 'Description');
-        yield TextareaField::new('specification', 'Spécification');
-
-        yield ImageField::new('image', 'Image')
-            ->setUploadDir('public/images/products')
-            ->setUploadedFileNamePattern('[randomhash].[extension]')
-            ->setRequired(false)
-            ->onlyOnForms();
-
         yield TextField::new('imagePreview', 'Image')
             ->formatValue(function ($value, $entity) {
                 $image = $entity->getImage()
@@ -77,29 +64,40 @@ class ProductCrudController extends AbstractCrudController
             ->renderAsHtml()
             ->onlyOnIndex();
 
-        yield BooleanField::new('aLaUne', 'À la une');
+        yield TextField::new('nom', 'Nom');
 
-        yield BooleanField::new('isActive', 'Produit actif')
-            ->setHelp('Désactivez ce champ pour retirer le produit du catalogue sans supprimer son historique.');
+        yield MoneyField::new('prix', 'Prix')
+            ->setCurrency('EUR')
+            ->setStoredAsCents(false);
+
+        yield IntegerField::new('stock', 'Stock');
+
+        yield AssociationField::new('seller', 'Vendeur')
+            ->formatValue(function ($value, $entity) {
+                return $entity->getSeller() ? (string) $entity->getSeller() : 'InnovShop';
+            });
 
         yield AssociationField::new('category', 'Catégorie');
 
-        yield DateTimeField::new('createdAt', 'Créé le')
-            ->hideOnForm();
+        yield BooleanField::new('aLaUne', 'À la une')
+            ->renderAsSwitch(false);
+
+        yield BooleanField::new('isActive', 'Produit actif')
+            ->renderAsSwitch(false);
+
+        yield DateTimeField::new('createdAt', 'Créé le');
     }
 
     /**
-     * Configure les actions disponibles sur les produits.
+     * Désactive les actions de modification dans la vue globale.
      *
-     * Fonctionnalité InnovShop :
-     * Back Office - Gestion sécurisée des produits.
-     *
-     * La suppression est désactivée pour éviter de supprimer un produit
-     * déjà lié à des commandes. À la place, le champ "isActive"
-     * permet de masquer un produit sans casser l’historique.
+     * Les modifications doivent se faire depuis :
+     * - Produits InnovShop pour les produits admin ;
+     * - Produits vendeurs pour les produits marketplace.
      */
     public function configureActions(Actions $actions): Actions
     {
-        return $actions->disable(Action::DELETE);
+        return $actions
+            ->disable(Action::NEW, Action::EDIT, Action::DELETE);
     }
 }

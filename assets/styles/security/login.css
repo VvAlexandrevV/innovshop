@@ -1,0 +1,28 @@
+/* =========================================================
+   CONNEXION - PAGE LOGIN
+   Fichier Twig concerné : templates/security/login.html.twig
+
+   Rôle :
+   - Style spécifique de la page de connexion
+   - Complète la base commune auth/base.css
+   - Gère les petits ajustements propres au formulaire login
+========================================================= */
+
+/* Lien de déconnexion dans l'alerte succès */
+.auth-alert-success a {
+    color: #6ee7f9;
+    font-weight: 800;
+}
+
+/* Hover du lien de déconnexion */
+.auth-alert-success a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* Checkbox "Rester connecté" sur la page login */
+.auth-options .auth-checkbox {
+    width: 100%;
+}
+
+/* Sur mobile, le bouton reste pleine largeur via auth/base.css */

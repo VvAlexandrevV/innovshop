@@ -1,0 +1,78 @@
+/* =========================================================
+   ESPACE CLIENT - DÉTAIL D'UNE COMMANDE
+   Fichier Twig concerné : templates/account/show_order.html.twig
+
+   Rôle :
+   - Style spécifique de la page détail d'une commande client
+   - Gère la grille commande + livraison
+   - Gère les ajustements du tableau des produits commandés
+========================================================= */
+
+/* Grille des deux cartes principales : commande + livraison */
+.account-grid-order-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Carte produits commandés située sous la grille */
+.account-grid-order-detail + .account-card {
+    margin-top: 1.5rem;
+}
+
+/* Nom du produit dans le tableau */
+.orders-table tbody td:first-child {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* Variante du produit */
+.orders-table tbody td:nth-child(2) {
+    color: #9fb0c0;
+}
+
+/* Prix du produit */
+.orders-table tbody td:nth-child(3) {
+    color: #6ee7f9;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   RESPONSIVE - TABLETTE
+========================================================= */
+
+@media (max-width: 992px) {
+    .account-grid-order-detail {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .account-grid-order-detail {
+        margin-bottom: 1rem;
+    }
+
+    .account-grid-order-detail + .account-card {
+        margin-top: 1rem;
+    }
+
+    .orders-table {
+        min-width: 560px;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - PETIT MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+    .orders-table {
+        min-width: 520px;
+    }
+}

@@ -1,0 +1,86 @@
+/* =========================================================
+   VENDEUR - LIGNES DE COMMANDE
+   Fichier Twig concerné : templates/seller/orders/order_items.html.twig
+
+   Rôle :
+   - Style du partial affichant les lignes de commande vendeur
+   - Gère l'image, le nom du produit, l'option, la commission et le gain
+========================================================= */
+
+/* Liste des lignes vendeur */
+.seller-order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* Ligne vendeur */
+.seller-order-item {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 0.9rem;
+    align-items: start;
+    padding: 0.9rem;
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Image */
+.seller-order-item-image {
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #0f1620;
+}
+
+/* Image produit */
+.seller-order-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Contenu */
+.seller-order-item-content {
+    min-width: 0;
+}
+
+/* Nom produit */
+.seller-order-item-content strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+/* Détails */
+.seller-order-item-content p {
+    margin: 0.25rem 0;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* État vide */
+.seller-order-items-empty {
+    margin: 0;
+    color: #9ca3af;
+    font-size: 0.92rem;
+}
+
+/* =========================================================
+   RESPONSIVE - PETIT MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+    .seller-order-item {
+        grid-template-columns: 1fr;
+    }
+
+    .seller-order-item-image {
+        width: 100%;
+        height: 150px;
+    }
+}

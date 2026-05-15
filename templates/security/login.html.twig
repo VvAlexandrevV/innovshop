@@ -53,9 +53,10 @@
                         </div>
                     {% endif %}
 
-                    <form method="post" class="auth-form">
+                    <form method="post" class="auth-form" data-turbo="false">
                         <div class="form-group">
                             <label for="username">Adresse email</label>
+
                             <input
                                 type="email"
                                 value="{{ last_username }}"
@@ -71,6 +72,7 @@
 
                         <div class="form-group">
                             <label for="password">Mot de passe</label>
+
                             <input
                                 type="password"
                                 name="password"

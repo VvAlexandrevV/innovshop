@@ -7,7 +7,9 @@
         <div class="container">
             <div class="account-header">
                 <span class="account-badge">Espace client</span>
+
                 <h1>Commande #{{ order.id }}</h1>
+
                 <p>
                     Consultez le détail de votre commande et les produits associés.
                 </p>
@@ -52,10 +54,12 @@
                                     <th>Prix</th>
                                 </tr>
                             </thead>
+
                             <tbody>
                                 {% for item in orderItems %}
                                     <tr>
                                         <td>{{ item.productName }}</td>
+
                                         <td>
                                             {% if item.variantLabel %}
                                                 {{ item.variantLabel }}
@@ -63,6 +67,7 @@
                                                 Standard
                                             {% endif %}
                                         </td>
+
                                         <td>{{ item.productPrice }} €</td>
                                     </tr>
                                 {% endfor %}
@@ -75,8 +80,13 @@
             </div>
 
             <div class="account-actions">
-                <a href="{{ path('app_account_orders') }}" class="btn btn-secondary">Retour aux commandes</a>
-                <a href="{{ path('app_account') }}" class="btn btn-primary">Retour à mon compte</a>
+                <a href="{{ path('app_account_orders') }}" class="btn btn-secondary">
+                    Retour aux commandes
+                </a>
+
+                <a href="{{ path('app_account') }}" class="btn btn-primary">
+                    Retour à mon compte
+                </a>
             </div>
         </div>
     </section>

@@ -1,0 +1,79 @@
+/* =========================================================
+   COMPOSANT PARTAGÉ - BOUTONS
+   Fichiers Twig concernés :
+   - Tous les templates utilisant .btn
+   - templates/base.html.twig
+   - templates/home/index.html.twig
+   - templates/product/*
+   - templates/panier/*
+   - templates/checkout/*
+   - templates/account/*
+   - templates/seller/*
+
+   Rôle :
+   - Style global des boutons InnovShop
+   - Gère les variantes primaire, secondaire et désactivée
+========================================================= */
+
+/* Bouton de base */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.95rem 1.4rem;
+    border-radius: 12px;
+    font-weight: 700;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Effet au survol */
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Bouton principal */
+.btn-primary {
+    background: linear-gradient(135deg, #6ee7f9, #38bdf8);
+    color: #081018;
+    box-shadow: 0 10px 30px rgba(56, 189, 248, 0.22);
+}
+
+/* Hover bouton principal */
+.btn-primary:hover {
+    box-shadow: 0 12px 34px rgba(56, 189, 248, 0.32);
+}
+
+/* Bouton secondaire */
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #f5f7fa;
+}
+
+/* Hover bouton secondaire */
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Bouton HTML désactivé */
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Bouton visuellement désactivé */
+.btn-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+}

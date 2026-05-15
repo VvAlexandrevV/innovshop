@@ -1,0 +1,121 @@
+/* =========================================================
+   CHECKOUT - CONFIRMATION COMMANDE
+   Fichier Twig concerné : templates/checkout/success.html.twig
+
+   Rôle :
+   - Style spécifique de la page de confirmation de commande
+   - Gère le héros de confirmation
+   - Gère les informations de commande
+   - Gère l'adresse de livraison
+   - Gère les lignes de commande sans image
+========================================================= */
+
+/* En-tête de confirmation */
+.order-confirmation-hero {
+    margin-bottom: 2.5rem;
+    text-align: left;
+}
+
+/* Badge confirmation */
+.order-confirmation-badge {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(110, 231, 249, 0.12);
+    border: 1px solid rgba(110, 231, 249, 0.25);
+    color: #6ee7f9;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+/* Titre de confirmation */
+.order-confirmation-hero h1 {
+    margin: 0 0 0.75rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    letter-spacing: -0.05em;
+}
+
+/* Texte de confirmation */
+.order-confirmation-hero p {
+    margin: 0;
+    color: #b8c3cf;
+    max-width: 720px;
+    line-height: 1.8;
+}
+
+/* Grille des informations de commande */
+.order-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+/* Boîte information commande */
+.order-meta-box {
+    padding: 1.1rem 1.2rem;
+    background: #121923;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+}
+
+/* Libellé d'une information */
+.order-meta-label {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #9fb0c0;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+/* Valeur d'une information */
+.order-meta-box strong {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    color: #f5f7fa;
+}
+
+/* Carte adresse de livraison */
+.delivery-card {
+    padding: 1.25rem;
+    background: #121923;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+}
+
+/* Texte adresse de livraison */
+.delivery-card p {
+    margin: 0 0 0.6rem;
+    color: #c0cad5;
+    line-height: 1.7;
+}
+
+/* Dernier paragraphe sans marge */
+.delivery-card p:last-child {
+    margin-bottom: 0;
+}
+
+/* Ligne de commande sans image */
+.order-line-card {
+    grid-template-columns: 1fr;
+}
+
+/* Contenu ligne de commande */
+.order-line-content {
+    padding: 1.2rem 1.25rem;
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .order-meta-grid {
+        grid-template-columns: 1fr;
+    }
+}

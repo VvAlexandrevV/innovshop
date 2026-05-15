@@ -64,7 +64,7 @@
                         Résultat :
                         le formulaire affiché correspond vraiment au choix.
                     #}
-                 <div class="register-type-section">
+                    <div class="register-type-section">
                         <p class="register-type-title">Choisissez votre type de compte</p>
 
                         <div class="register-type-actions">
@@ -84,11 +84,9 @@
                         </div>
                     </div>
 
-                    {#
-                        Messages flash d'erreur.
-                    #}
+                    {# Messages flash d'erreur #}
                     {% for message in app.flashes('error') %}
-                        <div class="alert alert-error">
+                        <div class="auth-alert">
                             {{ message }}
                         </div>
                     {% endfor %}
@@ -107,9 +105,7 @@
                         #}
                         {{ form_widget(registrationForm.accountType) }}
 
-                        {#
-                            Email de connexion.
-                        #}
+                        {# Email de connexion #}
                         <div class="form-group">
                             {{ form_label(registrationForm.email) }}
                             {{ form_widget(registrationForm.email, {
@@ -228,9 +224,7 @@
                             </div>
                         {% endif %}
 
-                        {#
-                            Mot de passe.
-                        #}
+                        {# Mot de passe #}
                         <div class="form-group">
                             {{ form_label(registrationForm.plainPassword.first) }}
                             {{ form_widget(registrationForm.plainPassword.first, {
@@ -255,9 +249,7 @@
 
                         {{ form_errors(registrationForm.plainPassword) }}
 
-                        {#
-                            Conditions d'utilisation.
-                        #}
+                        {# Conditions d'utilisation #}
                         <div class="form-group auth-checkbox-group">
                             <label class="auth-checkbox">
                                 {{ form_widget(registrationForm.agreeTerms) }}

@@ -3,7 +3,6 @@
 {% block title %}Commande confirmée{% endblock %}
 
 {% block body %}
-
     {% set statusLabels = {
         'pending': 'En attente',
         'paid': 'Payée',
@@ -17,7 +16,9 @@
         <div class="container">
             <div class="order-confirmation-hero">
                 <div class="order-confirmation-badge">Commande validée</div>
+
                 <h1>Merci pour votre commande</h1>
+
                 <p>
                     Votre commande a bien été enregistrée. Vous trouverez ci-dessous
                     le récapitulatif complet de votre achat.
@@ -26,7 +27,6 @@
 
             <div class="order-confirmation-grid">
                 <div class="order-confirmation-main">
-                    
                     <section class="checkout-card">
                         <div class="checkout-section-title">
                             <span class="checkout-step">01</span>
@@ -83,6 +83,7 @@
                                         <div class="checkout-product-top">
                                             <div>
                                                 <h3>{{ orderItem.productName }}</h3>
+
                                                 <p class="checkout-product-seller">
                                                     Vendu par :
                                                     <strong>
@@ -93,7 +94,8 @@
                                                         {% endif %}
                                                     </strong>
                                                 </p>
-                                               {% if orderItem.variantLabel %}
+
+                                                {% if orderItem.variantLabel %}
                                                     <p class="checkout-product-description">
                                                         Variante : {{ orderItem.variantLabel }}
                                                     </p>
@@ -115,7 +117,6 @@
                             {% endfor %}
                         </div>
                     </section>
-
                 </div>
 
                 <aside class="checkout-sidebar">
@@ -169,9 +170,7 @@
                         </div>
                     </div>
                 </aside>
-
             </div>
         </div>
     </section>
-
 {% endblock %}

@@ -1,0 +1,97 @@
+/* =========================================================
+   VENDEUR - ALERTE STRIPE CONNECT FLOTTANTE
+   Fichier Twig concerné : templates/seller/_stripe_connect_alert.html.twig
+
+   Rôle :
+   - Afficher un message permanent aux vendeurs sans Stripe Connect
+   - Prévenir que leurs produits ne sont pas visibles sur le site
+   - Donner un accès rapide à la connexion Stripe
+========================================================= */
+
+/* Bloc principal de l'alerte Stripe */
+.seller-stripe-floating-alert {
+    position: sticky;
+    top: 96px;
+    z-index: 950;
+    width: min(1200px, calc(100% - 2rem));
+    margin: 1rem auto;
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(245, 158, 11, 0.32);
+    border-radius: 18px;
+    background:
+        linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(245, 158, 11, 0.08)),
+        rgba(18, 25, 35, 0.96);
+    color: #fde68a;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(14px);
+}
+
+/* Zone texte de l'alerte */
+.seller-stripe-floating-alert-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+/* Titre de l'alerte */
+.seller-stripe-floating-alert strong {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 900;
+}
+
+/* Texte de l'alerte */
+.seller-stripe-floating-alert p {
+    margin: 0;
+    color: #fde68a;
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+/* Bouton de connexion Stripe */
+.seller-stripe-floating-alert .btn {
+    flex-shrink: 0;
+    min-height: 42px;
+    padding: 0.75rem 1rem;
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .seller-stripe-floating-alert {
+        position: static;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem;
+        text-align: left;
+    }
+
+    .seller-stripe-floating-alert .btn {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - PETIT MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+    .seller-stripe-floating-alert {
+        width: min(100% - 1rem, 1200px);
+        border-radius: 16px;
+    }
+
+    .seller-stripe-floating-alert strong {
+        font-size: 0.9rem;
+    }
+
+    .seller-stripe-floating-alert p {
+        font-size: 0.86rem;
+    }
+}

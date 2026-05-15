@@ -48,17 +48,17 @@
                 </div>
 
                 <div class="product-actions">
-                    <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-secondary">
+                    <a href="{{ path('app_product_detail', { id: product.id }) }}" class="btn btn-secondary">
                         Voir le détail
                     </a>
 
                     {% if productAvailable %}
                         {% if product.variants|length > 0 %}
-                            <a href="{{ path('app_product_detail', {id: product.id}) }}" class="btn btn-primary">
-                                Ajouter au panier
+                            <a href="{{ path('app_product_detail', { id: product.id }) }}" class="btn btn-primary">
+                                Choisir une option
                             </a>
                         {% else %}
-                            <a href="{{ path('app_panier_add', {id: product.id}) }}" class="btn btn-primary">
+                            <a href="{{ path('app_panier_add', { id: product.id }) }}" class="btn btn-primary">
                                 Ajouter au panier
                             </a>
                         {% endif %}
@@ -75,6 +75,8 @@
     {% endfor %}
 </div>
 
-<div class="navigation">
-    {{ knp_pagination_render(products) }}
-</div>
+{% if products.getTotalItemCount > 0 %}
+    <div class="navigation">
+        {{ knp_pagination_render(products) }}
+    </div>
+{% endif %}

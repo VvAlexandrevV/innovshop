@@ -51,6 +51,21 @@ class Product
     #[ORM\Column(options: ['default' => 0])]
     private ?int $stock = 0;
 
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $isBlockedByAdmin = false;
+
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $hasSellerUpdateAfterAdminBlock = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $sellerUpdatedAfterAdminBlockAt = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $adminBlockReason = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $adminBlockedAt = null;
+
     /**
      * @var Collection<int, Variant>
      */
@@ -61,6 +76,7 @@ class Product
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->isActive = true;
+        $this->isBlockedByAdmin = false;
         $this->stock = 0;
         $this->variants = new ArrayCollection();
     }
@@ -191,6 +207,80 @@ class Product
         return $this;
     }
 
+    public function isBlockedByAdmin(): ?bool
+    {
+        return $this->isBlockedByAdmin;
+    }
+
+    public function setIsBlockedByAdmin(bool $isBlockedByAdmin): static
+    {
+        $wasBlocked = $this->isBlockedByAdmin;
+
+        $this->isBlockedByAdmin = $isBlockedByAdmin;
+
+        /*
+        * Cas 1 :
+        * Le produit vient d’être bloqué par l’admin.
+        *
+        * On initialise le blocage :
+        * - date de blocage
+        * - retrait automatique de la mise à la une
+        * - correction vendeur remise à zéro
+        */
+        if ($isBlockedByAdmin && !$wasBlocked) {
+            $this->adminBlockedAt = new \DateTimeImmutable();
+            $this->aLaUne = false;
+            $this->hasSellerUpdateAfterAdminBlock = false;
+            $this->sellerUpdatedAfterAdminBlockAt = null;
+        }
+
+        /*
+        * Cas 2 :
+        * Le produit vient d’être débloqué par l’admin.
+        *
+        * On nettoie les infos de modération.
+        */
+        if (!$isBlockedByAdmin && $wasBlocked) {
+            $this->adminBlockedAt = null;
+            $this->adminBlockReason = null;
+            $this->hasSellerUpdateAfterAdminBlock = false;
+            $this->sellerUpdatedAfterAdminBlockAt = null;
+        }
+
+        /*
+        * Cas 3 :
+        * Le produit était déjà bloqué et reste bloqué.
+        *
+        * On ne touche pas à hasSellerUpdateAfterAdminBlock.
+        * Sinon l’admin pourrait effacer sans le vouloir le signal
+        * indiquant que le vendeur a corrigé son produit.
+        */
+
+        return $this;
+    }
+
+    public function getAdminBlockReason(): ?string
+    {
+        return $this->adminBlockReason;
+    }
+
+    public function setAdminBlockReason(?string $adminBlockReason): static
+    {
+        $this->adminBlockReason = $adminBlockReason;
+        return $this;
+    }
+
+    public function getAdminBlockedAt(): ?\DateTimeImmutable
+    {
+        return $this->adminBlockedAt;
+    }
+
+    public function setAdminBlockedAt(?\DateTimeImmutable $adminBlockedAt): static
+    {
+        $this->adminBlockedAt = $adminBlockedAt;
+        return $this;
+    }
+
     public function hasAvailableVariant(): bool
     {
         foreach ($this->variants as $variant) {
@@ -204,12 +294,12 @@ class Product
 
     public function isAvailable(): bool
     {
-        return $this->isActive() && ($this->getStock() > 0 || $this->hasAvailableVariant());
+        return $this->isVisible() && ($this->getStock() > 0 || $this->hasAvailableVariant());
     }
 
     public function canBeAddedWithoutVariant(): bool
     {
-        return $this->isActive() && $this->getStock() > 0;
+        return $this->isVisible() && $this->getStock() > 0;
     }
 
     /**
@@ -240,6 +330,7 @@ class Product
 
         return $this;
     }
+
     public function getSeller(): ?User
     {
         return $this->seller;
@@ -248,7 +339,6 @@ class Product
     public function setSeller(?User $seller): static
     {
         $this->seller = $seller;
-
         return $this;
     }
 
@@ -269,6 +359,48 @@ class Product
 
     public function isVisible(): bool
     {
-        return $this->isActive();
+        return $this->isActive() && !$this->isBlockedByAdmin();
+    }
+
+    public function hasSellerUpdateAfterAdminBlock(): ?bool
+    {
+        return $this->hasSellerUpdateAfterAdminBlock;
+    }
+
+    public function setHasSellerUpdateAfterAdminBlock(bool $hasSellerUpdateAfterAdminBlock): static
+    {
+        $this->hasSellerUpdateAfterAdminBlock = $hasSellerUpdateAfterAdminBlock;
+
+        return $this;
+    }
+
+    public function getSellerUpdatedAfterAdminBlockAt(): ?\DateTimeImmutable
+    {
+        return $this->sellerUpdatedAfterAdminBlockAt;
+    }
+
+    public function setSellerUpdatedAfterAdminBlockAt(?\DateTimeImmutable $sellerUpdatedAfterAdminBlockAt): static
+    {
+        $this->sellerUpdatedAfterAdminBlockAt = $sellerUpdatedAfterAdminBlockAt;
+
+        return $this;
+    }
+
+    public function markAsUpdatedAfterAdminBlock(): static
+    {
+        $this->hasSellerUpdateAfterAdminBlock = true;
+        $this->sellerUpdatedAfterAdminBlockAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getSellerActiveSwitch(): string
+    {
+        return '';
+    }
+
+    public function getAdminVariantsPreview(): string
+    {
+        return '';
     }
 }

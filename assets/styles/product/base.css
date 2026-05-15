@@ -1,0 +1,60 @@
+/* =========================================================
+   PRODUITS - BASE COMMUNE
+   Fichiers Twig concernés :
+   - templates/product/index.html.twig
+   - templates/product/detail.html.twig
+   - templates/product/_products_grid.html.twig
+
+   Rôle :
+   - Styles communs aux pages produits
+   - Gère les en-têtes de section
+   - Gère les tags de section
+   - Gère les sections alternatives
+========================================================= */
+
+/* Section avec fond alternatif */
+.alt-section {
+    background: #101720;
+}
+
+/* En-tête de section */
+.section-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Petit tag de section */
+.section-tag {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    color: #d7a7ff;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Lien de section */
+.section-link {
+    color: #b9c4cf;
+    font-weight: 700;
+}
+
+/* Hover lien de section */
+.section-link:hover {
+    color: #6ee7f9;
+}
+
+/* =========================================================
+   RESPONSIVE - TABLETTE
+========================================================= */
+
+@media (max-width: 992px) {
+    .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

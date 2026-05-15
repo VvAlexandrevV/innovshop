@@ -162,6 +162,21 @@ class SellerDashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
+
+        $user = $this->getUser();
+
+        if (
+            $user instanceof \App\Entity\User
+            && $user->isSeller()
+            && $user->getSellerProfile()
+            && !$user->getSellerProfile()->getStripeAccountId()
+        ) {
+            yield MenuItem::linkToRoute(
+                '⚠ Connecter Stripe',
+                'fa fa-credit-card',
+                'seller_stripe_connect'
+            );
+        }
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
@@ -171,6 +186,8 @@ class SellerDashboardController extends AbstractDashboardController
             ->setController(SellerProductCrudController::class)
             ->setAction(Crud::PAGE_INDEX)
             ->generateUrl();
+        yield MenuItem::linkToRoute('Mon profil vendeur', 'fa fa-building', 'seller_profile_edit');    
+        yield MenuItem::linkToRoute('Retour au site', 'fa fa-home', 'app_home');    
 
        yield MenuItem::linkToUrl('Mes produits', 'fa fa-box', $productsUrl);
 
@@ -184,4 +201,5 @@ class SellerDashboardController extends AbstractDashboardController
 
         yield MenuItem::linkToRoute('Mes commandes', 'fa fa-shopping-bag', 'seller_orders');
     }
+    
 }

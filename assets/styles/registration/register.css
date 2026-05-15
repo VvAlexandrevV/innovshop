@@ -1,0 +1,115 @@
+/* =========================================================
+   INSCRIPTION - CRÉATION DE COMPTE
+   Fichier Twig concerné : templates/registration/register.html.twig
+
+   Rôle :
+   - Style spécifique du formulaire d'inscription
+   - Gère le choix Particulier / Entreprise
+   - Gère l'affichage des champs entreprise
+========================================================= */
+
+/* Section choix type de compte */
+.register-type-section {
+    margin-bottom: 1.75rem;
+}
+
+/* Titre du choix de type */
+.register-type-title {
+    margin: 0 0 0.85rem;
+    color: #f5f7fa;
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+/* Grille des deux boutons de choix */
+.register-type-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+}
+
+/* Bouton de type de compte */
+.register-type-btn {
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.95rem 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(110, 231, 249, 0.22);
+    background: rgba(255, 255, 255, 0.04);
+    color: #c9d2dc;
+    font-size: 0.95rem;
+    font-weight: 900;
+    text-align: center;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Hover bouton type */
+.register-type-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(110, 231, 249, 0.12);
+    border-color: rgba(110, 231, 249, 0.65);
+    color: #ffffff;
+    box-shadow: 0 10px 26px rgba(56, 189, 248, 0.16);
+}
+
+/* Type actif */
+.register-type-btn.active {
+    background: linear-gradient(135deg, #6ee7f9, #38bdf8);
+    border-color: transparent;
+    color: #081018;
+    box-shadow: 0 12px 30px rgba(56, 189, 248, 0.28);
+}
+
+/* Hover type actif */
+.register-type-btn.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 34px rgba(56, 189, 248, 0.36);
+}
+
+/* Bloc champs entreprise */
+.company-fields {
+    display: none;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border: 1px solid rgba(110, 231, 249, 0.18);
+    border-radius: 16px;
+    background: rgba(110, 231, 249, 0.04);
+}
+
+/* Bloc entreprise visible */
+.company-fields-visible {
+    display: flex;
+}
+
+/* Titre bloc entreprise */
+.company-fields-header h3 {
+    margin: 0 0 0.4rem;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #f5f7fa;
+}
+
+/* Texte bloc entreprise */
+.company-fields-header p {
+    margin: 0;
+    color: #b8c3cf;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   RESPONSIVE - PETIT MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+    .register-type-actions {
+        grid-template-columns: 1fr;
+    }
+}

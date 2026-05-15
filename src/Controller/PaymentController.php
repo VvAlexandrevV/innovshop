@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Entity\Cart;
 
 final class PaymentController extends AbstractController
 {
@@ -90,6 +91,14 @@ final class PaymentController extends AbstractController
             $this->addFlash('warning', $stockErrorMessage);
             return $this->redirectToRoute('app_panier');
         }
+
+        $stripeSellerErrorMessage = $this->getStripeSellerErrorMessage($cart);
+
+        if ($stripeSellerErrorMessage) {
+            $this->addFlash('warning', $stripeSellerErrorMessage);
+            return $this->redirectToRoute('app_panier');
+        }
+
         $order->setUser($user);
         $order->setStatus('pending_payment');
         $order->setDeliveryFirstName($delivery['firstName']);
@@ -98,7 +107,7 @@ final class PaymentController extends AbstractController
         $order->setDeliveryPostalCode($delivery['postalCode']);
         $order->setDeliveryCity($delivery['city']);
         $order->setDeliveryCountry($delivery['country']);
-        $commissionRate = 0.10; // 10% de commission plateforme
+        $commissionRate = 0.10; // 10% de commission plateforme8
 
         $total = 0;
         $lineItems = [];
@@ -150,6 +159,10 @@ final class PaymentController extends AbstractController
             $orderItem->setSellerAmount(number_format($sellerAmount, 2, '.', ''));
             $orderItem->setPlatformAmount(number_format($platformAmount, 2, '.', ''));
 
+            if ($seller) {
+                $orderItem->setTransferStatus('pending');
+            }
+
             $total += $price;
 
             $lineItems[] = [
@@ -168,7 +181,7 @@ final class PaymentController extends AbstractController
             $entityManager->persist($orderItem);
         }
 
-        $order->setTotal((string) $total);
+        $order->setTotal(number_format($total, 2, '.', ''));
 
         $entityManager->flush();
 
@@ -220,7 +233,7 @@ final class PaymentController extends AbstractController
      * - variante invalide
      * - stock insuffisant
      */
-    private function getStockErrorMessage($cart): ?string
+    private function getStockErrorMessage(Cart $cart): ?string
     {
         $productNeeds = [];
         $variantNeeds = [];
@@ -267,4 +280,41 @@ final class PaymentController extends AbstractController
 
         return null;
     }
+
+    /**
+         * Vérifie que les vendeurs du panier peuvent recevoir un paiement Stripe.
+         *
+         * Marketplace - Sécurité paiement vendeur.
+         *
+         * Cette méthode empêche le paiement si un produit du panier appartient
+         * à un vendeur qui n'a pas encore configuré son compte Stripe Connect.
+         *
+         * Sans cette vérification, le client pourrait payer une commande
+         * contenant un produit vendeur, mais InnovShop ne pourrait pas reverser
+         * automatiquement la part du vendeur.
+         */
+        private function getStripeSellerErrorMessage(Cart $cart): ?string
+        {
+            foreach ($cart->getCartItems() as $cartItem) {
+                $product = $cartItem->getProduct();
+
+                if (!$product) {
+                    continue;
+                }
+
+                $seller = $product->getSeller();
+
+                if (!$seller) {
+                    continue;
+                }
+
+                $sellerProfile = $seller->getSellerProfile();
+
+                if (!$sellerProfile || !$sellerProfile->getStripeAccountId()) {
+                    return 'Le vendeur du produit "' . $product->getNom() . '" n’a pas encore configuré son compte Stripe. Ce produit ne peut pas être payé pour le moment.';
+                }
+            }
+
+            return null;
+        }
 }

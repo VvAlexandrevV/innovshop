@@ -1,0 +1,464 @@
+/* =========================================================
+   CHECKOUT - BASE COMMUNE
+   Fichiers Twig concernés :
+   - templates/checkout/index.html.twig
+   - templates/checkout/success.html.twig
+
+   Rôle :
+   - Style commun du tunnel de commande
+   - Gère le layout principal, les cartes, les produits
+   - Gère la sidebar, le résumé de commande et les blocs d'information
+========================================================= */
+
+/* =========================================================
+   STRUCTURE GÉNÉRALE
+========================================================= */
+
+
+/* Page principale du checkout */
+.checkout-page,
+.order-confirmation-page {
+    padding: 3rem 0 5rem;
+}
+
+/* Grille principale : contenu + sidebar */
+.checkout-grid,
+.order-confirmation-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Colonne principale */
+.checkout-main,
+.order-confirmation-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* =========================================================
+   CARTES COMMUNES
+========================================================= */
+
+/* Cartes principales */
+.checkout-card,
+.checkout-summary-card,
+.checkout-info-box {
+    background: rgba(21, 29, 40, 0.92);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.22);
+}
+
+/* Espacement interne des cartes principales */
+.checkout-card,
+.checkout-summary-card {
+    padding: 1.75rem;
+}
+
+/* En-tête interne des sections */
+.checkout-section-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Titres des cartes */
+.checkout-section-title h2,
+.checkout-summary-card h2,
+.checkout-info-box h3 {
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.03em;
+}
+
+/* Pastille d'étape */
+.checkout-step {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(110, 231, 249, 0.45);
+    color: #6ee7f9;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* =========================================================
+   PRODUITS / LIGNES DE COMMANDE
+========================================================= */
+
+/* Liste des produits */
+.checkout-products {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Carte produit */
+.checkout-product {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1rem;
+    background: #121923;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Image produit */
+.checkout-product-image {
+    min-height: 120px;
+    background: #0f1620;
+}
+
+/* Image dans la carte produit */
+.checkout-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    transform: scale(1.06);
+    transition:
+        filter 0.45s ease,
+        transform 0.45s ease,
+        opacity 0.45s ease;
+}
+
+/* Effet couleur au survol */
+.checkout-product:hover .checkout-product-image img {
+    filter: grayscale(0%);
+    transform: scale(1);
+}
+
+/* Contenu de la carte produit */
+.checkout-product-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* Haut de la carte produit */
+.checkout-product-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+}
+
+/* Nom du produit */
+.checkout-product-top h3 {
+    margin: 0 0 0.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+}
+
+/* Description du produit */
+.checkout-product-description {
+    margin: 0;
+    color: #b8c3cf;
+    line-height: 1.6;
+}
+
+/* Vendeur du produit */
+.checkout-product-seller {
+    margin: 0 0 0.6rem;
+    color: #9fb0c0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Nom du vendeur */
+.checkout-product-seller strong {
+    color: #6ee7f9;
+    font-weight: 700;
+}
+
+/* Prix du produit */
+.checkout-product-price {
+    color: #6ee7f9;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Bas de carte produit */
+.checkout-product-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Quantité affichée */
+.checkout-qty {
+    color: #9fb0c0;
+    font-size: 0.95rem;
+}
+
+/* Actions produit */
+.checkout-product-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Variante produit */
+.checkout-product-variant {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #7ddcff;
+    font-weight: 600;
+}
+
+/* Paragraphes des variantes */
+.checkout-product-variant p {
+    margin: 0.25rem 0;
+}
+
+/* Supplément de prix variante */
+.checkout-product-variant span {
+    color: #b8c7d9;
+}
+
+/* Liens secondaires */
+.small-link {
+    color: #6ee7f9;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+/* Hover liens secondaires */
+.small-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* =========================================================
+   SIDEBAR / RÉSUMÉ
+========================================================= */
+
+/* Sidebar sticky */
+.checkout-sidebar {
+    position: sticky;
+    top: 110px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Lignes du résumé */
+.summary-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 1.5rem 0;
+}
+
+/* Ligne simple + total */
+.summary-line,
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Libellés du résumé */
+.summary-line span {
+    color: #b8c3cf;
+}
+
+/* Texte vert/bleu pour gratuit ou statut positif */
+.summary-free {
+    color: #6ee7f9;
+}
+
+/* Total final */
+.summary-total {
+    padding-top: 1.25rem;
+    margin-top: 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Libellé total */
+.summary-total span {
+    color: #f5f7fa;
+    font-weight: 600;
+}
+
+/* Montant total */
+.summary-total strong {
+    color: #6ee7f9;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+/* Note de sécurité */
+.checkout-security-note {
+    margin: 0.9rem 0 0;
+    text-align: center;
+    color: #9fb0c0;
+    font-size: 0.85rem;
+}
+
+/* Blocs d'information sous le résumé */
+.checkout-side-infos {
+    display: grid;
+    gap: 1rem;
+}
+
+/* Carte information */
+.checkout-info-box {
+    padding: 1.25rem;
+}
+
+/* Texte des cartes information */
+.checkout-info-box p {
+    margin: 0.5rem 0 0;
+    color: #b8c3cf;
+    line-height: 1.7;
+}
+
+/* Actions dans le résumé */
+.cart-summary-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Boutons pleine largeur dans le résumé */
+.checkout-submit,
+.cart-clear-btn {
+    width: 100%;
+    text-align: center;
+}
+
+/* État vide */
+.empty-state {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.7;
+}
+
+/* =========================================================
+   RESPONSIVE - TABLETTE
+========================================================= */
+
+@media (max-width: 992px) {
+    .checkout-grid,
+    .order-confirmation-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-sidebar {
+        position: static;
+        top: auto;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .checkout-product {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-product-image {
+        height: 220px;
+    }
+
+    .checkout-product-top,
+    .checkout-product-bottom {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .checkout-product-seller {
+        font-size: 0.86rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - PETIT MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+    .checkout-card,
+    .checkout-summary-card {
+        padding: 1.2rem;
+    }
+
+    .checkout-product-seller {
+        font-size: 0.82rem;
+        line-height: 1.4;
+    }
+}
+
+/* =========================================================
+   CHECKOUT / PANIER - EN-TÊTE COMMUN
+   Fichiers Twig concernés :
+   - templates/checkout/index.html.twig
+   - templates/panier/index.html.twig
+
+   Rôle :
+   - Style des titres de pages panier / checkout
+   - Style du lien de retour
+========================================================= */
+
+/* En-tête de page */
+.checkout-header {
+    margin-bottom: 2.5rem;
+}
+
+/* Lien de retour */
+.checkout-back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #6ee7f9;
+    font-weight: 700;
+}
+
+/* Hover du lien de retour */
+.checkout-back-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* Titre principal */
+.checkout-header h1 {
+    margin: 0 0 0.75rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    letter-spacing: -0.04em;
+}
+
+/* Texte d'introduction */
+.checkout-header p {
+    margin: 0;
+    color: #b8c3cf;
+    line-height: 1.7;
+}
+
+/* Lien dangereux : supprimer un produit */
+.danger-link {
+    color: #ff9e98;
+}
+
+.danger-link:hover {
+    color: #fecaca;
+}

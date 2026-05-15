@@ -91,6 +91,35 @@
                     </p>
                 </aside>
 
+                <div class="seller-stripe-card">
+                    <h2>Compte Stripe Connect</h2>
+
+                    {% if sellerProfile.stripeAccountId %}
+                        <div class="seller-stripe-status seller-stripe-status--connected">
+                            <strong>Connecté à Stripe Connect</strong>
+                            <p>
+                                Votre compte Stripe est connecté. Vous pouvez recevoir les paiements liés à vos ventes.
+                            </p>
+                        </div>
+
+                        <a href="{{ path('seller_stripe_connect') }}" class="btn btn-primary">
+                            Mettre à jour mon compte Stripe
+                        </a>
+                    {% else %}
+                        <div class="seller-stripe-status seller-stripe-status--missing">
+                            <strong>Non connecté à Stripe Connect</strong>
+                            <p>
+                                Vous n’êtes pas encore connecté à Stripe Connect.
+                                Vous devez connecter votre compte Stripe pour recevoir vos paiements vendeur.
+                            </p>
+                        </div>
+
+                        <a href="{{ path('seller_stripe_connect') }}" class="btn btn-primary">
+                            Connecter mon compte Stripe
+                        </a>
+                    {% endif %}
+                </div>
+
                 {#
                     Formulaire de modification.
 
@@ -98,8 +127,14 @@
                 #}
                 <div class="seller-profile-form-card">
                     <h2>Coordonnées entreprise</h2>
-
-                    {{ form_start(sellerProfileForm, {'attr': {'class': 'seller-profile-form'}}) }}
+                    
+                            {{ form_start(sellerProfileForm, {
+                                'attr': {
+                                    'class': 'seller-profile-form',
+                                    'data-turbo': 'false'
+                                }
+                            }) }}
+                    
 
                         <div class="form-group">
                             {{ form_label(sellerProfileForm.companyEmail) }}

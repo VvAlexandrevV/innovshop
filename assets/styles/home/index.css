@@ -1,0 +1,245 @@
+/* =========================================================
+   ACCUEIL - PAGE PRINCIPALE
+   Fichier Twig concerné : templates/home/index.html.twig
+
+   Rôle :
+   - Style spécifique de la page d'accueil
+   - Gère le hero principal
+   - Gère les sections produits de la home
+   - Gère la newsletter visuelle
+========================================================= */
+
+/* =========================================================
+   HERO ACCUEIL
+========================================================= */
+
+/* Section principale de présentation */
+.hero-section {
+    position: relative;
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at top right, rgba(110, 231, 249, 0.18), transparent 25%),
+        radial-gradient(circle at left center, rgba(151, 71, 255, 0.12), transparent 20%),
+        linear-gradient(135deg, #0b0f14 0%, #101827 100%);
+}
+
+/* Image de fond du hero */
+.hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+/* Image du hero */
+.hero-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+}
+
+/* Voile sombre au-dessus de l'image */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to right, rgba(11, 15, 20, 0.95), rgba(11, 15, 20, 0.65), rgba(11, 15, 20, 0.35));
+}
+
+/* Contenu textuel du hero */
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 650px;
+    padding: 6rem 0;
+}
+
+/* Petit badge au-dessus du titre */
+.hero-badge {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: #6ee7f9;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Titre principal */
+.hero-content h1 {
+    margin: 0 0 1.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+    font-weight: 700;
+}
+
+/* Partie colorée du titre */
+.hero-content h1 span {
+    color: #6ee7f9;
+}
+
+/* Texte de présentation */
+.hero-content p {
+    max-width: 620px;
+    margin: 0 0 2rem;
+    color: #c0cad5;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* Boutons du hero */
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* =========================================================
+   SECTIONS PRODUITS ACCUEIL
+========================================================= */
+
+/* Section contenant les produits */
+.product-section {
+    padding: 5rem 0;
+}
+
+/* Variante sombre pour la deuxième section */
+.alt-section {
+    background: #101720;
+}
+
+/* En-tête des sections produits */
+.section-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Petit tag de section */
+.section-tag {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    color: #d7a7ff;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Titres des sections */
+.section-header h2,
+.newsletter-box h2 {
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    letter-spacing: -0.04em;
+}
+
+/* Lien vers le catalogue */
+.section-link {
+    color: #b9c4cf;
+    font-weight: 700;
+}
+
+/* Hover du lien catalogue */
+.section-link:hover {
+    color: #6ee7f9;
+}
+
+/* =========================================================
+   NEWSLETTER
+========================================================= */
+
+/* Section newsletter */
+.newsletter-section {
+    padding: 5rem 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Bloc centré newsletter */
+.newsletter-box {
+    text-align: center;
+    max-width: 760px;
+}
+
+/* Texte de la newsletter */
+.newsletter-box p {
+    margin: 1rem 0 2rem;
+    color: #c0cad5;
+    line-height: 1.8;
+}
+
+/* Formulaire newsletter */
+.newsletter-form {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Champ email newsletter */
+.newsletter-form input {
+    min-width: 280px;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: #121923;
+    color: #ffffff;
+    outline: none;
+}
+
+/* Focus du champ email */
+.newsletter-form input:focus {
+    border-color: #6ee7f9;
+}
+
+/* =========================================================
+   RESPONSIVE - TABLETTE
+========================================================= */
+
+@media (max-width: 992px) {
+    .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: auto;
+    }
+
+    .hero-content {
+        padding: 5rem 0 4rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - PETIT MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .newsletter-form input {
+        min-width: 100%;
+    }
+}

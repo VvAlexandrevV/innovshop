@@ -1,0 +1,63 @@
+/* =========================================================
+   ESPACE CLIENT - TABLEAU DE BORD
+   Fichier Twig concerné : templates/account/index.html.twig
+
+   Rôle :
+   - Style spécifique de la page "Mon compte"
+   - Gère la grille principale du compte
+   - Gère la carte résumé
+   - Gère les statistiques : nombre de commandes + total dépensé
+========================================================= */
+
+/* Grille principale : informations personnelles, adresse, résumé */
+.account-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+/* Carte résumé */
+.account-card-summary {
+    overflow: hidden;
+}
+
+/* Grille des statistiques */
+.account-stats {
+    display: grid;
+    gap: 1rem;
+}
+
+/* Bloc statistique */
+.account-stat {
+    padding: 1.2rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(59, 130, 246, 0.08));
+    border: 1px solid rgba(56, 189, 248, 0.18);
+}
+
+/* Valeur principale de la statistique */
+.account-stat-value {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+/* Libellé de la statistique */
+.account-stat-label {
+    display: block;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.95rem;
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .account-stat-value {
+        font-size: 1.5rem;
+    }
+}

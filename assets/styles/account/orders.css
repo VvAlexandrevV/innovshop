@@ -1,0 +1,37 @@
+/* =========================================================
+   ESPACE CLIENT - HISTORIQUE DES COMMANDES
+   Fichier Twig concerné : templates/account/orders.html.twig
+
+   Rôle :
+   - Style spécifique de la page "Mes commandes"
+   - Gère les détails visuels du tableau d'historique
+   - Gère les produits affichés dans chaque commande
+========================================================= */
+
+/* Carte contenant le tableau */
+.account-page .account-card {
+    width: 100%;
+}
+
+/* Liste des produits dans une commande */
+.orders-table td div {
+    margin-bottom: 0.35rem;
+    line-height: 1.5;
+}
+
+.orders-table td div:last-child {
+    margin-bottom: 0;
+}
+
+/* Statut de commande */
+.orders-table td:nth-child(4) {
+    color: #dbeafe;
+    font-weight: 700;
+}
+
+/* Total de commande */
+.orders-table td:nth-child(5) {
+    color: #6ee7f9;
+    font-weight: 800;
+    white-space: nowrap;
+}

@@ -1,44 +1,118 @@
-<h1>Merci pour votre commande #{{ order.id }}</h1>
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Confirmation de commande #{{ order.id }}</title>
+    </head>
 
-<p>Bonjour {{ order.deliveryFirstName }} {{ order.deliveryLastName }},</p>
+    <body style="margin: 0; padding: 0; background: #0b0f14; color: #f5f7fa; font-family: Arial, sans-serif;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background: #0b0f14; padding: 32px 16px;">
+            <tr>
+                <td align="center">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 680px; background: #151d28; border-radius: 18px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08);">
+                        
+                        <tr>
+                            <td style="padding: 32px 32px 24px; background: linear-gradient(135deg, #101827, #151d28);">
+                                <p style="margin: 0 0 12px; color: #6ee7f9; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+                                    Commande confirmée
+                                </p>
 
-<p>Votre commande a bien été validée.</p>
+                                <h1 style="margin: 0; color: #ffffff; font-size: 28px; line-height: 1.2;">
+                                    Merci pour votre commande #{{ order.id }}
+                                </h1>
 
-<h2>Produits commandés</h2>
+                                <p style="margin: 16px 0 0; color: #c0cad5; font-size: 15px; line-height: 1.6;">
+                                    Bonjour {{ order.deliveryFirstName }} {{ order.deliveryLastName }}, votre commande a bien été validée.
+                                </p>
+                            </td>
+                        </tr>
 
-<ul>
-    {% for item in order.orderItems %}
-        <li>
-            <strong>{{ item.productName }}</strong><br>
+                        <tr>
+                            <td style="padding: 28px 32px;">
+                                <h2 style="margin: 0 0 18px; color: #ffffff; font-size: 20px;">
+                                    Produits commandés
+                                </h2>
 
-            Vendu par :
-            {% if item.seller %}
-                {{ item.seller.sellerProfile ? item.seller.sellerProfile.companyName : item.seller.email }}
-            {% else %}
-                InnovShop
-            {% endif %}
-            <br>
+                                {% for item in order.orderItems %}
+                                    <div style="padding: 18px; margin-bottom: 14px; background: #121923; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.06);">
+                                        <h3 style="margin: 0 0 10px; color: #ffffff; font-size: 17px;">
+                                            {{ item.productName }}
+                                        </h3>
 
-            {% if item.variantLabel %}
-                Variante : {{ item.variantLabel }}<br>
-            {% else %}
-                Variante : Standard<br>
-            {% endif %}
+                                        <p style="margin: 0 0 6px; color: #9fb0c0; font-size: 14px; line-height: 1.5;">
+                                            Vendu par :
+                                            <strong style="color: #6ee7f9;">
+                                                {% if item.seller %}
+                                                    {{ item.seller.sellerProfile ? item.seller.sellerProfile.companyName : item.seller.email }}
+                                                {% else %}
+                                                    InnovShop
+                                                {% endif %}
+                                            </strong>
+                                        </p>
 
-            Prix : {{ item.productPrice }} €
-        </li>
-    {% endfor %}
-</ul>
+                                        <p style="margin: 0 0 6px; color: #c0cad5; font-size: 14px; line-height: 1.5;">
+                                            Variante :
+                                            <strong style="color: #ffffff;">
+                                                {% if item.variantLabel %}
+                                                    {{ item.variantLabel }}
+                                                {% else %}
+                                                    Standard
+                                                {% endif %}
+                                            </strong>
+                                        </p>
 
-<h2>Adresse de livraison</h2>
+                                        <p style="margin: 0; color: #6ee7f9; font-size: 16px; font-weight: 700;">
+                                            {{ item.productPrice }} €
+                                        </p>
+                                    </div>
+                                {% endfor %}
+                            </td>
+                        </tr>
 
-<p>
-    {{ order.deliveryFirstName }} {{ order.deliveryLastName }}<br>
-    {{ order.deliveryAddress }}<br>
-    {{ order.deliveryPostalCode }} {{ order.deliveryCity }}<br>
-    {{ order.deliveryCountry }}
-</p>
+                        <tr>
+                            <td style="padding: 0 32px 28px;">
+                                <h2 style="margin: 0 0 18px; color: #ffffff; font-size: 20px;">
+                                    Adresse de livraison
+                                </h2>
 
-<h2>Total</h2>
+                                <div style="padding: 18px; background: #121923; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.06);">
+                                    <p style="margin: 0; color: #c0cad5; font-size: 15px; line-height: 1.7;">
+                                        <strong style="color: #ffffff;">
+                                            {{ order.deliveryFirstName }} {{ order.deliveryLastName }}
+                                        </strong><br>
+                                        {{ order.deliveryAddress }}<br>
+                                        {{ order.deliveryPostalCode }} {{ order.deliveryCity }}<br>
+                                        {{ order.deliveryCountry }}
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
 
-<p><strong>{{ order.total }} €</strong></p>
+                        <tr>
+                            <td style="padding: 0 32px 32px;">
+                                <div style="padding: 22px; background: rgba(110, 231, 249, 0.08); border: 1px solid rgba(110, 231, 249, 0.22); border-radius: 16px;">
+                                    <p style="margin: 0 0 8px; color: #9fb0c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
+                                        Total de la commande
+                                    </p>
+
+                                    <p style="margin: 0; color: #6ee7f9; font-size: 28px; font-weight: 800;">
+                                        {{ order.total }} €
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding: 20px 32px; background: #0f1620; border-top: 1px solid rgba(255, 255, 255, 0.06);">
+                                <p style="margin: 0; color: #9fb0c0; font-size: 13px; line-height: 1.6;">
+                                    Merci d’avoir commandé sur InnovShop. Vous pouvez retrouver le détail de votre commande depuis votre espace client.
+                                </p>
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

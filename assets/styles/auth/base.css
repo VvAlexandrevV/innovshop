@@ -1,0 +1,360 @@
+/* =========================================================
+   AUTHENTIFICATION - BASE COMMUNE
+   Fichiers Twig concernés :
+   - templates/registration/register.html.twig
+   - templates/security/login.html.twig
+
+   Rôle :
+   - Style commun des pages d'authentification
+   - Gère le layout en deux colonnes
+   - Gère le panneau de marque
+   - Gère les cartes de formulaire
+   - Gère les champs, erreurs, checkbox et footer auth
+========================================================= */
+
+/* Page principale auth */
+.auth-page {
+    min-height: calc(100vh - 160px);
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at top right, rgba(110, 231, 249, 0.10), transparent 22%),
+        radial-gradient(circle at left center, rgba(151, 71, 255, 0.08), transparent 18%),
+        linear-gradient(135deg, #0b0f14 0%, #101827 100%);
+}
+
+/* Grille décorative discrète */
+.auth-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(110, 231, 249, 0.05) 1px, transparent 0);
+    background-size: 24px 24px;
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* Layout auth : branding + formulaire */
+.auth-layout {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    min-height: calc(100vh - 160px);
+}
+
+/* Colonne branding */
+.auth-branding {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Contenu branding */
+.auth-branding-inner {
+    max-width: 560px;
+}
+
+/* Logo texte */
+.auth-logo {
+    margin-bottom: 2rem;
+    color: #6ee7f9;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+}
+
+/* Titre branding */
+.auth-branding h1 {
+    margin: 0 0 1.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(3rem, 6vw, 5.6rem);
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+}
+
+/* Partie colorée du titre */
+.auth-branding h1 span {
+    color: #6ee7f9;
+}
+
+/* Texte branding */
+.auth-branding p {
+    max-width: 520px;
+    margin: 0 0 2rem;
+    color: #c0cad5;
+    line-height: 1.9;
+    font-size: 1.08rem;
+}
+
+/* Statistiques / arguments */
+.auth-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+/* Carte statistique */
+.auth-stat {
+    padding: 1rem 1.2rem;
+    background: rgba(255,255,255,0.03);
+    border-left: 3px solid #6ee7f9;
+    border-radius: 12px;
+}
+
+/* Libellé statistique */
+.auth-stat span {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #9fb0c0;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+/* Valeur statistique */
+.auth-stat strong {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.35rem;
+    color: #f5f7fa;
+}
+
+/* Colonne formulaire */
+.auth-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* Boîte formulaire */
+.auth-box {
+    width: 100%;
+    max-width: 480px;
+    padding: 2rem;
+    background: rgba(21, 29, 40, 0.92);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.24);
+}
+
+/* En-tête de formulaire */
+.auth-header {
+    margin-bottom: 2rem;
+}
+
+/* Titre formulaire */
+.auth-header h2 {
+    margin: 0 0 0.6rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    letter-spacing: -0.04em;
+}
+
+/* Texte formulaire */
+.auth-header p {
+    margin: 0;
+    color: #b8c3cf;
+    line-height: 1.7;
+}
+
+/* Formulaire auth */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Groupe de champ */
+.auth-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+/* Labels */
+.auth-form label,
+.auth-form .form-group label {
+    color: #9fb0c0;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+/* Champs auth */
+.auth-input,
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form input[type="text"],
+.auth-form input[type="tel"],
+.auth-form input[type="number"] {
+    width: 100%;
+    padding: 1rem;
+    background: #121923;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 12px;
+    color: #f5f7fa;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Focus champs */
+.auth-input:focus,
+.auth-form input[type="email"]:focus,
+.auth-form input[type="password"]:focus,
+.auth-form input[type="text"]:focus,
+.auth-form input[type="tel"]:focus,
+.auth-form input[type="number"]:focus {
+    border-color: #6ee7f9;
+    box-shadow: 0 0 0 3px rgba(110, 231, 249, 0.12);
+}
+
+/* Ligne options auth */
+.auth-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Checkbox auth */
+.auth-checkbox,
+.auth-checkbox-group .auth-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: #c0cad5;
+    font-size: 0.92rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+/* Input checkbox */
+.auth-checkbox input {
+    width: 16px;
+    height: 16px;
+    accent-color: #6ee7f9;
+}
+
+/* Bouton submit */
+.auth-submit {
+    width: 100%;
+    min-height: 52px;
+    margin-top: 0.5rem;
+}
+
+/* Footer auth */
+.auth-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+/* Texte footer */
+.auth-footer p {
+    margin: 0;
+    color: #b8c3cf;
+}
+
+/* Lien footer */
+.auth-footer a {
+    color: #6ee7f9;
+    font-weight: 700;
+}
+
+/* Hover lien footer */
+.auth-footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* Alerte auth */
+.auth-alert {
+    margin-bottom: 1.25rem;
+    padding: 0.95rem 1rem;
+    border-radius: 12px;
+    background: rgba(255, 113, 108, 0.10);
+    border: 1px solid rgba(255, 113, 108, 0.25);
+    color: #ffb4af;
+    line-height: 1.6;
+}
+
+/* Alerte succès auth */
+.auth-alert-success {
+    background: rgba(110, 231, 249, 0.10);
+    border: 1px solid rgba(110, 231, 249, 0.25);
+    color: #bff6ff;
+}
+
+/* Erreurs Symfony */
+.auth-form ul,
+.auth-form .form-error-message,
+.auth-form .form-error-icon,
+.auth-form .invalid-feedback {
+    margin: 0.35rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: #ff9e98;
+    font-size: 0.88rem;
+}
+
+/* Ligne formulaire deux colonnes */
+.auth-form .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+/* =========================================================
+   RESPONSIVE - TABLETTE
+========================================================= */
+
+@media (max-width: 992px) {
+    .auth-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-branding {
+        display: none;
+    }
+
+    .auth-panel {
+        padding: 2rem 1rem;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .auth-options {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .auth-stats,
+    .auth-form .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-box {
+        padding: 1.5rem;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - PETIT MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+    .auth-box {
+        padding: 1.2rem;
+    }
+}

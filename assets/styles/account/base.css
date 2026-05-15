@@ -1,0 +1,298 @@
+/* =========================================================
+   ESPACE CLIENT - BASE COMMUNE
+   Fichiers Twig concernés :
+   - templates/account/index.html.twig
+   - templates/account/orders.html.twig
+   - templates/account/profile.html.twig
+   - templates/account/show_order.html.twig
+
+   Rôle :
+   - Style commun de l'espace client
+   - Gère les pages compte, les en-têtes, les badges
+   - Gère les cartes, listes d'informations, tableaux
+   - Gère les actions communes et les états vides
+========================================================= */
+
+/* =========================================================
+   PAGE COMPTE - STRUCTURE GÉNÉRALE
+========================================================= */
+
+/* Page principale des vues compte client */
+.account-page,
+.profile-edit-page {
+    padding: 4rem 0 5rem;
+    background:
+        radial-gradient(circle at top left, rgba(0, 200, 255, 0.08), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(0, 140, 255, 0.08), transparent 35%);
+}
+
+/* =========================================================
+   PAGE COMPTE - EN-TÊTE COMMUN
+========================================================= */
+
+/* En-tête des pages compte */
+.account-header,
+.profile-edit-header {
+    max-width: 760px;
+    margin: 0 auto 3rem;
+    text-align: center;
+}
+
+/* Badge "Espace client" */
+.account-badge,
+.profile-edit-badge {
+    display: inline-block;
+    padding: 0.45rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0, 170, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(0, 170, 255, 0.08);
+    color: #38bdf8;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* Titre principal des pages compte */
+.account-header h1,
+.profile-edit-header h1 {
+    margin: 0 0 1rem;
+    color: #ffffff;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1;
+}
+
+/* Texte d'introduction sous le titre */
+.account-header p,
+.profile-edit-header p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   PAGE COMPTE - CARTES COMMUNES
+========================================================= */
+
+/* Carte standard de l'espace client */
+.account-card {
+    position: relative;
+    padding: 1.75rem;
+    border-radius: 24px;
+    background: rgba(15, 23, 42, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+/* Effet au survol des cartes */
+.account-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(56, 189, 248, 0.35);
+    box-shadow:
+        0 25px 45px rgba(0, 0, 0, 0.28),
+        0 0 0 1px rgba(56, 189, 248, 0.08);
+}
+
+/* Titre des cartes */
+.account-card h2 {
+    margin: 0 0 1.25rem;
+    color: #ffffff;
+    font-size: 1.25rem;
+}
+
+/* =========================================================
+   PAGE COMPTE - LISTES D'INFORMATIONS
+========================================================= */
+
+/* Liste des informations utilisateur / commande / livraison */
+.account-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+/* Ligne d'information */
+.account-info-list p {
+    margin: 0;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.6;
+}
+
+/* Dernière ligne sans bordure */
+.account-info-list p:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* Libellés importants dans les informations */
+.account-info-list strong {
+    color: #ffffff;
+}
+
+/* =========================================================
+   PAGE COMPTE - TABLEAUX COMMANDES
+========================================================= */
+
+/* Conteneur du tableau avec scroll horizontal sur mobile */
+.orders-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Tableau standard des commandes */
+.orders-table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+}
+
+/* En-tête du tableau */
+.orders-table thead th {
+    padding: 1rem;
+    text-align: left;
+    color: #ffffff;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Cellules du tableau */
+.orders-table tbody td {
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.82);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    vertical-align: top;
+}
+
+/* Survol des lignes du tableau */
+.orders-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Numéro de commande ou nom de produit selon le tableau */
+.orders-table tbody td:first-child {
+    color: #6ee7f9;
+    font-weight: 700;
+}
+
+/* Petites informations dans le tableau, par exemple les variantes */
+.orders-table small {
+    color: #9fb0c0;
+    font-size: 0.82rem;
+}
+
+/* Liens dans les tableaux */
+.orders-table td a {
+    color: #6ee7f9;
+    font-weight: 700;
+    transition:
+        color 0.2s ease,
+        text-decoration-color 0.2s ease;
+}
+
+/* Hover des liens de tableau */
+.orders-table td a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* =========================================================
+   PAGE COMPTE - ACTIONS ET ÉTATS VIDES
+========================================================= */
+
+/* Actions en bas de page */
+.account-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+/* Message affiché quand il n'y a aucune donnée */
+.empty-state {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.7;
+}
+
+/* =========================================================
+   RESPONSIVE - TABLETTE
+   Largeur : moins de 992px
+========================================================= */
+
+@media (max-width: 992px) {
+    .account-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .account-card-summary {
+        grid-column: 1 / -1;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   Largeur : moins de 768px
+========================================================= */
+
+@media (max-width: 768px) {
+    .account-page,
+    .profile-edit-page {
+        padding: 3rem 0 4rem;
+    }
+
+    .account-header,
+    .profile-edit-header {
+        margin-bottom: 2rem;
+    }
+
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .account-card {
+        padding: 1.4rem;
+        border-radius: 20px;
+    }
+
+    .orders-table {
+        min-width: 680px;
+    }
+
+    .orders-table thead th,
+    .orders-table tbody td {
+        padding: 0.85rem;
+        font-size: 0.92rem;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - PETIT MOBILE
+   Largeur : moins de 480px
+========================================================= */
+
+@media (max-width: 480px) {
+    .account-card {
+        padding: 1.2rem;
+    }
+
+    .orders-table {
+        min-width: 640px;
+    }
+
+    .account-actions .btn {
+        width: 100%;
+    }
+}

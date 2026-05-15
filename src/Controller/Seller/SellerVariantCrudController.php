@@ -62,9 +62,11 @@ class SellerVariantCrudController extends AbstractCrudController
                     ->setParameter('seller', $this->getUser())
                     ->andWhere('entity.isActive = :active')
                     ->setParameter('active', true)
+                    ->andWhere('entity.isBlockedByAdmin = :blocked')
+                    ->setParameter('blocked', false)
                     ->orderBy('entity.nom', 'ASC');
             })
-            ->setHelp('Le vendeur ne peut choisir que ses propres produits actifs.');
+            ->setHelp('Le vendeur ne peut choisir que ses propres produits actifs et non bloqués.');
     }
 
     public function createIndexQueryBuilder(
@@ -87,9 +89,7 @@ class SellerVariantCrudController extends AbstractCrudController
 
         $product = $entityInstance->getProduct();
 
-        if (!$product instanceof Product || $product->getSeller() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('Vous ne pouvez créer une variante que pour vos propres produits.');
-        }
+        $this->denyAccessIfProductIsInvalidForSeller($product);
 
         $entityInstance->setIsActive(true);
 
@@ -104,9 +104,7 @@ class SellerVariantCrudController extends AbstractCrudController
 
         $product = $entityInstance->getProduct();
 
-        if (!$product instanceof Product || $product->getSeller() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('Vous ne pouvez modifier que les variantes de vos propres produits.');
-        }
+        $this->denyAccessIfProductIsInvalidForSeller($product);
 
         parent::updateEntity($entityManager, $entityInstance);
     }
@@ -119,9 +117,7 @@ class SellerVariantCrudController extends AbstractCrudController
 
         $product = $entityInstance->getProduct();
 
-        if (!$product instanceof Product || $product->getSeller() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('Vous ne pouvez supprimer que les variantes de vos propres produits.');
-        }
+        $this->denyAccessIfProductIsInvalidForSeller($product);
 
         parent::deleteEntity($entityManager, $entityInstance);
     }
@@ -130,5 +126,24 @@ class SellerVariantCrudController extends AbstractCrudController
     {
         return $actions
             ->disable(Action::DELETE);
+    }
+
+    private function denyAccessIfProductIsInvalidForSeller(?Product $product): void
+    {
+        if (!$product instanceof Product || $product->getSeller() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez gérer des variantes que pour vos propres produits.');
+        }
+
+        if ($product->isBlockedByAdmin()) {
+            $reason = $product->getAdminBlockReason();
+
+            $message = 'Ce produit est actuellement en cours d’enquête par l’administration InnovShop. Vous ne pouvez pas modifier ses variantes tant que le blocage n’a pas été levé.';
+
+            if ($reason) {
+                $message .= ' Motif : ' . $reason;
+            }
+
+            throw $this->createAccessDeniedException($message);
+        }
     }
 }

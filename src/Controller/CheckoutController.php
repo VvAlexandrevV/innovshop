@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
+use App\Service\StripeMarketplaceService;
 
 final class CheckoutController extends AbstractController
 {
@@ -122,7 +123,8 @@ final class CheckoutController extends AbstractController
         Order $order,
         EntityManagerInterface $entityManager,
         RequestStack $requestStack,
-        MailerInterface $mailer
+        MailerInterface $mailer,
+        StripeMarketplaceService $stripeMarketplaceService
     ): Response {
         
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -150,6 +152,8 @@ final class CheckoutController extends AbstractController
             }
 
             $order->setStatus('paid');
+
+            $stripeMarketplaceService->transferSellerAmounts($order);
             try {
                 $email = (new TemplatedEmail())
                     ->from('noreply@innovshop.fr')

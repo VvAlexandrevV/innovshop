@@ -1,0 +1,34 @@
+{#
+    Fichier : templates/seller/_stripe_connect_alert.html.twig
+
+    Rôle dans InnovShop :
+    Affiche une alerte permanente pour les vendeurs qui n'ont pas encore
+    connecté leur compte Stripe Connect.
+
+    Fonctionnalité InnovShop :
+    Marketplace - Sécurité vendeur / Stripe Connect.
+
+    Cette alerte prévient le vendeur que ses produits ne sont pas visibles
+    sur le site tant que Stripe Connect n'est pas configuré.
+#}
+
+{% if app.user
+    and is_granted('ROLE_SELLER')
+    and app.user.sellerProfile
+    and not app.user.sellerProfile.stripeAccountId
+%}
+    <div class="seller-stripe-floating-alert">
+        <div class="seller-stripe-floating-alert-content">
+            <strong>Compte Stripe Connect manquant</strong>
+
+            <p>
+                Vous n’avez pas encore connecté votre compte Stripe.
+                Vos produits ne sont pas disponibles sur le site pour le moment.
+            </p>
+        </div>
+
+        <a href="{{ path('seller_stripe_connect') }}" class="btn btn-primary">
+            Connecter Stripe
+        </a>
+    </div>
+{% endif %}

@@ -1,177 +1,178 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block content %}
+    {% set statusLabels = {
+        'pending_payment': 'En attente de paiement',
+        'paid': 'Payée',
+        'failed': 'Échouée',
+        'cancelled': 'Annulée',
+        'shipped': 'Expédiée',
+        'delivered': 'Livrée'
+    } %}
 
+    {% set statusClasses = {
+        'pending_payment': 'badge badge-warning',
+        'paid': 'badge badge-success',
+        'failed': 'badge badge-danger',
+        'cancelled': 'badge badge-danger',
+        'shipped': 'badge badge-info',
+        'delivered': 'badge badge-success'
+    } %}
 
-{% set statusLabels = {
-    'pending_payment': 'En attente de paiement',
-    'paid': 'Payée',
-    'failed': 'Échouée',
-    'cancelled': 'Annulée',
-    'shipped': 'Expédiée',
-    'delivered': 'Livrée'
-} %}
-
-{% set statusClasses = {
-    'pending_payment': 'badge badge-warning',
-    'paid': 'badge badge-success',
-    'failed': 'badge badge-danger',
-    'cancelled': 'badge badge-danger',
-    'shipped': 'badge badge-info',
-    'delivered': 'badge badge-success'
-} %}
-
-<div class="content-panel">
-    <div class="content-panel-header">
-        <h1 class="title">Mes commandes</h1>
-    </div>
-
-    <div class="content-panel-body">
-        <form method="get" action="{{ path('seller_orders') }}" class="row mb-4">
-            <div class="col-md-3">
-                <label for="period" class="form-label">Période rapide</label>
-                <select name="period" id="period" class="form-control">
-                    <option value="">Toutes les périodes</option>
-                    <option value="day" {{ period == 'day' ? 'selected' : '' }}>Aujourd’hui</option>
-                    <option value="yesterday" {{ period == 'yesterday' ? 'selected' : '' }}>Hier</option>
-                    <option value="week" {{ period == 'week' ? 'selected' : '' }}>Cette semaine</option>
-                    <option value="month" {{ period == 'month' ? 'selected' : '' }}>Ce mois</option>
-                    <option value="year" {{ period == 'year' ? 'selected' : '' }}>Cette année</option>
-                </select>
+    <div class="seller-orders-page">
+        <div class="content-panel">
+            <div class="content-panel-header">
+                <h1 class="title">Mes commandes</h1>
             </div>
 
-            <div class="col-md-3">
-                <label for="startDate" class="form-label">Date de début</label>
-                <input
-                    type="date"
-                    name="startDate"
-                    id="startDate"
-                    class="form-control"
-                    value="{{ startDate }}"
-                >
-            </div>
+            <div class="content-panel-body">
+                <form method="get" action="{{ path('seller_orders') }}" class="row mb-4">
+                    <div class="col-md-3">
+                        <label for="period" class="form-label">Période rapide</label>
 
-            <div class="col-md-3">
-                <label for="endDate" class="form-label">Date de fin</label>
-                <input
-                    type="date"
-                    name="endDate"
-                    id="endDate"
-                    class="form-control"
-                    value="{{ endDate }}"
-                >
-            </div>
+                        <select name="period" id="period" class="form-control">
+                            <option value="">Toutes les périodes</option>
+                            <option value="day" {{ period == 'day' ? 'selected' : '' }}>Aujourd’hui</option>
+                            <option value="yesterday" {{ period == 'yesterday' ? 'selected' : '' }}>Hier</option>
+                            <option value="week" {{ period == 'week' ? 'selected' : '' }}>Cette semaine</option>
+                            <option value="month" {{ period == 'month' ? 'selected' : '' }}>Ce mois</option>
+                            <option value="year" {{ period == 'year' ? 'selected' : '' }}>Cette année</option>
+                        </select>
+                    </div>
 
-            <div class="col-md-3 d-flex align-items-end gap-2">
-                <button type="submit" class="btn btn-primary">
-                    Filtrer
-                </button>
+                    <div class="col-md-3">
+                        <label for="startDate" class="form-label">Date de début</label>
 
-                <a href="{{ path('seller_orders') }}" class="btn btn-secondary">
-                    Réinitialiser
-                </a>
-            </div>
-        </form>
+                        <input
+                            type="date"
+                            name="startDate"
+                            id="startDate"
+                            class="form-control"
+                            value="{{ startDate }}"
+                        >
+                    </div>
 
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="field-group">
-                    <div class="field-label">Produits vendus</div>
-                    <div class="field-value">{{ totalProductsSold }}</div>
+                    <div class="col-md-3">
+                        <label for="endDate" class="form-label">Date de fin</label>
+
+                        <input
+                            type="date"
+                            name="endDate"
+                            id="endDate"
+                            class="form-control"
+                            value="{{ endDate }}"
+                        >
+                    </div>
+
+                    <div class="col-md-3 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            Filtrer
+                        </button>
+
+                        <a href="{{ path('seller_orders') }}" class="btn btn-secondary">
+                            Réinitialiser
+                        </a>
+                    </div>
+                </form>
+
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="field-group">
+                            <div class="field-label">Produits vendus</div>
+                            <div class="field-value">{{ totalProductsSold }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="field-group">
+                            <div class="field-label">Total vendu</div>
+                            <div class="field-value">{{ totalGross|number_format(2, ',', ' ') }} €</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="field-group">
+                            <div class="field-label">Commission</div>
+                            <div class="field-value">{{ totalCommission|number_format(2, ',', ' ') }} €</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="field-group">
+                            <div class="field-label">Gain vendeur</div>
+                            <div class="field-value">{{ totalNet|number_format(2, ',', ' ') }} €</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-md-3">
-                <div class="field-group">
-                    <div class="field-label">Total vendu</div>
-                    <div class="field-value">{{ totalGross|number_format(2, ',', ' ') }} €</div>
-                </div>
-            </div>
+                <table class="table datagrid seller-orders-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Produit</th>
+                            <th>Variante</th>
+                            <th>Date</th>
+                            <th>Client</th>
+                            <th>Statut</th>
+                            <th>Prix</th>
+                            <th>Commission</th>
+                            <th>Gain</th>
+                        </tr>
+                    </thead>
 
-            <div class="col-md-3">
-                <div class="field-group">
-                    <div class="field-label">Commission</div>
-                    <div class="field-value">{{ totalCommission|number_format(2, ',', ' ') }} €</div>
-                </div>
-            </div>
+                    <tbody>
+                        {% for item in items %}
+                            {% set status = item.orderEntity.status %}
 
-            <div class="col-md-3">
-                <div class="field-group">
-                    <div class="field-label">Gain vendeur</div>
-                    <div class="field-value">{{ totalNet|number_format(2, ',', ' ') }} €</div>
-                </div>
+                            <tr>
+                                <td>
+                                    <img
+                                        src="{{ item.product.image ? asset('images/products/' ~ item.product.image) : asset('images/default-product.png') }}"
+                                        alt="{{ item.productName }}"
+                                        class="seller-orders-product-image"
+                                    >
+                                </td>
+
+                                <td>{{ item.productName }}</td>
+                                <td>{{ item.variantLabel ?? '-' }}</td>
+                                <td>{{ item.orderEntity.createdAt|date('d/m/Y H:i') }}</td>
+
+                                <td>
+                                    {% if item.orderEntity.user %}
+                                        {{ item.orderEntity.user.firstname ?? '' }}
+                                        {{ item.orderEntity.user.lastname ?? '' }}
+
+                                        {% if item.orderEntity.user.firstname is empty and item.orderEntity.user.lastname is empty %}
+                                            {{ item.orderEntity.user.email }}
+                                        {% else %}
+                                            <br>
+                                            <small>{{ item.orderEntity.user.email }}</small>
+                                        {% endif %}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <span class="{{ statusClasses[status] ?? 'badge badge-secondary' }}">
+                                        {{ statusLabels[status] ?? status }}
+                                    </span>
+                                </td>
+
+                                <td>{{ item.productPrice|number_format(2, ',', ' ') }} €</td>
+                                <td>{{ item.commissionAmount|number_format(2, ',', ' ') }} €</td>
+                                <td>{{ item.sellerAmount|number_format(2, ',', ' ') }} €</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="9" class="text-center">
+                                    Aucune commande
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
-
-        <table class="table datagrid">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Produit</th>
-                    <th>Variante</th>
-                    <th>Date</th>
-                    <th>Client</th>
-                    <th>Statut</th>
-                    <th>Prix</th>
-                    <th>Commission</th>
-                    <th>Gain</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for item in items %}
-                    {% set status = item.orderEntity.status %}
-
-                    <tr>
-                        <td>
-                            <img
-                                src="{{ item.product.image ? asset('images/products/' ~ item.product.image) : asset('images/default-product.png') }}"
-                                alt="{{ item.productName }}"
-                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;"
-                            >
-                        </td>
-
-                        <td>{{ item.productName }}</td>
-
-                        <td>{{ item.variantLabel ?? '-' }}</td>
-
-                        <td>{{ item.orderEntity.createdAt|date('d/m/Y H:i') }}</td>
-
-                        <td>
-                            {% if item.orderEntity.user %}
-                                {{ item.orderEntity.user.firstname ?? '' }}
-                                {{ item.orderEntity.user.lastname ?? '' }}
-
-                                {% if item.orderEntity.user.firstname is empty and item.orderEntity.user.lastname is empty %}
-                                    {{ item.orderEntity.user.email }}
-                                {% else %}
-                                    <br>
-                                    <small>{{ item.orderEntity.user.email }}</small>
-                                {% endif %}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            <span class="{{ statusClasses[status] ?? 'badge badge-secondary' }}">
-                                {{ statusLabels[status] ?? status }}
-                            </span>
-                        </td>
-
-                        <td>{{ item.productPrice|number_format(2, ',', ' ') }} €</td>
-                        <td>{{ item.commissionAmount|number_format(2, ',', ' ') }} €</td>
-                        <td>{{ item.sellerAmount|number_format(2, ',', ' ') }} €</td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="8" class="text-center">
-                            Aucune commande
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
-</div>
 {% endblock %}

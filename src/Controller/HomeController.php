@@ -2,43 +2,44 @@
 
 namespace App\Controller;
 
+use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\ProductRepository;
 
+/**
+ * Fichier : HomeController.php
+ *
+ * Rôle dans InnovShop :
+ * Gère la page d'accueil publique du site.
+ *
+ * La page d'accueil affiche :
+ * - les produits à la une
+ * - les derniers produits ajoutés
+ *
+ * Les produits vendeurs sans compte Stripe Connect ne sont pas envoyés
+ * à cette page, car ils ne doivent pas être visibles sur le front.
+ */
 final class HomeController extends AbstractController
 {
-    
     /**
-     * Affiche la page d’accueil du site InnovShop.
+     * Affiche la page d'accueil InnovShop.
      *
      * Fonctionnalité InnovShop :
-     * Front Office - Page d’accueil.
+     * Front Office - Page d'accueil.
      *
-     * Cette méthode récupère les 3 produits à la une
-     * et les 3 derniers produits ajoutés.
+     * Cette méthode récupère :
+     * - les 3 produits actifs à la une
+     * - les 3 derniers produits actifs ajoutés
      *
-     * Ces données sont ensuite envoyées au template home/index.html.twig
-     * pour afficher une page d’accueil essentiellement graphique.
+     * Les règles de visibilité marketplace sont appliquées
+     * directement dans ProductRepository.
      */
-    // Cette méthode sert à afficher la page d'accueil avec les produits à la une et les derniers produits ajoutés.
-    // Liée à ProductRepository et au template home/index.html.twig
     #[Route('/', name: 'app_home')]
     public function index(ProductRepository $productRepository): Response
     {
-
-        $produitsALaUne = $productRepository->findBy(
-            ['aLaUne' => true], //filtre
-            null,               //pas d ordre specifique
-            3                   //limite le resultat a 3
-        );
-
-        $derniersProduits = $productRepository->findBy(
-            [],                      //aucun filtre(tout les produits)
-            ['createdAt' => 'DESC'], //du plus recent au plus ancien
-            3                        //les 3 premiers   
-        );
+        $produitsALaUne = $productRepository->findFeaturedForHome(3);
+        $derniersProduits = $productRepository->findLatestForHome(3);
 
         return $this->render('home/index.html.twig', [
             'produitsALaUne' => $produitsALaUne,

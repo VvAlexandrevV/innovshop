@@ -1,0 +1,83 @@
+/* =========================================================
+   CHECKOUT - VALIDATION DE COMMANDE
+   Fichier Twig concerné : templates/checkout/index.html.twig
+
+   Rôle :
+   - Style spécifique de la page validation de commande
+   - Gère l'en-tête, le lien retour panier
+   - Gère le formulaire de livraison
+========================================================= */
+
+
+/* Formulaire de livraison */
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Grille du formulaire */
+.checkout-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 1.25rem;
+}
+
+/* Champs pleine largeur */
+.checkout-form-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+/* Erreurs Symfony du formulaire */
+.checkout-form .form-group ul {
+    margin: 0.35rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: #ff9e98;
+    font-size: 0.88rem;
+}
+
+/* Champs du formulaire */
+.checkout-form .form-group input,
+.checkout-form .form-group select,
+.checkout-form .form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    background: #121923;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 12px;
+    color: #f5f7fa;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Focus des champs du formulaire */
+.checkout-form .form-group input:focus,
+.checkout-form .form-group select:focus,
+.checkout-form .form-group textarea:focus {
+    border-color: #6ee7f9;
+    box-shadow: 0 0 0 3px rgba(110, 231, 249, 0.12);
+}
+
+/* Zone du bouton de validation */
+.checkout-form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .checkout-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-form-actions .btn {
+        width: 100%;
+    }
+}

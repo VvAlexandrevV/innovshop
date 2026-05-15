@@ -1,0 +1,46 @@
+/* =========================================================
+   PANIER - PAGE PRINCIPALE
+   Fichier Twig concerné : templates/panier/index.html.twig
+
+   Rôle :
+   - Style spécifique de la page panier
+   - Gère l'état panier vide
+   - Complète les styles communs du checkout réutilisés par le panier
+========================================================= */
+
+/* Bloc affiché quand le panier est vide */
+.empty-cart-box {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Bouton de retour au catalogue dans le panier vide */
+.empty-cart-box .btn {
+    margin-top: 1.5rem;
+}
+
+/* Variante panier : actions du résumé */
+.cart-summary-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Boutons du résumé panier */
+.checkout-submit,
+.cart-clear-btn {
+    width: 100%;
+    text-align: center;
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+    .empty-cart-box {
+        max-width: 100%;
+    }
+}

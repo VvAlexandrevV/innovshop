@@ -3,8 +3,18 @@
 {% block title %}Validation de la commande{% endblock %}
 
 {% block body %}
-    <h1>Validation de la commande</h1>
+    <section class="checkout-page">
+        <div class="container">
+            <div class="checkout-card empty-cart-box">
+                <h1>Validation de la commande</h1>
 
-    <p>Votre panier est prêt.</p>
-    <p>Vous êtes connecté.</p>
+                <p class="empty-state">Votre panier est prêt.</p>
+                <p class="empty-state">Vous êtes connecté.</p>
+
+                <a href="{{ path('app_checkout') }}" class="btn btn-primary">
+                    Continuer vers la commande
+                </a>
+            </div>
+        </div>
+    </section>
 {% endblock %}

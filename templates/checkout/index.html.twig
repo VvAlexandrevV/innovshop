@@ -6,9 +6,15 @@
     <section class="checkout-page">
         <div class="container">
             <div class="checkout-header">
-                <a href="{{ path('app_panier') }}" class="checkout-back-link">← Retour au panier</a>
+                <a href="{{ path('app_panier') }}" class="checkout-back-link">
+                    ← Retour au panier
+                </a>
+
                 <h1>Validation de commande</h1>
-                <p>Vérifiez votre panier et renseignez vos informations de livraison avant de confirmer.</p>
+
+                <p>
+                    Vérifiez votre panier et renseignez vos informations de livraison avant de confirmer.
+                </p>
             </div>
 
             <div class="checkout-grid">
@@ -34,6 +40,7 @@
                                         <div class="checkout-product-top">
                                             <div>
                                                 <h3>{{ cartItem.product.nom }}</h3>
+
                                                 <p class="checkout-product-seller">
                                                     Vendu par :
                                                     <strong>
@@ -44,14 +51,17 @@
                                                         {% endif %}
                                                     </strong>
                                                 </p>
+
                                                 <p class="checkout-product-description">
                                                     {{ cartItem.product.description|length > 120 ? cartItem.product.description|slice(0, 120) ~ '...' : cartItem.product.description }}
                                                 </p>
+
                                                 {% if cartItem.variants is not empty %}
                                                     <div class="checkout-product-variant">
                                                         {% for variant in cartItem.variants %}
                                                             <p>
                                                                 {{ variant.type }} : {{ variant.value }}
+
                                                                 {% if variant.priceModifier %}
                                                                     <span>(+{{ variant.priceModifier }} €)</span>
                                                                 {% endif %}
@@ -70,7 +80,7 @@
                                             <span class="checkout-qty">Quantité : 1</span>
 
                                             <div class="checkout-product-actions">
-                                                <a href="{{ path('app_product_detail', {id: cartItem.product.id}) }}" class="small-link">
+                                                <a href="{{ path('app_product_detail', { id: cartItem.product.id }) }}" class="small-link">
                                                     Voir le détail
                                                 </a>
                                             </div>
@@ -89,15 +99,15 @@
                             <h2>Informations de livraison</h2>
                         </div>
 
-                            {{ form_start(orderForm, {
-                                'action': path('app_checkout'),
-                                'method': 'POST',
-                                'attr': {
-                                    'class': 'checkout-form',
-                                    'data-turbo': 'false'
-                                }
-                            }) }}
-                            
+                        {{ form_start(orderForm, {
+                            'action': path('app_checkout'),
+                            'method': 'POST',
+                            'attr': {
+                                'class': 'checkout-form',
+                                'data-turbo': 'false'
+                            }
+                        }) }}
+
                             {{ form_errors(orderForm) }}
 
                             <div class="checkout-form-grid">
@@ -138,11 +148,12 @@
                                 </div>
                             </div>
 
-                            <div class="account-actions">
+                            <div class="checkout-form-actions">
                                 <button type="submit" class="btn btn-primary">
                                     Continuer vers le paiement
                                 </button>
                             </div>
+
                         {{ form_end(orderForm) }}
                     </section>
                 </div>
