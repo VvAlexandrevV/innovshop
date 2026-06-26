@@ -12,8 +12,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use App\Controller\Seller\SellerVariantCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 
 #[AdminDashboard(routePath: '/seller', routeName: 'seller')]
 class SellerDashboardController extends AbstractDashboardController
@@ -22,7 +22,7 @@ class SellerDashboardController extends AbstractDashboardController
     public function configureAssets(): Assets
     {
         return Assets::new()
-            ->addCssFile('build/app.css');
+            ->addCssFile('styles/app.css');
     }
 
     public function index(): Response
