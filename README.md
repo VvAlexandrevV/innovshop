@@ -170,7 +170,7 @@ Ce projet sert de support pour démontrer les compétences RNCP :
 
 ## Informations à compléter
 
-- URL du dépôt GitHub ou GitLab
+- [URL du dépôt GitHub](https://github.com/VvAlexandrevV/innovshop.git)
 - [URL du site déployé](http://exo-blog-php.alwaysdata.net/)
-- Identifiants de test
-- Informations de configuration propres à l’environnement local ou à l’hébergement
+- Identifiants de test: creez un compte et connectez vous.
+- projet hebergé sur alwaysdata
