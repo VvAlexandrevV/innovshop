@@ -171,6 +171,6 @@ Ce projet sert de support pour démontrer les compétences RNCP :
 ## Informations à compléter
 
 - URL du dépôt GitHub ou GitLab
-- URL du site déployé
+- [URL du site déployé](http://exo-blog-php.alwaysdata.net/)
 - Identifiants de test
 - Informations de configuration propres à l’environnement local ou à l’hébergement
