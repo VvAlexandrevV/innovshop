@@ -1,30 +1,34 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const passwordToggles = document.querySelectorAll('[data-password-toggle]');
+console.log('password-toggle.js chargé');
 
-    passwordToggles.forEach((button) => {
-        button.addEventListener('click', () => {
-            const field = button.closest('.password-field');
+document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-password-toggle]');
 
-            if (!field) {
-                return;
-            }
+    if (!button) {
+        return;
+    }
 
-            const input = field.querySelector('.password-input');
+    const field = button.closest('.password-field');
 
-            if (!input) {
-                return;
-            }
+    if (!field) {
+        console.warn('Aucun .password-field trouvé');
+        return;
+    }
 
-            const isPasswordHidden = input.type === 'password';
+    const input = field.querySelector('.password-input');
 
-            input.type = isPasswordHidden ? 'text' : 'password';
+    if (!input) {
+        console.warn('Aucun .password-input trouvé');
+        return;
+    }
 
-            button.classList.toggle('is-visible', isPasswordHidden);
+    const passwordIsHidden = input.type === 'password';
 
-            button.setAttribute(
-                'aria-label',
-                isPasswordHidden ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
-            );
-        });
-    });
+    input.type = passwordIsHidden ? 'text' : 'password';
+
+    button.classList.toggle('is-visible', passwordIsHidden);
+
+    button.setAttribute(
+        'aria-label',
+        passwordIsHidden ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
+    );
 });
