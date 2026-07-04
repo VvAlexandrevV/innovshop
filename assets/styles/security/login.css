@@ -26,3 +26,48 @@
 }
 
 /* Sur mobile, le bouton reste pleine largeur via auth/base.css */
+
+/*oeil pour afficher le mot de passe*/
+.password-field {
+    position: relative;
+    width: 100%;
+}
+
+.password-field .auth-input {
+    width: 100%;
+    padding-right: 3.2rem;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+
+    width: 2rem;
+    height: 2rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    background: transparent;
+    color: var(--primary-color, #ffffff);
+
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%;
+}
+
+.password-toggle:hover {
+    background-color: rgba(124, 58, 237, 0.12);
+}
+
+.password-toggle.is-visible {
+    color: #6ee7f9;
+}
+
+.password-toggle svg {
+    pointer-events: none;
+}
